@@ -1,15 +1,29 @@
 /* Fuel Dashboard V7.1 Professional Alignment */
-/* Header KPI labels: larger and more readable */
-.kpis small,.recon-kpis small{
-  font-size:11px!important;
-  line-height:1.25;
+
+/* KPI headings — enlarged and sharpened to match the target dashboard */
+.kpis small{
+  display:block;
+  font-size:13px!important;
+  line-height:1.18!important;
   font-weight:900!important;
-  color:#f4f8ff!important;
-  letter-spacing:.45px;
+  color:#ffffff!important;
+  letter-spacing:.25px!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.65);
+  margin-bottom:5px;
 }
-.kpis strong{font-size:28px!important}
-.recon-kpis strong{font-size:23px!important}
-.recon-kpis article{min-height:86px;padding:14px 16px}
+.recon-kpis small{
+  display:block;
+  font-size:12px!important;
+  line-height:1.18!important;
+  font-weight:900!important;
+  color:#ffffff!important;
+  letter-spacing:.2px!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.65);
+  margin-bottom:5px;
+}
+.kpis strong{font-size:30px!important;line-height:1.05!important}
+.recon-kpis strong{font-size:24px!important;line-height:1.05!important}
+.recon-kpis article{min-height:86px;padding:13px 16px!important}
 
 /* Refueling Control replacement brand */
 .logo-box{
@@ -37,15 +51,46 @@
 .stock-panel .stock-meta{margin-top:22px}
 .stock-cols h4{font-size:11px!important;color:#f4f8ff}
 
-/* Unit type graphics */
-.unit-icon{height:66px!important;margin:6px auto 7px!important;display:flex;align-items:center;justify-content:center}
-.unit-icon svg{width:78px;height:62px;overflow:visible}
-.unit-types>div:nth-child(2) .unit-icon svg{width:72px;height:60px}
-.unit-types small{font-size:10px!important;color:#f4f8ff}
+/* Exact target unit graphics, taken from the supplied dashboard reference */
+.unit-icon{
+  height:76px!important;
+  margin:5px auto 4px!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  overflow:visible!important;
+}
+.unit-icon img.v71-unit-img{
+  display:block;
+  object-fit:contain;
+  max-width:none;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.35));
+}
+.unit-icon .excavator-img{width:108px!important;height:78px!important}
+.unit-icon .gears-img{width:86px!important;height:78px!important}
+.unit-types{
+  align-items:start!important;
+}
+.unit-types>div{
+  display:flex!important;
+  flex-wrap:wrap!important;
+  align-content:start!important;
+  justify-content:center!important;
+  min-width:0;
+}
+.unit-types>div>small{
+  flex:0 0 100%;
+  text-align:center!important;
+}
+.unit-types small{font-size:10px!important;color:#f4f8ff!important;font-weight:800!important}
 .unit-types strong{font-size:22px!important}
 
-/* Chart legends: white and high-contrast */
+/* Chart legends: make labels/values visually white and leave more space on the right */
 #truckChart,#statusChart{filter:saturate(1.08)}
+.row-middle .panel:nth-child(3) .chart.medium,
+#efficiency .chart.medium{
+  padding-right:2px!important;
+}
 
 /* Section headings slightly stronger */
 .title span{font-size:12px!important;font-weight:900!important;color:#ffb12d!important}
@@ -54,9 +99,17 @@
 @media(min-width:1400px){
   .kpis article{min-height:112px;padding:16px}
   .recon-kpis article{min-height:90px}
-  .unit-types{margin-top:14px}
+  .unit-types{margin-top:12px}
+  .kpis small{font-size:13.5px!important}
+  .recon-kpis small{font-size:12.5px!important}
+}
+@media(max-width:1100px){
+  .kpis small{font-size:11.5px!important}
+  .recon-kpis small{font-size:10.5px!important}
 }
 @media(max-width:900px){
   .refueling-brand .rf-top{font-size:20px}.refueling-brand .rf-mid{font-size:21px}.refueling-brand .rf-site{font-size:14px}
   .kpis small,.recon-kpis small{font-size:10px!important}
+  .unit-icon .excavator-img{width:96px!important;height:70px!important}
+  .unit-icon .gears-img{width:78px!important;height:70px!important}
 }

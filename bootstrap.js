@@ -3,6 +3,8 @@
   css6.rel='stylesheet';css6.href='v6.css?v=6';document.head.appendChild(css6);
   const css7=document.createElement('link');
   css7.rel='stylesheet';css7.href='v7.css?v=7';document.head.appendChild(css7);
+  const css71=document.createElement('link');
+  css71.rel='stylesheet';css71.href='v71.css?v=71';document.head.appendChild(css71);
   function num(x){return (x===''||x==null)?null:Number(x)}
   function normalize(rows){
     return rows.map((r,i)=>{
@@ -33,11 +35,20 @@
     if(!window.FUEL_DATA.length) throw new Error('No valid Fuel_Usage_Clean rows');
   }catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];}
   const s=document.createElement('script');
-  s.src='app.js?v=7';
+  s.src='app.js?v=71';
   s.onload=()=>{
     const p6=document.createElement('script');
     p6.src='v6.js?v=6';
-    p6.onload=()=>{const p7=document.createElement('script');p7.src='v7.js?v=7';document.body.appendChild(p7)};
+    p6.onload=()=>{
+      const p7=document.createElement('script');
+      p7.src='v7.js?v=7fix';
+      p7.onload=()=>{
+        const p71=document.createElement('script');
+        p71.src='v71.js?v=71';
+        document.body.appendChild(p71);
+      };
+      document.body.appendChild(p7);
+    };
     document.body.appendChild(p6);
   };
   document.body.appendChild(s);

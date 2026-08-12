@@ -6,7 +6,7 @@
   const css71=document.createElement('link');
   css71.rel='stylesheet';css71.href='v71.css?v=71';document.head.appendChild(css71);
   const css72=document.createElement('link');
-  css72.rel='stylesheet';css72.href='v72.css?v=72.1';document.head.appendChild(css72);
+  css72.rel='stylesheet';css72.href='v72.css?v=72.2';document.head.appendChild(css72);
   function num(x){return (x===''||x==null)?null:Number(x)}
   function normalize(rows){
     return rows.map((r,i)=>{
@@ -37,7 +37,7 @@
     if(!window.FUEL_DATA.length) throw new Error('No valid Fuel_Usage_Clean rows');
   }catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];}
   const s=document.createElement('script');
-  s.src='app.js?v=72';
+  s.src='app.js?v=72.2';
   s.onload=()=>{
     const p6=document.createElement('script');
     p6.src='v6.js?v=6';
@@ -49,7 +49,7 @@
         p71.src='v71.js?v=71';
         p71.onload=()=>{
           const p72=document.createElement('script');
-          p72.src='v72.js?v=72.1';
+          p72.src='v72.js?v=72.2';
           document.body.appendChild(p72);
         };
         document.body.appendChild(p71);

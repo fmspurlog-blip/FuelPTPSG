@@ -1,4 +1,6 @@
 (async()=>{
+  const css=document.createElement('link');
+  css.rel='stylesheet';css.href='v6.css?v=6';document.head.appendChild(css);
   function num(x){return (x===''||x==null)?null:Number(x)}
   function normalize(rows){
     return rows.map((r,i)=>{
@@ -15,16 +17,7 @@
       const vp=num(r.Variance_Pct);
       let st=r.Consumption_Status||r.Status||'';
       if(!st) st=std==null?'NO STANDARD':vp==null?'NO DATA':vp<=-.10?'EFFICIENT':vp<=.10?'NORMAL':vp<=.20?'WARNING':'OVER CONSUMPTION';
-      return {
-        Transaction_ID:r.Transaction_ID||`AUTO-${i+1}`,
-        Date:date||'',Day:r.Day||'',Time:r.Time||'',Shift:r.Shift||'',
-        Unit_Code:r.Unit_Code||'',Category:r.Category||'',Unit_Type:r.Unit_Type||'',
-        Fuel_Liter:num(r.Fuel_Liter)||0,Meter_Before:num(r.Meter_Before),Meter_Current:num(r.Meter_Current),
-        Delta_HM_KM:num(r.Delta_HM_KM),Actual_LHM:actual,Fuel_Truck:r.Fuel_Truck||'',
-        Mtech_Code:r.Mtech_Code||'',Unit_Group_Code:r.Unit_Group_Code||'',Manpower:r.Manpower||'',
-        Unit_Position:r.Unit_Position||'',Standard_LHM:std,Variance_LHM:num(r.Variance_LHM),
-        Variance_Pct:vp,Consumption_Status:st,Standard_Match:r.Standard_Match||''
-      };
+      return {Transaction_ID:r.Transaction_ID||`AUTO-${i+1}`,Date:date||'',Day:r.Day||'',Time:r.Time||'',Shift:r.Shift||'',Unit_Code:r.Unit_Code||'',Category:r.Category||'',Unit_Type:r.Unit_Type||'',Fuel_Liter:num(r.Fuel_Liter)||0,Meter_Before:num(r.Meter_Before),Meter_Current:num(r.Meter_Current),Delta_HM_KM:num(r.Delta_HM_KM),Actual_LHM:actual,Fuel_Truck:r.Fuel_Truck||'',Mtech_Code:r.Mtech_Code||'',Unit_Group_Code:r.Unit_Group_Code||'',Manpower:r.Manpower||'',Unit_Position:r.Unit_Position||'',Standard_LHM:std,Variance_LHM:num(r.Variance_LHM),Variance_Pct:vp,Consumption_Status:st,Standard_Match:r.Standard_Match||''};
     }).filter(r=>r.Date&&r.Unit_Code&&r.Fuel_Liter>0);
   }
   try{
@@ -36,11 +29,9 @@
     const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheet],{defval:''});
     window.FUEL_DATA=normalize(rows);
     if(!window.FUEL_DATA.length) throw new Error('No valid Fuel_Usage_Clean rows');
-  }catch(err){
-    console.error('Default fuel database load failed',err);
-    window.FUEL_DATA=[];
-  }
+  }catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];}
   const s=document.createElement('script');
-  s.src='app.js?v=5';
+  s.src='app.js?v=6';
+  s.onload=()=>{const p=document.createElement('script');p.src='v6.js?v=6';document.body.appendChild(p)};
   document.body.appendChild(s);
 })();

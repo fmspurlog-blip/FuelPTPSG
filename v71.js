@@ -1,19 +1,16 @@
 (()=>{
   const applyV71=()=>{
     try{
-      // Replace logo with requested text branding.
       const logoBox=document.querySelector('.logo-box');
       if(logoBox && !logoBox.querySelector('.refueling-brand')){
         logoBox.innerHTML='<div class="refueling-brand"><div class="rf-top">REFUELING</div><div class="rf-mid">CONTROL</div><div class="rf-site">PSG Site ABM</div></div>';
       }
 
-      // Remove number "2." from Fuel Stock heading.
       const stockHeading=document.querySelector('.stock-panel>h3');
       if(stockHeading){
         stockHeading.innerHTML=stockHeading.innerHTML.replace(/<em>\s*2\.\s*<\/em>\s*/i,'').replace(/^\s*2\.\s*/,'');
       }
 
-      // Replace production/support icons with lightweight inline SVG artwork.
       const icons=document.querySelectorAll('.unit-types .unit-icon');
       if(icons[0]){
         icons[0].innerHTML=`<svg viewBox="0 0 120 90" aria-label="Excavator" role="img">
@@ -44,8 +41,7 @@
         </svg>`;
       }
 
-      // Make Fuel Truck Distribution and Consumption Status legend text white.
-      const charts=window.state?.charts||{};
+      const charts=(typeof state!=='undefined' && state && state.charts)?state.charts:{};
       ['truck','status'].forEach(name=>{
         const c=charts[name];
         if(!c)return;
@@ -56,13 +52,11 @@
         c.update('none');
       });
 
-      // Version marker.
       const version=document.querySelector('.v7-version');
       if(version)version.textContent='Dashboard V7.1 Professional';
     }catch(err){console.warn('V7.1 patch skipped',err)}
   };
 
-  // Finite one-time retries only; no interval/observer loops.
   applyV71();
   setTimeout(applyV71,350);
   setTimeout(applyV71,1000);

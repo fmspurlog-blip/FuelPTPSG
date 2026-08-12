@@ -1,0 +1,62 @@
+/* Fuel Dashboard V7.1 Professional Alignment */
+/* Header KPI labels: larger and more readable */
+.kpis small,.recon-kpis small{
+  font-size:11px!important;
+  line-height:1.25;
+  font-weight:900!important;
+  color:#f4f8ff!important;
+  letter-spacing:.45px;
+}
+.kpis strong{font-size:28px!important}
+.recon-kpis strong{font-size:23px!important}
+.recon-kpis article{min-height:86px;padding:14px 16px}
+
+/* Refueling Control replacement brand */
+.logo-box{
+  height:104px!important;
+  padding:0!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:#fff!important;
+  border:1px solid #dce4eb!important;
+  border-radius:6px!important;
+}
+.refueling-brand{
+  width:100%;height:100%;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  font-family:Arial,Helvetica,sans-serif;font-weight:900;line-height:.96;
+  letter-spacing:.2px;padding:8px 5px;
+}
+.refueling-brand .rf-top{font-size:24px;font-style:italic;color:#124d8c}
+.refueling-brand .rf-mid{font-size:25px;font-style:italic;color:#e12727;margin:3px 0 4px}
+.refueling-brand .rf-site{font-size:17px;color:#153f78;letter-spacing:.3px}
+
+/* Fuel stock heading and panel */
+.stock-panel>h3{font-size:13px!important;color:#ffb12d!important}
+.stock-panel .stock-meta{margin-top:22px}
+.stock-cols h4{font-size:11px!important;color:#f4f8ff}
+
+/* Unit type graphics */
+.unit-icon{height:66px!important;margin:6px auto 7px!important;display:flex;align-items:center;justify-content:center}
+.unit-icon svg{width:78px;height:62px;overflow:visible}
+.unit-types>div:nth-child(2) .unit-icon svg{width:72px;height:60px}
+.unit-types small{font-size:10px!important;color:#f4f8ff}
+.unit-types strong{font-size:22px!important}
+
+/* Chart legends: white and high-contrast */
+#truckChart,#statusChart{filter:saturate(1.08)}
+
+/* Section headings slightly stronger */
+.title span{font-size:12px!important;font-weight:900!important;color:#ffb12d!important}
+
+/* Better desktop proportions */
+@media(min-width:1400px){
+  .kpis article{min-height:112px;padding:16px}
+  .recon-kpis article{min-height:90px}
+  .unit-types{margin-top:14px}
+}
+@media(max-width:900px){
+  .refueling-brand .rf-top{font-size:20px}.refueling-brand .rf-mid{font-size:21px}.refueling-brand .rf-site{font-size:14px}
+  .kpis small,.recon-kpis small{font-size:10px!important}
+}

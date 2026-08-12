@@ -8,7 +8,7 @@
 
   function polishCharts(){
     try{
-      const charts=(window.state&&window.state.charts)?window.state.charts:{};
+      const charts=(typeof state!=='undefined'&&state&&state.charts)?state.charts:{};
       ['truck','status'].forEach(name=>{
         const c=charts[name];
         if(!c||!c.options||!c.options.plugins||!c.options.plugins.legend)return;
@@ -34,8 +34,8 @@
   }
 
   function receiptRows(){
-    const source=(window.reconData&&Array.isArray(window.reconData.receiptDetails))
-      ? window.reconData.receiptDetails
+    const source=(typeof reconData!=='undefined'&&reconData&&Array.isArray(reconData.receiptDetails))
+      ? reconData.receiptDetails
       : ((window.RECON_DATA&&Array.isArray(window.RECON_DATA.receiptDetails))?window.RECON_DATA.receiptDetails:[]);
     const from=document.getElementById('dateFrom')?.value||'';
     const to=document.getElementById('dateTo')?.value||'';
@@ -62,16 +62,18 @@
   }
 
   function wrapReceiptRenderer(){
-    if(typeof window.renderReceiptPage==='function'&&!window.renderReceiptPage.$v72wrapped){
-      const original=window.renderReceiptPage;
-      const wrapped=function(){
-        const result=original.apply(this,arguments);
-        setTimeout(renderIncomingDetail,0);
-        return result;
-      };
-      wrapped.$v72wrapped=true;
-      window.renderReceiptPage=wrapped;
-    }
+    try{
+      if(typeof renderReceiptPage==='function'&&!renderReceiptPage.$v72wrapped){
+        const original=renderReceiptPage;
+        const wrapped=function(){
+          const result=original.apply(this,arguments);
+          setTimeout(renderIncomingDetail,0);
+          return result;
+        };
+        wrapped.$v72wrapped=true;
+        renderReceiptPage=wrapped;
+      }
+    }catch(err){console.warn('V7.2 receipt wrapper skipped',err);}
   }
 
   function applyV72(){

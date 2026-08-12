@@ -1,0 +1,18 @@
+/* Fuel Dashboard v6 final polish */
+.logo-box img{width:92%;height:auto;max-height:66px;object-fit:contain}
+.stock-row b{white-space:nowrap}
+.stock-value{min-width:52px;text-align:right}
+.truck-bars .bar-track{height:14px}
+.truck-bars .bar-fill{background:linear-gradient(180deg,#4dafff,#1474d8)}
+.trend-panel .chart{overflow:visible}
+@media(min-width:1400px){
+  .app{grid-template-columns:220px 1fr}
+  main{padding:12px 16px 22px}
+  .hero h1{font-size:27px}
+  .kpis article{height:104px}
+  .kpis strong{font-size:25px}
+  .row-top{grid-template-columns:1.22fr 1.52fr .98fr}
+  .stock-panel{min-height:315px}
+  .chart{height:265px}
+  .chart.medium{height:195px}
+}

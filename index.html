@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#061322">
+  <title>Fuel Management System | PT Prima Sarana Gemilang</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo-box"><div class="prima-text-logo">PRIMA</div></div>
+    <nav>
+      <a href="#dashboard" class="nav-link active" data-section="dashboard">◉ <span>Dashboard</span></a>
+      <a href="#fuel-usage" class="nav-link" data-section="fuel-usage">⛽ <span>Fuel Usage</span></a>
+      <a href="#fuel-stock-page" class="nav-link" data-section="fuel-stock-page">▣ <span>Fuel Stock</span></a>
+      <a href="#fuel-receipt" class="nav-link" data-section="fuel-receipt">▤ <span>Fuel Receipt</span></a>
+      <a href="#fuel-truck" class="nav-link" data-section="fuel-truck">▱ <span>Fuel Truck</span></a>
+      <a href="#efficiency-page" class="nav-link" data-section="efficiency-page">◔ <span>Efficiency</span></a>
+      <a href="#reports" class="nav-link" data-section="reports">▧ <span>Reports</span></a>
+      <a href="#data-quality" class="nav-link" data-section="data-quality">☷ <span>Data Quality</span></a>
+      <a href="#master-data" class="nav-link" data-section="master-data">⚙ <span>Master Data</span></a>
+    </nav>
+    <div class="side-card">
+      <small>PERIODE DATA</small>
+      <strong id="periodSide">-</strong>
+      <small>LAST UPDATE</small>
+      <strong id="updateSide">-</strong>
+      <small>STATUS DATA</small>
+      <strong class="valid">VALID</strong>
+    </div>
+    <div class="copyright">© 2026 PT Prima Sarana Gemilang</div>
+  </aside>
+
+  <main>
+    <header class="hero">
+      <div>
+        <h1>FUEL MANAGEMENT SYSTEM</h1>
+        <p>PT PRIMA SARANA GEMILANG</p>
+      </div>
+      <div class="hero-status">
+        <span>▣ Last Update : <strong id="topLastUpdate">-</strong></span>
+        <span class="valid-badge">▣ DATA VALID</span>
+      </div>
+    </header>
+
+    <section class="filters">
+      <div class="filter wide">
+        <label>PERIODE</label>
+        <div class="date-pair">
+          <input type="date" id="dateFrom"><span>s/d</span><input type="date" id="dateTo">
+        </div>
+      </div>
+      <div class="filter"><label>SHIFT</label><select id="shiftFilter"><option value="">All Shift</option></select></div>
+      <div class="filter"><label>CATEGORY</label><select id="categoryFilter"><option value="">All Category</option></select></div>
+      <div class="filter"><label>FUEL TRUCK</label><select id="truckFilter"><option value="">All Fuel Truck</option></select></div>
+      <div class="filter"><label>SEARCH UNIT</label><input id="unitSearch" type="search" placeholder="Search unit..."></div>
+      <label class="action upload">⇧<span>UPLOAD EXCEL</span><input type="file" id="excelUpload" accept=".xlsx,.xls" hidden></label>
+      <button class="action export" id="exportBtn">⇩<span>EXPORT CSV</span></button>
+      <button class="action reset" id="resetBtn">↻<span>RESET FILTER</span></button>
+    </section>
+
+    <div id="dashboard" class="app-section active-section">
+<section class="kpis">
+      <article><div class="ico blue">◒</div><div><small>TOTAL FUEL ISSUED</small><strong id="kpiFuel">0</strong><span>Liter</span></div></article>
+      <article><div class="ico green">↗</div><div><small>AVERAGE / DAY</small><strong id="kpiAvgDay">0</strong><span>Liter</span></div></article>
+      <article><div class="ico orange">▣</div><div><small>ACTIVE UNIT</small><strong id="kpiUnits">0</strong><span>Unit</span></div></article>
+      <article><div class="ico purple">◴</div><div><small>AVG ACTUAL L/HM</small><strong id="kpiAvgLHM">0</strong><span>L/HM</span></div></article>
+      <article><div class="ico red">△</div><div><small>OVER CONSUMPTION</small><strong id="kpiOver">0</strong><span id="kpiOverPct">0%</span></div></article>
+      <article><div class="ico green">◆</div><div><small>EFFICIENT</small><strong id="kpiEff">0</strong><span id="kpiEffPct">0%</span></div></article>
+    </section>
+
+    <section class="recon-kpis">
+      <article><small>FUEL RECEIPT</small><strong id="kpiReceipt">0</strong><span>Liter</span></article>
+      <article><small>BOOK CLOSING STOCK</small><strong id="kpiBookStock">0</strong><span>Liter</span></article>
+      <article><small>PHYSICAL CLOSING STOCK</small><strong id="kpiPhysicalStock">0</strong><span>Liter</span></article>
+      <article><small>STOCK VARIANCE</small><strong id="kpiVariance">0</strong><span id="kpiVariancePct">0%</span></article>
+      <article><small>RECON STATUS</small><strong id="kpiReconStatus">-</strong><span id="kpiReconDate">-</span></article>
+    </section>
+
+    <section class="row-top">
+      <article id="fuel-stock" class="panel stock-panel">
+        <h3><em>2.</em> FUEL STOCK</h3>
+        <div class="stock-meta"><span id="stockDay">-</span><strong id="stockDate">-</strong><span>Jam :</span><strong id="stockTime">-</strong></div>
+        <div class="stock-total"><small>TOTAL</small><div class="stock-orb"><strong id="stockTotal">0</strong><span>Liter</span></div></div>
+        <div class="stock-cols">
+          <div>
+            <h4>FUEL STORAGE<br><small>(STATIC TANK)</small></h4>
+            <div id="storageList" class="stock-list"></div>
+          </div>
+          <div>
+            <h4>FUEL TRUCK</h4>
+            <div id="truckStockList" class="stock-list truck-bars"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel trend-panel">
+        <div class="title"><span>TREND</span><h3>Daily Fuel Consumption <small>(Liter)</small></h3></div>
+        <div class="chart"><canvas id="dailyChart"></canvas></div>
+      </article>
+
+      <article class="panel shift-panel">
+        <div class="title"><span>SHIFT MIX</span><h3>Day vs Night</h3></div>
+        <div class="shift-content">
+          <div class="chart donut"><canvas id="shiftChart"></canvas></div>
+          <div id="shiftLegend" class="shift-legend"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="row-middle">
+      <article class="panel unit-type-panel">
+        <div class="title"><span>TOTAL CONSUMPTION BY UNIT TYPE</span></div>
+        <div class="unit-types">
+          <div><small>PRODUKSI</small><div class="unit-icon">♜</div><strong id="productionFuel">0</strong><span>Liter</span><b id="productionPct">0%</b></div>
+          <div><small>GENERAL SUPPORT</small><div class="unit-icon">●●●</div><strong id="supportFuel">0</strong><span>Liter</span><b id="supportPct">0%</b></div>
+        </div>
+      </article>
+
+      <article class="panel"><div class="title"><span>CONSUMPTION BY CATEGORY</span></div><div class="chart medium"><canvas id="categoryChart"></canvas></div></article>
+      <article class="panel"><div class="title"><span>FUEL TRUCK DISTRIBUTION</span></div><div class="chart medium"><canvas id="truckChart"></canvas></div></article>
+      <article id="efficiency" class="panel"><div class="title"><span>CONSUMPTION STATUS</span></div><div class="chart medium"><canvas id="statusChart"></canvas></div></article>
+    </section>
+
+    <section class="recon-row">
+      <article class="panel recon-chart-panel">
+        <div class="title"><span>FUEL RECONCILIATION TREND</span><h3>Book Stock vs Physical Stock</h3></div>
+        <div class="chart recon-chart"><canvas id="reconChart"></canvas></div>
+      </article>
+      <article class="panel recon-summary-panel">
+        <div class="title"><span>DAILY RECONCILIATION</span><h3>Opening + Receipt − Issued = Book Closing</h3></div>
+        <div id="reconSummary" class="recon-summary"></div>
+      </article>
+    </section>
+
+    <section class="row-bottom">
+      <article class="panel rank"><div class="title"><span>TOP 5 FUEL CONSUMER <i>(LITER)</i></span></div><div id="topConsumers"></div></article>
+      <article class="panel rank"><div class="title red-title"><span>TOP 5 OVER CONSUMPTION <i>(VAR %)</i></span></div><div id="topOver"></div></article>
+      <article class="panel rank"><div class="title green-title"><span>TOP 5 EFFICIENT UNIT <i>(VAR %)</i></span></div><div id="topEfficient"></div></article>
+      <article id="transactions" class="panel recent">
+        <div class="title"><span>RECENT FUEL TRANSACTION</span></div>
+        <div class="table-wrap">
+          <table><thead><tr><th>DATE</th><th>TIME</th><th>SHIFT</th><th>UNIT</th><th>CATEGORY</th><th>FUEL TRUCK</th><th>LITER</th><th>L/HM</th><th>STATUS</th></tr></thead>
+          <tbody id="transactionBody"></tbody></table>
+        </div>
+        <div class="pager"><button id="prevPage">‹</button><span id="pageInfo">1 / 1</span><button id="nextPage">›</button></div>
+      </article>
+    </section>
+
+    
+</div>
+
+<section id="fuel-usage" class="app-section page-section">
+  <div class="page-heading"><div><span>FUEL USAGE</span><h2>Fuel Consumption & Transaction Analysis</h2></div><button class="section-export" data-export="usage">EXPORT CSV</button></div>
+  <div class="page-kpis">
+    <article><small>TOTAL ISSUED</small><strong id="usageTotal">0</strong><span>Liter</span></article>
+    <article><small>TRANSACTIONS</small><strong id="usageTransactions">0</strong><span>Rows</span></article>
+    <article><small>ACTIVE UNIT</small><strong id="usageUnits">0</strong><span>Unit</span></article>
+    <article><small>AVG PER TRANSACTION</small><strong id="usageAvgTxn">0</strong><span>Liter</span></article>
+  </div>
+  <div class="page-grid two">
+    <article class="panel"><div class="title"><span>DAILY FUEL USAGE</span><h3>Consumption by Date</h3></div><div class="chart page-chart"><canvas id="usageDailyChart"></canvas></div></article>
+    <article class="panel"><div class="title"><span>TOP UNIT</span><h3>Highest Fuel Consumer</h3></div><div id="usageTopUnits" class="page-list"></div></article>
+  </div>
+  <article class="panel"><div class="title"><span>ALL TRANSACTIONS</span></div><div class="table-wrap page-table"><table><thead><tr><th>DATE</th><th>TIME</th><th>SHIFT</th><th>UNIT</th><th>CATEGORY</th><th>FUEL TRUCK</th><th>LITER</th><th>ACTUAL L/HM</th><th>STANDARD</th><th>VAR %</th><th>STATUS</th></tr></thead><tbody id="usageTableBody"></tbody></table></div></article>
+</section>
+
+<section id="fuel-stock-page" class="app-section page-section">
+  <div class="page-heading"><div><span>FUEL STOCK</span><h2>Physical Stock Monitoring</h2></div></div>
+  <div class="page-kpis">
+    <article><small>TOTAL PHYSICAL STOCK</small><strong id="stockPageTotal">0</strong><span>Liter</span></article>
+    <article><small>STATIC TANK STOCK</small><strong id="stockPageFS">0</strong><span>Liter</span></article>
+    <article><small>FUEL TRUCK STOCK</small><strong id="stockPageFT">0</strong><span>Liter</span></article>
+    <article><small>SNAPSHOT DATE</small><strong id="stockPageDate">-</strong><span id="stockPageTime">-</span></article>
+  </div>
+  <div class="page-grid two">
+    <article class="panel"><div class="title"><span>STATIC TANK</span><h3>FS01 - FS06</h3></div><div class="chart page-chart"><canvas id="stockFSChart"></canvas></div></article>
+    <article class="panel"><div class="title"><span>FUEL TRUCK</span><h3>Current Stock per Truck</h3></div><div class="chart page-chart"><canvas id="stockFTChart"></canvas></div></article>
+  </div>
+  <article class="panel"><div class="title"><span>STOCK TREND</span><h3>Total Physical Stock by Date</h3></div><div class="chart page-chart"><canvas id="stockTrendChart"></canvas></div></article>
+</section>
+
+<section id="fuel-receipt" class="app-section page-section">
+  <div class="page-heading"><div><span>FUEL RECEIPT</span><h2>Fuel Incoming Monitoring</h2></div></div>
+  <div class="page-kpis">
+    <article><small>TOTAL RECEIPT</small><strong id="receiptTotal">0</strong><span>Liter</span></article>
+    <article><small>RECEIPT DAYS</small><strong id="receiptDays">0</strong><span>Days</span></article>
+    <article><small>AVG RECEIPT / DAY</small><strong id="receiptAvg">0</strong><span>Liter</span></article>
+    <article><small>LAST RECEIPT</small><strong id="receiptLast">-</strong><span id="receiptLastQty">0 L</span></article>
+  </div>
+  <div class="page-grid two">
+    <article class="panel"><div class="title"><span>DAILY RECEIPT</span><h3>Fuel Incoming by Date</h3></div><div class="chart page-chart"><canvas id="receiptChart"></canvas></div></article>
+    <article class="panel"><div class="title"><span>RECENT RECEIPT</span><h3>Latest Deliveries</h3></div><div id="receiptList" class="page-list"></div></article>
+  </div>
+</section>
+
+<section id="fuel-truck" class="app-section page-section">
+  <div class="page-heading"><div><span>FUEL TRUCK</span><h2>Distribution & Truck Performance</h2></div></div>
+  <div class="page-grid two">
+    <article class="panel"><div class="title"><span>DISTRIBUTION</span><h3>Total Issued by Fuel Truck</h3></div><div class="chart page-chart"><canvas id="truckPageChart"></canvas></div></article>
+    <article class="panel"><div class="title"><span>TRANSACTION COUNT</span><h3>Transactions per Fuel Truck</h3></div><div class="chart page-chart"><canvas id="truckTxnChart"></canvas></div></article>
+  </div>
+  <article class="panel"><div class="title"><span>TRUCK SUMMARY</span></div><div id="truckSummaryList" class="page-list"></div></article>
+</section>
+
+<section id="efficiency-page" class="app-section page-section">
+  <div class="page-heading"><div><span>EFFICIENCY</span><h2>Actual vs Standard Fuel Consumption</h2></div></div>
+  <div class="page-kpis">
+    <article><small>EFFICIENT</small><strong id="effPageEff">0</strong><span>Transactions</span></article>
+    <article><small>NORMAL</small><strong id="effPageNormal">0</strong><span>Transactions</span></article>
+    <article><small>WARNING</small><strong id="effPageWarning">0</strong><span>Transactions</span></article>
+    <article><small>OVER CONSUMPTION</small><strong id="effPageOver">0</strong><span>Transactions</span></article>
+  </div>
+  <div class="page-grid two">
+    <article class="panel"><div class="title"><span>STATUS DISTRIBUTION</span></div><div class="chart page-chart"><canvas id="effStatusChart"></canvas></div></article>
+    <article class="panel"><div class="title"><span>TOP VARIANCE</span></div><div id="effVarianceList" class="page-list"></div></article>
+  </div>
+</section>
+
+<section id="reports" class="app-section page-section">
+  <div class="page-heading"><div><span>REPORTS</span><h2>Fuel Operational Summary</h2></div><button class="section-export" id="downloadReconCsv">DOWNLOAD RECON CSV</button></div>
+  <div class="report-cards">
+    <article class="report-card"><h3>Fuel Usage Report</h3><p>Daily fuel consumption, units, shift, category, L/HM and status.</p><button data-report="usage">Export Usage CSV</button></article>
+    <article class="report-card"><h3>Stock Reconciliation</h3><p>Opening, Receipt, Issued, Book Closing, Physical Closing and Variance.</p><button data-report="recon">Export Reconciliation CSV</button></article>
+    <article class="report-card"><h3>Fuel Receipt Report</h3><p>Daily incoming fuel deliveries from the cleaned source data.</p><button data-report="receipt">Export Receipt CSV</button></article>
+  </div>
+</section>
+
+<section id="data-quality" class="app-section page-section">
+  <div class="page-heading"><div><span>DATA QUALITY</span><h2>Database Validation & Completeness</h2></div></div>
+  <div class="quality-grid" id="qualityGrid"></div>
+</section>
+
+<section id="master-data" class="app-section page-section">
+  <div class="page-heading"><div><span>MASTER DATA</span><h2>Unit & Consumption Standard</h2></div></div>
+  <div class="page-kpis">
+    <article><small>UNIQUE UNIT</small><strong id="masterUnitCount">0</strong><span>Unit</span></article>
+    <article><small>WITH STANDARD</small><strong id="masterStdCount">0</strong><span>Unit</span></article>
+    <article><small>NO STANDARD</small><strong id="masterNoStdCount">0</strong><span>Unit</span></article>
+    <article><small>CATEGORIES</small><strong id="masterCatCount">0</strong><span>Category</span></article>
+  </div>
+  <article class="panel"><div class="title"><span>MASTER UNIT SUMMARY</span></div><div class="table-wrap page-table"><table><thead><tr><th>UNIT</th><th>CATEGORY</th><th>UNIT TYPE</th><th>STANDARD L/HM</th><th>MATCH</th></tr></thead><tbody id="masterTableBody"></tbody></table></div></article>
+</section>
+
+<footer>• L/HM : Liter per Engine Hour &nbsp; | &nbsp; HM : Engine Hour &nbsp; | &nbsp; KM : Kilometer</footer>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="data/fuel_data.js"></script>
+<script src="data/stock_data.js"></script>
+<script src="data/reconciliation_data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

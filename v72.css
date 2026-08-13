@@ -1,120 +1,94 @@
-/* Fuel Dashboard V7.2 readability & incoming monitoring */
+/* Dashboard V7.2.3 - target layout refresh */
 
-/* Shift Mix: slimmer donut so center values stay comfortably inside */
-.shift-content{
-  grid-template-columns:.88fr 1.12fr!important;
-  gap:10px!important;
-}
-.shift-content .chart.donut{
-  width:172px!important;
-  max-width:100%!important;
-  height:182px!important;
-  justify-self:center!important;
-  align-self:center!important;
-}
-.shift-panel{overflow:hidden}
+/* Brand / logo */
+.logo-box{height:72px!important;background:#fff!important;border-radius:0!important;margin:4px 0 16px!important;overflow:hidden!important;position:relative!important}
+.logo-box .prima-text-logo{display:none!important}
+.logo-box::before{content:"";position:absolute;inset:4px 7px;background:#fff url("data:image/jpeg;base64,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") center/contain no-repeat}
 
-/* Fuel Truck Distribution & Consumption Status: guaranteed white HTML legends */
-.v72-chart-with-legend{
-  display:grid!important;
-  grid-template-columns:minmax(115px,.95fr) minmax(128px,1.05fr)!important;
-  gap:8px!important;
-  align-items:center!important;
-  height:175px!important;
-}
-.v72-chart-with-legend>canvas{
-  position:relative!important;
-  width:100%!important;
-  height:160px!important;
-  max-width:160px!important;
-  justify-self:center!important;
-}
-.v72-html-legend{
-  display:grid;
-  gap:9px;
-  align-content:center;
-  min-width:0;
-  padding-right:2px;
-}
-.v72-legend-row{
-  display:grid;
-  grid-template-columns:9px minmax(0,1fr);
-  gap:7px;
-  align-items:start;
-  color:#ffffff!important;
-  font-size:8.5px!important;
-  font-weight:800!important;
-  line-height:1.32!important;
-  text-shadow:0 1px 2px rgba(0,0,0,.7);
-}
-.v72-legend-row i{
-  width:9px;height:9px;margin-top:1px;border-radius:1px;box-shadow:0 0 4px rgba(255,255,255,.12)
-}
-.v72-legend-row span{
-  color:#ffffff!important;
-  opacity:1!important;
-  overflow-wrap:anywhere;
-}
-.v72-status-legend{gap:7px}
+/* Main target proportions */
+body{background:radial-gradient(circle at 68% 0,#08243e 0,#03101d 45%)!important}
+.app{grid-template-columns:202px 1fr!important}
+.sidebar{padding:7px!important;background:linear-gradient(180deg,#06192b,#08213a)!important}
+.nav-link{height:44px!important;padding:0 13px!important;font-size:13px!important;border-radius:5px!important}
+.nav-link.active{background:linear-gradient(90deg,#0d6eea,#347ff7)!important;box-shadow:0 4px 16px rgba(0,105,235,.35)!important}
+.side-card{padding:14px 12px!important;border-color:#203f5a!important}
+main{padding:10px 13px 16px!important}
+.hero{height:63px!important;align-items:flex-start!important}
+.hero h1{font-size:24px!important;letter-spacing:.2px!important;margin-top:4px!important}
+.hero p{font-size:12px!important}
+.hero-status{margin-top:14px!important}
+
+/* Target compact filter bar */
+.filters{grid-template-columns:2.2fr 1fr 1fr 1fr 1.2fr 108px 108px 108px!important;gap:10px!important;padding:11px 13px!important;margin-bottom:12px!important;border-color:#28465f!important;background:#0a1d31!important}
+.filter input,.filter select{height:34px!important}
+.action{min-height:52px!important}
+.export span{font-size:0!important}
+.export span::after{content:"EXPORT REPORT";font-size:8px!important}
+
+/* Target dashboard: hide reconciliation cards/row on HOME only */
+#dashboard>.recon-kpis,#dashboard>.recon-row{display:none!important}
+
+/* KPI cards */
+.kpis{gap:10px!important;margin-bottom:10px!important}
+.kpis article{height:96px!important;padding:11px 12px!important;border-color:#29465f!important;background:linear-gradient(145deg,#0c2238,#091b2c)!important}
+.kpis small{font-size:9px!important;letter-spacing:.35px!important}
+.kpis strong{font-size:23px!important;margin-top:5px!important}
+.ico{width:45px!important;height:45px!important;font-size:20px!important}
+
+/* Main three panels */
+.row-top{grid-template-columns:1.28fr 1.28fr 1fr!important;gap:10px!important;margin-bottom:10px!important}
+.panel{border-color:#2a4963!important;background:linear-gradient(145deg,#0b2035,#07192b)!important}
+.stock-panel{min-height:300px!important}
+.stock-meta{margin-top:20px!important}
+.stock-orb{width:92px!important;height:92px!important}
+.chart{height:245px!important}
+.shift-content{grid-template-columns:1fr .92fr!important;gap:7px!important}
+.shift-content .chart.donut{width:188px!important;height:205px!important;justify-self:center!important}
+.shift-legend{gap:18px!important}
+.shift-item strong{font-size:17px!important}
+
+/* Middle row like target */
+.row-middle{grid-template-columns:1.05fr 1.03fr 1.02fr 1.25fr!important;gap:10px!important;margin-bottom:10px!important}
+.chart.medium{height:175px!important}
+.unit-types{margin-top:17px!important}
+
+/* Bottom row */
+.row-bottom{grid-template-columns:.73fr .73fr .73fr 2.31fr!important;gap:10px!important}
+.rank-line{font-size:10px!important}
+.recent th,.recent td{font-size:8.5px!important;padding:6px!important}
+
+/* White readable legends */
+.v72-chart-with-legend{display:grid!important;grid-template-columns:minmax(112px,.95fr) minmax(128px,1.05fr)!important;gap:8px!important;align-items:center!important;height:175px!important}
+.v72-chart-with-legend>canvas{position:relative!important;width:100%!important;height:158px!important;max-width:158px!important;justify-self:center!important}
+.v72-html-legend{display:grid!important;gap:8px!important;align-content:center!important;min-width:0!important;padding-right:2px!important}
+.v72-legend-row{display:grid!important;grid-template-columns:9px minmax(0,1fr)!important;gap:7px!important;align-items:start!important;color:#fff!important;font-size:8.4px!important;font-weight:800!important;line-height:1.28!important;text-shadow:0 1px 2px rgba(0,0,0,.7)!important}
+.v72-legend-row i{width:9px!important;height:9px!important;margin-top:1px!important;border-radius:50%!important}
+.v72-legend-row span{color:#fff!important;opacity:1!important;overflow-wrap:anywhere!important}
+.v72-status-legend{gap:7px!important}
 .v72-status-legend .v72-legend-row{font-size:7.8px!important}
 
-/* Fuel Incoming Monitoring detail table */
-.receipt-detail-wrap{
-  margin-top:12px;
-  max-height:340px;
-  overflow:auto;
-  border:1px solid #24435f;
-  border-radius:7px;
-  background:#081a2b;
-}
-.receipt-detail-table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:640px;
-}
-.receipt-detail-table th,
-.receipt-detail-table td{
-  padding:10px 9px;
-  border-bottom:1px solid #1d3a54;
-  text-align:left;
-  font-size:10px;
-  color:#ffffff;
-}
-.receipt-detail-table th{
-  position:sticky;
-  top:0;
-  z-index:2;
-  background:#0d2740;
-  color:#ffffff;
-  font-size:9px;
-  font-weight:900;
-  letter-spacing:.25px;
-}
-.receipt-detail-table td:last-child{
-  text-align:right;
-  font-weight:900;
-}
-.receipt-empty-row td{
-  text-align:center!important;
-  color:#9fb4c9!important;
-  font-weight:500!important;
-  padding:22px 10px!important;
-}
+/* Fuel incoming detail */
+.receipt-detail-wrap{margin-top:12px;max-height:340px;overflow:auto;border:1px solid #24435f;border-radius:7px;background:#081a2b}
+.receipt-detail-table{width:100%;border-collapse:collapse;min-width:640px}
+.receipt-detail-table th,.receipt-detail-table td{padding:10px 9px;border-bottom:1px solid #1d3a54;text-align:left;font-size:10px;color:#fff}
+.receipt-detail-table th{position:sticky;top:0;z-index:2;background:#0d2740;color:#fff;font-size:9px;font-weight:900;letter-spacing:.25px}
+.receipt-detail-table td:last-child{text-align:right;font-weight:900}
+.receipt-empty-row td{text-align:center!important;color:#9fb4c9!important;font-weight:500!important;padding:22px 10px!important}
 
-@media(min-width:1400px){
-  .shift-content .chart.donut{width:178px!important;height:188px!important}
-  .v72-legend-row{font-size:8.8px!important}
-  .v72-status-legend .v72-legend-row{font-size:8px!important}
+@media(min-width:1500px){
+ .shift-content .chart.donut{width:198px!important;height:212px!important}
+ .v72-legend-row{font-size:8.7px!important}
 }
-@media(max-width:1100px){
-  .shift-content{grid-template-columns:1fr 1fr!important}
-  .shift-content .chart.donut{width:166px!important;height:176px!important}
-  .v72-chart-with-legend{grid-template-columns:1fr 1fr!important}
+@media(max-width:1300px){
+ .filters{grid-template-columns:repeat(5,1fr)!important}
+ .kpis{grid-template-columns:repeat(3,1fr)!important}
+ .row-top,.row-middle,.row-bottom{grid-template-columns:1fr 1fr!important}
+ .recent{grid-column:1/-1!important}
 }
 @media(max-width:850px){
-  .shift-content{grid-template-columns:1fr!important}
-  .shift-content .chart.donut{width:190px!important;height:190px!important}
-  .v72-chart-with-legend{grid-template-columns:1fr!important;height:auto!important}
-  .v72-chart-with-legend>canvas{height:170px!important;max-width:170px!important}
-  .v72-html-legend{padding:0 12px 8px}
+ .logo-box{width:170px!important}
+ .filters{grid-template-columns:1fr 1fr!important}
+ .kpis,.row-top,.row-middle,.row-bottom{grid-template-columns:1fr!important}
+ .shift-content{grid-template-columns:1fr!important}
+ .v72-chart-with-legend{grid-template-columns:1fr!important;height:auto!important}
 }

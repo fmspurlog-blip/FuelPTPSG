@@ -1,0 +1,75 @@
+/* FuelPTPSG v72.4 compact dashboard refinements */
+
+/* Keep PRIMA logo clean: crop/zoom the existing embedded logo and hide any lower artifact */
+.logo-box{height:66px!important;margin:4px 0 12px!important;overflow:hidden!important;background:#fff!important}
+.logo-box::before{inset:2px 8px 7px!important;background-size:92% auto!important;background-position:center 42%!important;background-repeat:no-repeat!important;transform:scale(1.03);transform-origin:center}
+.logo-box::after{content:"";position:absolute;left:0;right:0;bottom:0;height:8px;background:#fff;z-index:3}
+
+/* Header & KPI slightly more compact so bottom tables remain visible */
+.hero{height:56px!important}
+.hero h1{font-size:23px!important;margin:2px 0 5px!important}
+.hero p{font-size:11px!important;text-transform:none!important}
+.hero-status{margin-top:9px!important}
+.filters{padding:8px 11px!important;margin-bottom:9px!important}
+.action{min-height:46px!important}
+.kpis{margin-bottom:8px!important;gap:8px!important}
+.kpis article{height:82px!important;padding:9px 11px!important}
+.kpis strong{font-size:21px!important;margin-top:3px!important}
+.kpis small{font-size:8.5px!important}
+.ico{width:40px!important;height:40px!important}
+
+/* Pull Fuel Stock / Trend / Shift upward and reduce their vertical footprint */
+.row-top{gap:8px!important;margin-bottom:8px!important;align-items:stretch!important}
+.row-top>.panel{height:248px!important;min-height:248px!important;padding:10px!important;overflow:hidden!important}
+.stock-panel{min-height:248px!important}
+.stock-meta{margin:12px 0 3px!important;font-size:9px!important}
+.stock-total{top:14px!important}
+.stock-orb{width:74px!important;height:74px!important;margin-top:3px!important}
+.stock-orb strong{font-size:18px!important}
+.stock-cols{margin-top:30px!important;gap:20px!important}
+.stock-cols h4{font-size:9px!important;margin-bottom:6px!important}
+.stock-list{gap:5px!important}
+.stock-row{font-size:9px!important;grid-template-columns:62px 1fr auto!important}
+.bar-track{height:9px!important}
+.stock-value{font-size:9px!important}
+.row-top .chart{height:190px!important}
+.trend-panel .chart{height:188px!important;margin-top:1px!important}
+.shift-content{grid-template-columns:.88fr 1.12fr!important;gap:4px!important}
+.shift-content .chart.donut{width:150px!important;height:160px!important}
+.shift-legend{gap:10px!important}
+.shift-item strong{font-size:14px!important;margin:3px 0!important}
+.shift-item span{font-size:9px!important}
+
+/* Make the second chart row compact as well */
+.row-middle{gap:8px!important;margin-bottom:8px!important}
+.row-middle>.panel{height:164px!important;min-height:164px!important;padding:9px!important;overflow:hidden!important}
+.row-middle .chart.medium{height:122px!important}
+.unit-types{margin-top:8px!important}
+.unit-icon{font-size:25px!important;height:32px!important;margin-top:4px!important}
+.unit-types strong{font-size:17px!important}
+.v72-chart-with-legend{height:122px!important;grid-template-columns:minmax(92px,.9fr) minmax(110px,1.1fr)!important}
+.v72-chart-with-legend>canvas{height:112px!important;max-width:112px!important}
+.v72-html-legend{gap:5px!important}
+.v72-legend-row{font-size:7.4px!important;line-height:1.18!important}
+.v72-status-legend .v72-legend-row{font-size:7px!important}
+
+/* Bottom row should be readable without browser zooming out */
+.row-bottom{gap:8px!important}
+.row-bottom>.panel{padding:9px!important}
+.rank>div:last-child{gap:6px!important;margin-top:10px!important}
+.rank-line{font-size:9px!important}
+.recent th,.recent td{padding:5px 5px!important;font-size:8.2px!important}
+.table-wrap{margin-top:6px!important}
+
+/* Fuel Usage > All Transactions status colors */
+#usageTableBody td:last-child{font-weight:900!important}
+#usageTableBody td.status-over,#usageTableBody td[data-status="OVER CONSUMPTION"]{color:#ff5148!important}
+#usageTableBody td.status-standard,#usageTableBody td[data-status="NORMAL"],#usageTableBody td[data-status="EFFICIENT"]{color:#35d777!important}
+#usageTableBody td.status-warning,#usageTableBody td[data-status="WARNING"]{color:#ffb12d!important}
+#usageTableBody td.status-no-standard,#usageTableBody td[data-status="NO STANDARD"],#usageTableBody td[data-status="NO DATA"]{color:#ffffff!important}
+
+@media(max-width:1300px){
+ .row-top>.panel,.row-middle>.panel{height:auto!important;min-height:0!important;overflow:visible!important}
+ .row-top .chart,.trend-panel .chart{height:220px!important}
+ .row-middle .chart.medium{height:170px!important}
+}

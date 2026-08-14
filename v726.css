@@ -1,0 +1,85 @@
+/* FuelPTPSG v72.6 - dashboard polish + A4 landscape print */
+
+/* Clean PRIMA logo: cover the thin artifact/shadow at the very top */
+.logo-box{height:66px!important;background:#fff!important;overflow:hidden!important;position:relative!important}
+.logo-box::before{inset:-4px 8px 2px!important;background-size:92% auto!important;background-position:center 48%!important;filter:brightness(1.08) contrast(1.04)!important;transform:none!important}
+.logo-box::after{content:""!important;position:absolute!important;left:0!important;right:0!important;top:0!important;bottom:auto!important;height:7px!important;background:#fff!important;z-index:5!important;box-shadow:0 2px 4px rgba(255,255,255,.95)!important}
+
+/* Pull filter row closer to the company subtitle */
+.hero{height:47px!important;min-height:47px!important;margin-bottom:2px!important}
+.hero h1{margin:0 0 1px!important}
+.hero p{margin:0!important;line-height:1.05!important}
+.filters{margin-top:0!important}
+
+/* Main row proportions: smaller stock + slimmer Shift Mix, wider Trend */
+.row-top{grid-template-columns:1.02fr 1.58fr .78fr!important;gap:8px!important}
+.row-top>.panel{height:238px!important;min-height:238px!important}
+.trend-panel .chart{height:184px!important}
+.shift-panel{padding-left:9px!important;padding-right:9px!important}
+.shift-content{grid-template-columns:118px minmax(108px,1fr)!important;gap:2px!important;align-items:center!important}
+.shift-content .chart.donut{width:118px!important;height:138px!important}
+.shift-legend{gap:7px!important}
+.shift-item strong{font-size:12.5px!important;white-space:nowrap!important}
+.shift-item small{font-size:8px!important}
+.shift-item span{font-size:8px!important}
+
+/* Fuel stock compact layout and total stock moved under fuel truck list */
+.stock-panel{padding-bottom:8px!important}
+.stock-cols{margin-top:22px!important;grid-template-columns:1fr 1.12fr!important;gap:12px!important}
+.stock-list{gap:3px!important}
+.stock-row{min-height:15px!important;line-height:15px!important}
+.stock-total.v726-stock-total{position:static!important;display:flex!important;align-items:baseline!important;justify-content:flex-start!important;gap:6px!important;margin:7px 0 0 0!important;padding:6px 0 0!important;border-top:1px solid rgba(80,122,157,.35)!important;transform:none!important}
+.stock-total.v726-stock-total small{font-size:8.5px!important;font-weight:900!important;color:#dbe9f7!important;letter-spacing:.3px!important}
+.stock-total.v726-stock-total .stock-orb{width:auto!important;height:auto!important;border:0!important;background:none!important;box-shadow:none!important;display:flex!important;align-items:baseline!important;gap:4px!important;margin:0!important;padding:0!important}
+.stock-total.v726-stock-total .stock-orb strong{font-size:18px!important;color:#55a8ff!important;line-height:1!important}
+.stock-total.v726-stock-total .stock-orb span{font-size:9px!important;color:#fff!important}
+
+/* Trend: remove legend footprint */
+.trend-panel .chart{margin-bottom:0!important}
+
+/* Unit type values below artwork, in one line */
+.unit-types{margin-top:4px!important;align-items:start!important}
+.unit-types>div{position:relative!important;padding-bottom:4px!important;overflow:visible!important}
+.unit-icon{height:58px!important;margin:0 auto 5px!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.unit-types strong{display:inline-block!important;position:relative!important;z-index:4!important;font-size:16px!important;line-height:1.05!important;margin-top:7px!important;color:#fff!important;text-shadow:0 2px 3px #000!important}
+.unit-types strong+span{display:inline-block!important;font-size:8.5px!important;margin-left:3px!important;color:#fff!important;vertical-align:baseline!important}
+.unit-types b{display:block!important;margin-top:3px!important;font-size:9px!important;position:relative!important;z-index:4!important}
+
+/* Category chart: reserve room for Dump Truck value labels */
+.row-middle .panel:nth-child(2) .chart.medium{padding-right:2px!important}
+
+/* Larger readable truck/status legends */
+.v72-truck-legend .v72-legend-row{font-size:9.8px!important;line-height:1.24!important;font-weight:800!important}
+.v72-truck-legend .v72-legend-row span{color:#f5f9ff!important}
+.v72-status-legend .v72-legend-row{font-size:8.1px!important;line-height:1.25!important;font-weight:800!important}
+.v72-status-legend .v72-legend-row span{color:#f5f9ff!important}
+
+/* Reports: hide Stock Reconciliation export */
+#downloadReconCsv{display:none!important}
+#reports .report-card.v726-print-card button{background:linear-gradient(180deg,#2388ff,#0b66d8)!important;color:#fff!important;font-weight:900!important}
+
+/* Print a clean one-page dashboard */
+@page{size:A4 landscape;margin:5mm}
+@media print{
+  html,body{background:#fff!important;width:100%!important;height:auto!important;overflow:visible!important}
+  body.print-dashboard .app{display:block!important;width:100%!important;min-height:0!important}
+  body.print-dashboard .sidebar,
+  body.print-dashboard .filters,
+  body.print-dashboard .hero-status,
+  body.print-dashboard .app-section:not(#dashboard),
+  body.print-dashboard .pager{display:none!important}
+  body.print-dashboard main{display:block!important;width:100%!important;padding:0!important;margin:0!important;background:#061322!important}
+  body.print-dashboard .hero{display:flex!important;height:44px!important;padding:4px 8px!important;margin:0 0 4px!important}
+  body.print-dashboard #dashboard{display:block!important;zoom:.62!important;width:100%!important;background:#061322!important;padding:0!important;margin:0!important}
+  body.print-dashboard .panel,
+  body.print-dashboard .kpis article{break-inside:avoid!important;page-break-inside:avoid!important}
+  body.print-dashboard .row-top>.panel{height:238px!important;min-height:238px!important}
+  body.print-dashboard .row-middle>.panel{height:164px!important;min-height:164px!important}
+  body.print-dashboard .copyright{display:none!important}
+}
+
+@media(max-width:1300px){
+  .row-top{grid-template-columns:1fr!important}
+  .row-top>.panel{height:auto!important;min-height:0!important}
+  .shift-content{grid-template-columns:150px 1fr!important}
+}

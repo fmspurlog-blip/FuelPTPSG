@@ -1,0 +1,39 @@
+/* FuelPTPSG v72.7 - visual + export refinement */
+.logo-box{height:66px!important;background:#fff!important;overflow:hidden!important}
+.logo-box::after{display:none!important;content:none!important}
+.logo-box::before{inset:3px 10px!important;background-size:88% auto!important;background-position:center center!important;filter:none!important;box-shadow:none!important}
+
+/* Restore a strong, readable stock total orb */
+.stock-panel .stock-cols{grid-template-columns:1fr 1.08fr!important}
+.stock-total.v726-stock-total{position:absolute!important;display:block!important;left:18px!important;top:72px!important;width:132px!important;height:132px!important;border:0!important;margin:0!important;padding:0!important;z-index:4!important}
+.stock-total.v726-stock-total>small{position:absolute!important;top:24px!important;left:0!important;right:0!important;text-align:center!important;color:#fff!important;font-size:9px!important;font-weight:900!important;z-index:2!important}
+.stock-total.v726-stock-total .stock-orb{width:132px!important;height:132px!important;border-radius:50%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;background:radial-gradient(circle at 50% 45%,#173a58 0,#09243b 53%,#07192b 57%)!important;border:9px solid #ff982d!important;box-shadow:0 0 18px rgba(255,145,35,.65),inset 0 0 20px rgba(20,120,210,.25)!important}
+.stock-total.v726-stock-total .stock-orb strong{font-size:25px!important;line-height:1!important;color:#fff!important;text-shadow:0 2px 7px #000!important}
+.stock-total.v726-stock-total .stock-orb span{font-size:10px!important;color:#fff!important}
+.stock-panel .stock-cols{padding-left:145px!important;margin-top:22px!important}
+
+/* Daily chart must always have visible plotting area */
+.trend-panel .chart{display:block!important;position:relative!important;height:184px!important;min-height:184px!important;overflow:visible!important}
+#dailyChart{display:block!important;width:100%!important;height:100%!important;opacity:1!important;visibility:visible!important}
+
+/* Cleaner, fuller donut cards */
+.row-middle .chart.medium{height:132px!important;min-height:132px!important}
+.v72-chart-with-legend{grid-template-columns:minmax(105px,.9fr) minmax(145px,1.1fr)!important;align-items:center!important;gap:8px!important}
+.v72-chart-with-legend canvas{max-width:126px!important;max-height:126px!important;margin:auto!important}
+.v72-html-legend{gap:7px!important}
+.v72-legend-row{white-space:normal!important;overflow:visible!important}
+.v72-legend-row span{line-height:1.25!important}
+
+/* Top 5 over consumption heading: keep VAR % tidy */
+.row-bottom .rank .title span{display:flex!important;align-items:baseline!important;gap:5px!important;white-space:nowrap!important;font-size:10.5px!important}
+.row-bottom .rank .title i{font-size:8px!important;white-space:nowrap!important}
+#topOver .rank-line{grid-template-columns:20px minmax(88px,1fr) 70px!important;gap:4px!important}
+#topOver .rank-line b,#topOver .rank-line span{white-space:nowrap!important}
+
+/* Export cards */
+#reports .v727-export-card button{margin-right:7px!important;margin-top:6px!important;background:linear-gradient(180deg,#2388ff,#0b66d8)!important;color:#fff!important;font-weight:900!important}
+
+@media print{
+ body.print-dashboard .stock-total.v726-stock-total{transform:scale(.92)!important;transform-origin:top left!important}
+ body.print-dashboard #dashboard{zoom:.60!important}
+}

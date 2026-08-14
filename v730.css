@@ -1,0 +1,44 @@
+/* FuelPTPSG V7.3.0 stable visual layer - preserves V7.2.5/7.2.6 target look */
+
+/* clean single PRIMA logo */
+.logo-box{height:62px!important;margin:2px 0 9px!important;background:#fff!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;border-radius:3px!important}
+.logo-box::before,.logo-box::after{display:none!important;content:none!important;background:none!important}
+.logo-box img{display:block!important;max-width:92%!important;max-height:56px!important;object-fit:contain!important;filter:none!important;box-shadow:none!important}
+.refueling-brand,.prima-text-logo{display:none!important}
+
+/* keep dashboard compact like target */
+.hero{height:47px!important;min-height:47px!important;margin-bottom:2px!important}
+.hero h1{margin:0 0 1px!important}.hero p{margin:0!important;line-height:1.05!important}
+.filters{margin-top:0!important;margin-bottom:7px!important}
+.kpis{margin-bottom:7px!important}.kpis article{height:72px!important;min-height:72px!important;padding:6px 10px!important}
+.kpis small{font-size:8.5px!important;margin-bottom:2px!important}.kpis strong{font-size:21px!important;margin-top:2px!important}.ico{width:36px!important;height:36px!important;flex:0 0 36px!important;font-size:17px!important}
+
+/* stock panel: target layout, no oversized orb */
+.row-top{grid-template-columns:1.02fr 1.58fr .90fr!important;gap:8px!important;margin-bottom:8px!important}
+.row-top>.panel{height:238px!important;min-height:238px!important}
+.stock-panel{padding-bottom:8px!important;overflow:hidden!important}
+.stock-cols{margin-top:22px!important;grid-template-columns:1fr 1.12fr!important;gap:12px!important;padding-left:0!important}
+.stock-list{gap:3px!important}.stock-row{min-height:15px!important;line-height:15px!important;font-size:8px!important}
+.stock-total.v726-stock-total{position:static!important;display:flex!important;align-items:baseline!important;justify-content:flex-start!important;gap:6px!important;margin:7px 0 0!important;padding:6px 0 0!important;border-top:1px solid rgba(80,122,157,.35)!important;transform:none!important;width:auto!important;height:auto!important}
+.stock-total.v726-stock-total>small{position:static!important;font-size:8.5px!important;color:#dbe9f7!important;font-weight:900!important}
+.stock-total.v726-stock-total .stock-orb{width:auto!important;height:auto!important;border:0!important;border-radius:0!important;background:none!important;box-shadow:none!important;display:flex!important;flex-direction:row!important;align-items:baseline!important;gap:4px!important;margin:0!important;padding:0!important}
+.stock-total.v726-stock-total .stock-orb strong{font-size:18px!important;color:#55a8ff!important;line-height:1!important;text-shadow:none!important}.stock-total.v726-stock-total .stock-orb span{font-size:9px!important;color:#fff!important}
+
+/* charts stable and aligned */
+.trend-panel .chart{height:184px!important;min-height:184px!important;overflow:visible!important}.trend-panel canvas{display:block!important;opacity:1!important;visibility:visible!important}
+.shift-content{grid-template-columns:118px minmax(108px,1fr)!important;gap:4px!important;align-items:center!important}.shift-content .chart.donut{width:118px!important;height:138px!important}.shift-legend{gap:7px!important}.shift-item strong{font-size:12.5px!important;white-space:nowrap!important}
+.row-middle{gap:8px!important;margin-bottom:8px!important}.row-middle>.panel{height:164px!important;min-height:164px!important;overflow:hidden!important}.row-middle .chart.medium{height:132px!important;min-height:132px!important}
+.v72-chart-with-legend{grid-template-columns:minmax(105px,.9fr) minmax(145px,1.1fr)!important;align-items:center!important;gap:8px!important}.v72-chart-with-legend canvas{max-width:126px!important;max-height:126px!important;margin:auto!important}.v72-html-legend{gap:7px!important}.v72-legend-row{white-space:normal!important;overflow:visible!important}.v72-truck-legend .v72-legend-row{font-size:9.8px!important;line-height:1.24!important;font-weight:800!important}.v72-status-legend .v72-legend-row{font-size:8px!important;line-height:1.2!important;font-weight:800!important}.v72-legend-row span{color:#f5f9ff!important}
+
+/* unit graphics/values */
+.unit-icon{height:58px!important;margin:0 auto 5px!important}.unit-icon .excavator-img{width:100px!important;height:66px!important}.unit-icon .gears-img{width:82px!important;height:66px!important}.unit-types strong{font-size:16px!important;line-height:1.05!important;color:#fff!important}.unit-types strong+span{font-size:8.5px!important;color:#fff!important}.unit-types b{font-size:9px!important;margin-top:3px!important}
+
+/* bottom panels */
+.row-bottom{gap:8px!important}.row-bottom>.panel{padding:8px!important;min-height:151px!important}.rank>div:last-child{gap:4px!important;margin-top:6px!important}.rank-line{font-size:8.4px!important;min-height:16px!important}.recent th,.recent td{padding:4px!important;font-size:7.8px!important}
+.row-bottom .rank .title span{display:flex!important;align-items:baseline!important;gap:5px!important;white-space:nowrap!important;font-size:10.5px!important}.row-bottom .rank .title i{font-size:8px!important}
+
+/* report: Excel only */
+#downloadReconCsv{display:none!important}
+#reports .v730-excel-card button{background:linear-gradient(180deg,#2388ff,#0b66d8)!important;color:#fff!important;font-weight:900!important}
+
+@media(max-width:1300px){.row-top{grid-template-columns:1fr!important}.row-top>.panel,.row-middle>.panel{height:auto!important;min-height:0!important}.row-middle{grid-template-columns:repeat(2,1fr)!important}}

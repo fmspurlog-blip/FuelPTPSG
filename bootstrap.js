@@ -1,5 +1,5 @@
 (async()=>{
-  const q='72.9';
+  const q='72.9.1';
   const addCss=(href)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('style.css?v='+q);
   addCss('v72.css?v='+q);

@@ -23,4 +23,5 @@
   const load=(src)=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
   await load('app.js?v='+q);
   await load('v727.js?v='+q);
+  await load('v729.js?v='+q);
 })();

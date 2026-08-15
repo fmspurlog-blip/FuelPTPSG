@@ -1,5 +1,5 @@
 (async()=>{
-  const q='73.3';
+  const q='74.1';
   const addCss=(href)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);
   addCss('v7.css?v='+q);
@@ -27,8 +27,8 @@
 
   const load=(src)=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
 
-  // IMPORTANT: one core runtime + one consolidated stable layer only.
-  // Legacy v6/v7/v71/v72/v724/v726/v730/v731 JavaScript patches are intentionally NOT loaded.
+  // Runtime: one core + stable layer + requested UI/security enhancement layer.
   await load('app.js?v='+q);
   await load('v733.js?v='+q);
+  await load('v741.js?v='+q);
 })();

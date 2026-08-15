@@ -1,0 +1,39 @@
+/* FuelPTPSG V7.3.1 stable visual fixes */
+
+/* clean PRIMA wordmark: no bitmap background, duplicate layer, shadow, or pseudo element */
+.logo-box{background:transparent!important;box-shadow:none!important;border:0!important;overflow:visible!important}
+.logo-box::before,.logo-box::after{display:none!important;content:none!important}
+.logo-box img,.logo-box .refueling-brand,.logo-box .prima-text-logo{display:none!important}
+.v731-prima-logo{display:flex;align-items:center;justify-content:center;width:100%;height:58px;background:transparent;color:#0b65a8;font-size:31px;font-weight:950;font-style:italic;letter-spacing:1.5px;line-height:1;text-shadow:none;box-shadow:none}
+
+/* total stock compact */
+.stock-total.v726-stock-total{margin-top:4px!important;padding-top:4px!important;gap:5px!important}
+.stock-total.v726-stock-total>small{font-size:8px!important}
+.stock-total.v726-stock-total .stock-orb strong{font-size:15px!important;line-height:1!important}
+.stock-total.v726-stock-total .stock-orb span{font-size:8px!important}
+
+/* circular chart panels aligned to one visual rhythm */
+.shift-content{grid-template-columns:110px minmax(105px,1fr)!important;align-items:center!important;gap:8px!important;height:132px!important}
+.shift-content .chart.donut{width:110px!important;height:110px!important;min-width:110px!important;min-height:110px!important;margin:auto!important}
+.row-middle>.panel:has(#truckChart),.row-middle>.panel:has(#statusChart){display:flex!important;flex-direction:column!important}
+.row-middle>.panel:has(#truckChart) .chart.medium,.row-middle>.panel:has(#statusChart) .chart.medium{height:128px!important;min-height:128px!important;display:grid!important;align-items:center!important}
+.v72-chart-with-legend{grid-template-columns:112px minmax(0,1fr)!important;gap:8px!important;height:128px!important;align-items:center!important;overflow:visible!important}
+.v72-chart-with-legend canvas{width:108px!important;height:108px!important;max-width:108px!important;max-height:108px!important;margin:auto!important}
+.v72-html-legend{align-self:center!important;justify-self:stretch!important;max-height:116px!important;overflow:hidden!important;gap:5px!important}
+.v72-legend-row{font-size:8.6px!important;line-height:1.15!important;white-space:normal!important;align-items:flex-start!important}
+.v72-legend-row i{margin-top:2px!important;flex:0 0 auto!important}
+.v72-legend-row span{color:#f7fbff!important;font-weight:800!important}
+
+/* daily chart remains visible during resize/filter redraw */
+.trend-panel .chart,.trend-panel canvas{opacity:1!important;visibility:visible!important;display:block!important}
+.trend-panel .chart{contain:layout paint;overflow:visible!important}
+
+/* Excel-only report */
+#reports .report-cards{grid-template-columns:minmax(280px,520px)!important;justify-content:start!important}
+#reports .v731-excel-only{min-height:150px!important}
+#reports .v731-excel-only button,#exportBtn{background:linear-gradient(180deg,#2388ff,#0b66d8)!important;color:#fff!important;font-weight:900!important}
+
+@media(max-width:1300px){
+  .shift-content{height:auto!important}
+  .v72-chart-with-legend{height:auto!important;min-height:128px!important}
+}

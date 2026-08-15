@@ -1,0 +1,20 @@
+/* V7.3.3 consolidated stable layer */
+.logo-box{height:64px!important;background:#fff!important;border:0!important;box-shadow:none!important;overflow:hidden!important;display:flex!important;align-items:center!important;justify-content:center!important;position:relative!important}
+.logo-box::before,.logo-box::after{display:none!important;content:none!important;background:none!important;box-shadow:none!important}
+.logo-box>*:not(.v733-logo){display:none!important}
+.logo-box .v733-logo{display:block!important;width:92%!important;height:56px!important;object-fit:contain!important;object-position:center!important;filter:none!important;box-shadow:none!important;background:#fff!important}
+
+.trend-panel{min-width:0!important}
+.trend-panel .chart{display:block!important;position:relative!important;width:100%!important;height:184px!important;min-height:184px!important;overflow:visible!important;opacity:1!important;visibility:visible!important}
+.trend-panel canvas#dailyChart{display:block!important;width:100%!important;height:100%!important;min-width:0!important;min-height:184px!important;opacity:1!important;visibility:visible!important}
+
+.stock-total.v733-stock-total{position:static!important;margin:6px auto 0!important;padding:4px 0 0!important;border-top:1px solid rgba(80,122,157,.30)!important;width:100%!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:3px!important;transform:none!important}
+.stock-total.v733-stock-total>small{font-size:8px!important;font-weight:900!important;color:#e8f3ff!important;line-height:1!important}
+.stock-total.v733-stock-total .stock-orb{width:58px!important;height:58px!important;border-radius:50%!important;border:1px solid rgba(140,210,255,.85)!important;background:radial-gradient(circle at 32% 24%,#77c7ff 0,#2e83e6 32%,#1760bc 68%,#0a356f 100%)!important;box-shadow:inset 0 5px 10px rgba(255,255,255,.25),inset 0 -8px 12px rgba(0,0,0,.28),0 6px 10px rgba(0,0,0,.42)!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;margin:0 auto!important;padding:0!important}
+.stock-total.v733-stock-total .stock-orb strong{font-size:12px!important;color:#fff!important;line-height:1!important;text-shadow:0 1px 2px rgba(0,0,0,.55)!important}
+.stock-total.v733-stock-total .stock-orb span{font-size:6.5px!important;color:#fff!important;margin-top:2px!important}
+
+@media(max-width:1300px){
+ .trend-panel .chart{height:220px!important;min-height:220px!important}
+ .trend-panel canvas#dailyChart{min-height:220px!important}
+}

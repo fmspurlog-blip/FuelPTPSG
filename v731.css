@@ -1,39 +1,155 @@
-/* FuelPTPSG V7.3.1 stable visual fixes */
+/* FuelPTPSG V7.3.2 stable visual + responsive fixes */
 
-/* clean PRIMA wordmark: no bitmap background, duplicate layer, shadow, or pseudo element */
-.logo-box{background:transparent!important;box-shadow:none!important;border:0!important;overflow:visible!important}
-.logo-box::before,.logo-box::after{display:none!important;content:none!important}
-.logo-box img,.logo-box .refueling-brand,.logo-box .prima-text-logo{display:none!important}
-.v731-prima-logo{display:flex;align-items:center;justify-content:center;width:100%;height:58px;background:transparent;color:#0b65a8;font-size:31px;font-weight:950;font-style:italic;letter-spacing:1.5px;line-height:1;text-shadow:none;box-shadow:none}
+/* Exact PRIMA logo from user upload: one image only, no duplicate/shadow layer */
+.logo-box{
+  height:64px!important;
+  margin:2px 0 8px!important;
+  background:transparent!important;
+  box-shadow:none!important;
+  border:0!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+}
+.logo-box::before,.logo-box::after{display:none!important;content:none!important;background:none!important;box-shadow:none!important}
+.logo-box>.refueling-brand,.logo-box>.prima-text-logo,.logo-box>img:not(.v732-prima-logo){display:none!important}
+.logo-box .v732-prima-logo{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:91%!important;
+  max-height:58px!important;
+  object-fit:contain!important;
+  background:transparent!important;
+  filter:none!important;
+  box-shadow:none!important;
+  opacity:1!important;
+  transform:none!important;
+}
 
-/* total stock compact */
-.stock-total.v726-stock-total{margin-top:4px!important;padding-top:4px!important;gap:5px!important}
-.stock-total.v726-stock-total>small{font-size:8px!important}
-.stock-total.v726-stock-total .stock-orb strong{font-size:15px!important;line-height:1!important}
-.stock-total.v726-stock-total .stock-orb span{font-size:8px!important}
+/* Trend chart: fixed responsive drawing area so zoom/refresh does not collapse the canvas */
+.trend-panel{min-width:0!important;overflow:hidden!important}
+.trend-panel .chart{
+  position:relative!important;
+  display:block!important;
+  width:100%!important;
+  height:184px!important;
+  min-height:184px!important;
+  min-width:0!important;
+  overflow:hidden!important;
+  opacity:1!important;
+  visibility:visible!important;
+  contain:none!important;
+}
+.trend-panel .chart canvas,#dailyChart{
+  display:block!important;
+  opacity:1!important;
+  visibility:visible!important;
+  max-width:100%!important;
+  max-height:184px!important;
+}
 
-/* circular chart panels aligned to one visual rhythm */
+/* Fuel Stock: compact 3D blue total stock orb below FTRL44G004 */
+.stock-panel{overflow:hidden!important}
+.stock-cols{align-items:start!important}
+.stock-total.v726-stock-total{
+  position:relative!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  width:100%!important;
+  min-height:66px!important;
+  margin:4px 0 0!important;
+  padding:1px 0 0!important;
+  border-top:0!important;
+  gap:1px!important;
+  transform:none!important;
+}
+.stock-total.v726-stock-total>small{
+  position:static!important;
+  display:block!important;
+  margin:0 0 2px!important;
+  color:#d9ebff!important;
+  font-size:7.5px!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  line-height:1!important;
+  text-align:center!important;
+}
+.stock-total.v726-stock-total .stock-orb{
+  position:relative!important;
+  width:56px!important;
+  height:56px!important;
+  min-width:56px!important;
+  min-height:56px!important;
+  border-radius:50%!important;
+  border:1px solid rgba(150,210,255,.75)!important;
+  background:radial-gradient(circle at 32% 24%,rgba(255,255,255,.42) 0 8%,rgba(255,255,255,.10) 18%,transparent 34%),radial-gradient(circle at 50% 46%,#4f98ff 0%,#2676df 48%,#1255aa 78%,#0a356f 100%)!important;
+  box-shadow:inset -7px -9px 14px rgba(0,21,62,.42),inset 6px 5px 12px rgba(153,214,255,.20),0 5px 9px rgba(0,0,0,.40),0 0 0 2px rgba(42,139,255,.10)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:0!important;
+  margin:0!important;
+  padding:0!important;
+  overflow:hidden!important;
+}
+.stock-total.v726-stock-total .stock-orb::after{
+  content:""!important;
+  position:absolute!important;
+  top:7px!important;
+  left:11px!important;
+  width:24px!important;
+  height:9px!important;
+  border-radius:50%!important;
+  background:rgba(255,255,255,.17)!important;
+  transform:rotate(-16deg)!important;
+  pointer-events:none!important;
+}
+.stock-total.v726-stock-total .stock-orb strong{
+  position:relative!important;
+  z-index:2!important;
+  color:#fff!important;
+  font-size:13px!important;
+  font-weight:900!important;
+  line-height:1!important;
+  text-shadow:0 2px 3px rgba(0,0,0,.55)!important;
+}
+.stock-total.v726-stock-total .stock-orb span{
+  position:relative!important;
+  z-index:2!important;
+  margin-top:3px!important;
+  color:#eaf5ff!important;
+  font-size:6.5px!important;
+  font-weight:800!important;
+  line-height:1!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.6)!important;
+}
+
+/* Keep circular dashboards aligned and equal size */
 .shift-content{grid-template-columns:110px minmax(105px,1fr)!important;align-items:center!important;gap:8px!important;height:132px!important}
 .shift-content .chart.donut{width:110px!important;height:110px!important;min-width:110px!important;min-height:110px!important;margin:auto!important}
-.row-middle>.panel:has(#truckChart),.row-middle>.panel:has(#statusChart){display:flex!important;flex-direction:column!important}
-.row-middle>.panel:has(#truckChart) .chart.medium,.row-middle>.panel:has(#statusChart) .chart.medium{height:128px!important;min-height:128px!important;display:grid!important;align-items:center!important}
-.v72-chart-with-legend{grid-template-columns:112px minmax(0,1fr)!important;gap:8px!important;height:128px!important;align-items:center!important;overflow:visible!important}
-.v72-chart-with-legend canvas{width:108px!important;height:108px!important;max-width:108px!important;max-height:108px!important;margin:auto!important}
+.row-middle>.panel:has(#truckChart),.row-middle>.panel:has(#statusChart){display:flex!important;flex-direction:column!important;min-width:0!important}
+.row-middle>.panel:has(#truckChart) .chart.medium,.row-middle>.panel:has(#statusChart) .chart.medium{height:128px!important;min-height:128px!important;display:grid!important;align-items:center!important;overflow:hidden!important}
+.v72-chart-with-legend{grid-template-columns:108px minmax(0,1fr)!important;gap:8px!important;height:128px!important;align-items:center!important;overflow:hidden!important}
+.v72-chart-with-legend canvas{width:106px!important;height:106px!important;max-width:106px!important;max-height:106px!important;margin:auto!important}
 .v72-html-legend{align-self:center!important;justify-self:stretch!important;max-height:116px!important;overflow:hidden!important;gap:5px!important}
-.v72-legend-row{font-size:8.6px!important;line-height:1.15!important;white-space:normal!important;align-items:flex-start!important}
+.v72-legend-row{font-size:8.4px!important;line-height:1.15!important;white-space:normal!important;align-items:flex-start!important}
 .v72-legend-row i{margin-top:2px!important;flex:0 0 auto!important}
 .v72-legend-row span{color:#f7fbff!important;font-weight:800!important}
 
-/* daily chart remains visible during resize/filter redraw */
-.trend-panel .chart,.trend-panel canvas{opacity:1!important;visibility:visible!important;display:block!important}
-.trend-panel .chart{contain:layout paint;overflow:visible!important}
-
-/* Excel-only report */
+/* Excel only */
 #reports .report-cards{grid-template-columns:minmax(280px,520px)!important;justify-content:start!important}
 #reports .v731-excel-only{min-height:150px!important}
 #reports .v731-excel-only button,#exportBtn{background:linear-gradient(180deg,#2388ff,#0b66d8)!important;color:#fff!important;font-weight:900!important}
 
 @media(max-width:1300px){
+  .trend-panel .chart{height:210px!important;min-height:210px!important}
   .shift-content{height:auto!important}
   .v72-chart-with-legend{height:auto!important;min-height:128px!important}
+  .stock-total.v726-stock-total{min-height:64px!important}
 }

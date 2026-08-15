@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 const VERSION='7.4.1';
-const PASSWORD='PrimaFuel@2026';
+const PASSWORD_HASH='258d4020d9264a872bb3c59faa548ea4a9efa8a06ab2281f4f3da354e1fc9c4f';
 const BRAND='PT PRIMA SARANA GEMILANG SITE ABM - LUWUK';
 const byId=id=>document.getElementById(id);
 const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
@@ -9,8 +9,7 @@ const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Num
 function injectStyles(){
   if(document.getElementById('v741-style')) return;
   const s=document.createElement('style');s.id='v741-style';s.textContent=`
-.logo-box{display:flex!important;align-items:center!important;justify-content:center!important;background:#fff!important;border-radius:8px!important;padding:5px 8px!important;min-height:58px!important;overflow:hidden!important}
-.logo-box>*:not(.v741-logo){display:none!important}.logo-box .v741-logo{display:block!important;width:100%!important;max-width:170px!important;height:48px!important;object-fit:contain!important;filter:none!important;box-shadow:none!important;opacity:1!important}
+.logo-box{display:flex!important;align-items:center!important;justify-content:center!important;background:#fff url('prima-logo.png?v=741') center/contain no-repeat!important;border-radius:8px!important;padding:5px 8px!important;min-height:58px!important;overflow:hidden!important}.logo-box>*{visibility:hidden!important;opacity:0!important}
 .hero p{font-weight:800!important;letter-spacing:.35px!important}.stock-panel>h3 em{display:none!important}
 .unit-types .unit-icon{height:72px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin:3px auto 4px!important}.unit-types .unit-icon svg{width:92px!important;height:64px!important;display:block!important;overflow:visible!important;filter:drop-shadow(0 5px 8px rgba(0,0,0,.35))}.unit-types>div:nth-child(2) .unit-icon svg{width:78px!important}
 #truckDailyDistribution{margin-top:16px;border-top:1px solid #23425f;padding-top:14px}.daily-dist-title{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-bottom:10px}.daily-dist-title span{color:#ff9a26;font-weight:900;font-size:12px;letter-spacing:.5px}.daily-dist-title small{color:#8299b3;font-size:10px}.daily-dist-table{width:100%;border-collapse:collapse;font-size:11px}.daily-dist-table th{color:#9db2c8;text-align:left;padding:8px;border-bottom:1px solid #29445e;font-size:9px}.daily-dist-table td{color:#fff;padding:9px 8px;border-bottom:1px dashed #20384f}.daily-dist-table td strong{color:#fff}.daily-dist-table .pct{font-weight:900;color:#ff9a26}.daily-dist-table tbody tr:hover{background:rgba(50,138,244,.07)}
@@ -28,11 +27,7 @@ function applyBrand(){
   const ver=document.querySelector('.v7-version');if(ver)ver.textContent='Dashboard V7.4.1 Professional';
 }
 
-function installLogo(){
-  const box=document.querySelector('.logo-box');if(!box)return;
-  let img=box.querySelector('.v741-logo');
-  if(!img){box.innerHTML='';img=document.createElement('img');img.className='v741-logo';img.alt='PRIMA';img.src='prima-logo.png?v=741';box.appendChild(img);} else if(!img.src.includes('prima-logo.png')) img.src='prima-logo.png?v=741';
-}
+function installLogo(){const box=document.querySelector('.logo-box');if(box)box.setAttribute('aria-label','PRIMA');}
 
 function installUnitIcons(){
   const icons=document.querySelectorAll('.unit-types .unit-icon');if(icons.length<2)return;
@@ -71,13 +66,14 @@ function markProtectedButtons(){
 function isProtected(el){
   if(!el)return false;const id=el.id||'';if(['exportBtn','downloadReconCsv','exportDashboardExcel'].includes(id))return true;if(el.matches?.('[data-report]'))return true;if(el.matches?.('label.upload')||el.querySelector?.('#excelUpload'))return true;const t=(el.textContent||'').toUpperCase();return /\b(EXPORT|DOWNLOAD|UPLOAD)\b/.test(t);
 }
+async function validPassword(value){const hash=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(value));return [...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,'0')).join('')===PASSWORD_HASH;}
 
 let modalPromise=null;
 function requestPassword(){
   if(modalPromise)return modalPromise;
   modalPromise=new Promise(resolve=>{
     const ov=document.createElement('div');ov.className='v741-modal';ov.innerHTML=`<div class="v741-modal-card"><h3>🔒 Protected Fuel Data Action</h3><p>Masukkan password untuk melanjutkan upload, download, atau export data Fuel Management System.</p><input type="password" autocomplete="current-password" placeholder="Password"><p class="v741-error"></p><div class="v741-modal-actions"><button class="v741-cancel" type="button">BATAL</button><button class="v741-unlock" type="button">UNLOCK</button></div></div>`;document.body.appendChild(ov);const input=ov.querySelector('input'),err=ov.querySelector('.v741-error');
-    const done=ok=>{ov.remove();modalPromise=null;resolve(ok)};const check=()=>{if(input.value===PASSWORD)done(true);else{err.textContent='Password salah. Akses tidak diberikan.';input.select();}};
+    const done=ok=>{ov.remove();modalPromise=null;resolve(ok)};const check=async()=>{if(await validPassword(input.value))done(true);else{err.textContent='Password salah. Akses tidak diberikan.';input.select();}};
     ov.querySelector('.v741-cancel').onclick=()=>done(false);ov.querySelector('.v741-unlock').onclick=check;input.addEventListener('keydown',e=>{if(e.key==='Enter')check();if(e.key==='Escape')done(false)});setTimeout(()=>input.focus(),30);
   });
   return modalPromise;
@@ -92,6 +88,5 @@ injectStyles();refreshEnhancements();
 ['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].forEach(id=>byId(id)?.addEventListener(id==='unitSearch'?'input':'change',()=>setTimeout(refreshEnhancements,40)));
 document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>setTimeout(refreshEnhancements,50)));
 const usageBody=byId('usageTableBody');if(usageBody)new MutationObserver(colorUsageStatuses).observe(usageBody,{childList:true,subtree:true,characterData:true});
-const logoBox=document.querySelector('.logo-box');if(logoBox)new MutationObserver(()=>setTimeout(installLogo,0)).observe(logoBox,{childList:true,subtree:true});
 setTimeout(refreshEnhancements,150);setTimeout(refreshEnhancements,600);setTimeout(refreshEnhancements,1500);
 })();

@@ -1,0 +1,132 @@
+/* FuelPTPSG stable dashboard layer - single render pipeline */
+
+/* PRIMA: one real bitmap only, no pseudo/background duplicate */
+.logo-box{
+  height:66px!important;
+  margin:0 0 8px!important;
+  padding:4px 7px!important;
+  background:#fff!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+  overflow:hidden!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  position:relative!important;
+}
+.logo-box::before,.logo-box::after{display:none!important;content:none!important;background:none!important;box-shadow:none!important}
+.logo-box .refueling-brand,.logo-box .prima-text-logo,.logo-box .v731-prima-logo{display:none!important}
+.logo-box img{
+  display:block!important;
+  width:auto!important;
+  height:auto!important;
+  max-width:96%!important;
+  max-height:58px!important;
+  object-fit:contain!important;
+  filter:none!important;
+  opacity:1!important;
+  visibility:visible!important;
+  box-shadow:none!important;
+  transform:none!important;
+}
+
+/* Trend must always have a measurable drawing box */
+.trend-panel{overflow:hidden!important}
+.trend-panel .chart{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  height:184px!important;
+  min-height:184px!important;
+  max-height:184px!important;
+  contain:none!important;
+  overflow:hidden!important;
+  opacity:1!important;
+  visibility:visible!important;
+}
+.trend-panel .chart canvas,
+#dailyChart{
+  display:block!important;
+  width:100%!important;
+  height:184px!important;
+  min-height:184px!important;
+  opacity:1!important;
+  visibility:visible!important;
+  position:relative!important;
+}
+
+/* Stock: total stock centered under fuel-truck rows */
+.stock-cols{align-items:start!important}
+#truckStockList{width:100%!important}
+.stock-total.v740-stock-total{
+  position:static!important;
+  width:100%!important;
+  margin:4px 0 0!important;
+  padding:4px 0 0!important;
+  border-top:1px solid rgba(90,135,175,.34)!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:3px!important;
+  transform:none!important;
+}
+.stock-total.v740-stock-total>small{
+  position:static!important;
+  margin:0!important;
+  color:#f2f7ff!important;
+  font-size:7.5px!important;
+  font-weight:900!important;
+  letter-spacing:.35px!important;
+  line-height:1!important;
+}
+.stock-total.v740-stock-total .stock-orb{
+  width:56px!important;
+  height:56px!important;
+  min-width:56px!important;
+  min-height:56px!important;
+  border-radius:50%!important;
+  border:1px solid rgba(145,205,255,.92)!important;
+  margin:0 auto!important;
+  padding:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:center!important;
+  gap:1px!important;
+  background:
+    radial-gradient(circle at 34% 25%,rgba(255,255,255,.48) 0 8%,transparent 9% 20%),
+    radial-gradient(circle at 38% 32%,#5fb7ff 0%,#287fdd 45%,#0a4f9d 72%,#05356f 100%)!important;
+  box-shadow:inset -7px -8px 12px rgba(0,20,60,.35),inset 5px 5px 10px rgba(255,255,255,.15),0 5px 9px rgba(0,0,0,.34)!important;
+  transform:none!important;
+}
+.stock-total.v740-stock-total .stock-orb strong{
+  color:#fff!important;
+  font-size:11px!important;
+  line-height:1!important;
+  text-shadow:0 1px 2px rgba(0,0,0,.5)!important;
+}
+.stock-total.v740-stock-total .stock-orb span{
+  color:#eaf6ff!important;
+  font-size:6px!important;
+  line-height:1!important;
+  font-weight:800!important;
+}
+
+/* Donuts: fixed aligned drawing areas */
+.shift-content{grid-template-columns:112px minmax(105px,1fr)!important;align-items:center!important;gap:8px!important}
+.shift-content .chart.donut{width:112px!important;height:112px!important;min-width:112px!important;min-height:112px!important;margin:auto!important}
+.v740-chart-layout{display:grid!important;grid-template-columns:112px minmax(0,1fr)!important;align-items:center!important;gap:8px!important;height:128px!important;min-height:128px!important}
+.v740-chart-layout canvas{display:block!important;width:108px!important;height:108px!important;max-width:108px!important;max-height:108px!important;margin:auto!important}
+.v740-html-legend{display:flex!important;flex-direction:column!important;justify-content:center!important;gap:5px!important;min-width:0!important;overflow:hidden!important}
+.v740-legend-row{display:flex!important;align-items:flex-start!important;gap:6px!important;color:#f5f9ff!important;font-size:8.2px!important;line-height:1.18!important;font-weight:800!important;white-space:normal!important}
+.v740-legend-row i{width:8px!important;height:8px!important;min-width:8px!important;border-radius:50%!important;margin-top:1px!important}
+
+/* prevent old HTML legends from occupying duplicate space */
+.v72-html-legend{display:none!important}
+
+@media(max-width:1300px){
+  .trend-panel .chart,.trend-panel .chart canvas,#dailyChart{height:200px!important;max-height:200px!important}
+  .v740-chart-layout{height:auto!important;min-height:128px!important}
+}

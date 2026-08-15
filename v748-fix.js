@@ -33,6 +33,26 @@ window.addEventListener('click',e=>{
 
 const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
 
+function ensureUiStyle(){
+  let s=document.getElementById('v751-style');
+  if(!s){s=document.createElement('style');s.id='v751-style';document.head.appendChild(s);}
+  s.textContent=`
+#truckChart,#statusChart{max-height:126px!important}
+.row-middle .panel:nth-child(3) .chart.medium,
+.row-middle .panel:nth-child(4) .chart.medium{height:138px!important;min-height:138px!important;overflow:hidden!important}
+@media(max-width:1350px){
+ #truckChart,#statusChart{max-height:116px!important}
+ .row-middle .panel:nth-child(3) .chart.medium,
+ .row-middle .panel:nth-child(4) .chart.medium{height:130px!important;min-height:130px!important}
+}
+`;
+}
+
+function updateTitle(){
+  const h1=document.querySelector('.hero h1');
+  if(h1)h1.textContent='FUEL MANAGEMENT SYSTEM V73.2';
+}
+
 function cleanupOldHtmlLegend(canvas){
   if(!canvas)return;
   const wrap=canvas.parentElement;
@@ -56,17 +76,18 @@ function forceNativeWhiteLegend(chartName,canvasId){
     legend.align='center';
     const labels=legend.labels||(legend.labels={});
     labels.color='#ffffff';
-    labels.boxWidth=chartName==='truck'?10:9;
-    labels.boxHeight=chartName==='truck'?10:9;
-    labels.padding=chartName==='truck'?14:10;
-    labels.font={...(labels.font||{}),size:chartName==='truck'?10:9,weight:'900',family:'Segoe UI, Arial, sans-serif'};
+    labels.boxWidth=chartName==='truck'?8:7;
+    labels.boxHeight=chartName==='truck'?8:7;
+    labels.padding=chartName==='truck'?9:6;
+    labels.usePointStyle=false;
+    labels.font={...(labels.font||{}),size:chartName==='truck'?8:7,weight:'800',family:'Segoe UI, Arial, sans-serif'};
     labels.generateLabels=chart=>{
       const ds=chart.data.datasets?.[0]||{};
       const labs=chart.data.labels||[];
       const vals=ds.data||[];
       const colors=Array.isArray(ds.backgroundColor)?ds.backgroundColor:labs.map(()=>ds.backgroundColor||'#fff');
       return labs.map((lab,i)=>({
-        text:`${lab}  ${fmt(vals[i])} L`,
+        text:`${lab} ${fmt(vals[i])} L`,
         fillStyle:colors[i]||'#fff',
         strokeStyle:'transparent',
         lineWidth:0,
@@ -76,19 +97,23 @@ function forceNativeWhiteLegend(chartName,canvasId){
         index:i
       }));
     };
+    c.options.cutout=chartName==='truck'?'64%':'60%';
+    c.options.radius=chartName==='truck'?'80%':'78%';
     c.options.layout=c.options.layout||{};
-    c.options.layout.padding={top:2,right:4,bottom:2,left:2};
+    c.options.layout.padding={top:2,right:2,bottom:2,left:2};
     c.resize();
     c.update('none');
   }catch(err){console.warn('native white legend fix',chartName,err);}
 }
 
 function applyLegends(){
+  ensureUiStyle();
+  updateTitle();
   if(window.Chart){
     Chart.defaults.color='#ffffff';
     if(Chart.defaults.plugins?.legend?.labels){
       Chart.defaults.plugins.legend.labels.color='#ffffff';
-      Chart.defaults.plugins.legend.labels.font={...(Chart.defaults.plugins.legend.labels.font||{}),weight:'900'};
+      Chart.defaults.plugins.legend.labels.font={...(Chart.defaults.plugins.legend.labels.font||{}),weight:'800'};
     }
   }
   forceNativeWhiteLegend('truck','truckChart');

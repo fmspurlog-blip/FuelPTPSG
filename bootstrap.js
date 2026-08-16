@@ -1,4 +1,10 @@
 (async()=>{
+  // Canonical public URL: keep versioning internal, not in the user-facing URL.
+  // Old links such as ?v=73.2 continue to work but are normalized immediately.
+  if(location.search){
+    const hash=location.hash||'#dashboard';
+    history.replaceState(null,'',location.pathname+hash);
+  }
   const q='75.4';
   const addCss=(href)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);addCss('v7.css?v='+q);addCss('v71.css?v='+q);addCss('v72.css?v='+q);addCss('v724.css?v='+q);addCss('v726.css?v='+q);addCss('v730.css?v='+q);addCss('v731.css?v='+q);addCss('v733.css?v='+q);

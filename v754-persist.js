@@ -1,9 +1,9 @@
 (()=>{
 'use strict';
-const VER='75.4';
-const RKEY='fuelptpsg_receipts_v754', SKEY='fuelptpsg_stock_v754';
+const VER='75.6';
+const RKEY='fuelptpsg_receipts_v754', SKEY='fuelptpsg_stock_v754', UKEY='fuelptpsg_usage_v756';
 const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
-let lastReceiptSig='',lastStockSig='';
+let lastReceiptSig='',lastStockSig='',lastUsageSig='';
 
 function safeGet(k){try{return JSON.parse(localStorage.getItem(k)||'null')}catch(_){return null}}
 function safeSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){console.warn('localStorage',e)}}
@@ -17,6 +17,7 @@ function applyLogo(){
 
 function receiptSig(data){return (data||[]).map(r=>`${r.Date}|${r.Qty}|${r.Fuel_Truck}|${r.No_Surat_Jalan}`).join(';')}
 function stockSig(data){return JSON.stringify(data?.availableDates||[])+'|'+JSON.stringify(data?.snapshots||{})}
+function usageSig(data){const d=data||[];if(!d.length)return '';const a=d[0]||{},b=d[d.length-1]||{};return `${d.length}|${a.Transaction_ID}|${a.Date}|${b.Transaction_ID}|${b.Date}|${d.reduce((s,r)=>s+(Number(r.Fuel_Liter)||0),0)}`}
 
 function filteredReceipts(){
  const d=window.__FUEL_RECEIPTS||[];
@@ -45,11 +46,24 @@ function applyStock(parsed){
  window.__FUEL_STOCK_DATA=parsed;
  try{if(typeof renderStock==='function')renderStock();if(typeof renderFuelStockPage==='function')renderFuelStockPage()}catch(e){console.warn('stock render',e)}
 }
+function applyUsage(data){
+ if(!Array.isArray(data)||!data.length)return;
+ try{
+   if(typeof state==='undefined')return;
+   state.raw=data;
+   state.filtered=[];
+   state.page=1;
+   if(typeof initFilters==='function')initFilters();
+   if(typeof applyFilters==='function')applyFilters();
+   else if(typeof renderAll==='function'){state.filtered=[...state.raw];renderAll();}
+ }catch(e){console.warn('usage restore',e)}
+}
 
 function restore(){
- const r=safeGet(RKEY),s=safeGet(SKEY);
+ const r=safeGet(RKEY),s=safeGet(SKEY),u=safeGet(UKEY);
  if(Array.isArray(r)&&r.length){window.__FUEL_RECEIPTS=r;lastReceiptSig=receiptSig(r)}
  if(s&&s.snapshots){applyStock(s);lastStockSig=stockSig(s)}
+ if(Array.isArray(u)&&u.length){lastUsageSig=usageSig(u);setTimeout(()=>applyUsage(u),60);setTimeout(()=>applyUsage(u),260)}
  applyLogo();
  setTimeout(renderReceipt,80);setTimeout(renderReceipt,300);setTimeout(()=>applyStock(window.__FUEL_STOCK_DATA),200);
 }
@@ -58,6 +72,10 @@ function persistCurrent(){
  if(r.length&&rs&&rs!==lastReceiptSig){lastReceiptSig=rs;safeSet(RKEY,r);setTimeout(renderReceipt,30);setTimeout(renderReceipt,180)}
  const s=window.__FUEL_STOCK_DATA;const ss=s?stockSig(s):'';
  if(s&&s.availableDates?.length&&ss!==lastStockSig){lastStockSig=ss;safeSet(SKEY,s);applyStock(s)}
+ try{
+   const u=(typeof state!=='undefined'&&Array.isArray(state.raw))?state.raw:[];const us=usageSig(u);
+   if(u.length&&us&&us!==lastUsageSig){lastUsageSig=us;safeSet(UKEY,u)}
+ }catch(_){ }
 }
 function refresh(){applyLogo();renderReceipt();applyStock(window.__FUEL_STOCK_DATA)}
 restore();

@@ -1,32 +1,66 @@
 (()=>{
 'use strict';
-const VER='75.8';
+const VER='75.9';
+
 function latestStockDate(){
   const s=window.__FUEL_STOCK_DATA;
-  const dates=(s?.availableDates||Object.keys(s?.snapshots||{})).filter(Boolean).sort();
-  return dates.length?dates[dates.length-1]:'';
+  const dates=[...(s?.availableDates||Object.keys(s?.snapshots||{}))]
+    .filter(Boolean)
+    .map(String)
+    .sort((a,b)=>a.localeCompare(b));
+  return dates.length?dates.at(-1):'';
 }
+
+function latestSnapshot(){
+  const data=window.__FUEL_STOCK_DATA;
+  const date=latestStockDate();
+  return {date,snapshot:date?(data?.snapshots||{})[date]:null};
+}
+
+// IMPORTANT: app.js originally resolves stock using dateTo Fuel Usage.
+// Replace that resolver so stock is independent from transaction filters
+// and always uses the MAX date available in Stock Calculasi.
+try{
+  resolveStockSnapshot=function(){
+    const {date,snapshot}=latestSnapshot();
+    stock=snapshot
+      ? {...snapshot,snapshotDate:date,snapshotTime:snapshot.time||''}
+      : {fuelStorage:{},fuelTruck:{},total:0,snapshotDate:'',snapshotTime:''};
+    window.__FUEL_STOCK_SELECTED_DATE=date||'';
+  };
+}catch(e){console.warn('Unable to override stock resolver',e)}
+
 function syncStockToLatest(){
-  const latest=latestStockDate();
-  if(!latest)return;
-  // Stock panel must always open on the latest available Stock Calculasi snapshot,
-  // independent from the fuel-usage period filter.
+  const {date}=latestSnapshot();
+  if(!date)return;
   try{
     if(typeof stockData!=='undefined'){
-      stockData.selectedDate=latest;
-      stockData.currentDate=latest;
+      const source=window.__FUEL_STOCK_DATA;
+      if(source?.snapshots){
+        stockData.snapshots=source.snapshots;
+        stockData.availableDates=[...(source.availableDates||Object.keys(source.snapshots))].sort();
+      }
+      stockData.selectedDate=date;
+      stockData.currentDate=date;
     }
   }catch(_){ }
-  window.__FUEL_STOCK_SELECTED_DATE=latest;
-  try{if(typeof renderStock==='function')renderStock(latest)}catch(e){console.warn('latest stock render',e)}
-  try{if(location.hash==='#fuel-stock'&&typeof renderFuelStockPage==='function')renderFuelStockPage(latest)}catch(e){console.warn('latest stock page render',e)}
+  window.__FUEL_STOCK_SELECTED_DATE=date;
+  try{if(typeof renderStock==='function')renderStock()}catch(e){console.warn('latest stock render',e)}
+  try{if((location.hash==='#fuel-stock'||location.hash==='#fuel-stock-page')&&typeof renderFuelStockPage==='function')renderFuelStockPage(date)}catch(e){console.warn('latest stock page render',e)}
 }
-function run(){setTimeout(syncStockToLatest,40);setTimeout(syncStockToLatest,180);setTimeout(syncStockToLatest,500)}
+
+function run(){
+  setTimeout(syncStockToLatest,30);
+  setTimeout(syncStockToLatest,150);
+  setTimeout(syncStockToLatest,450);
+  setTimeout(syncStockToLatest,900);
+}
+
 run();
 window.addEventListener('pageshow',run);
 window.addEventListener('hashchange',run);
 window.addEventListener('change',e=>{
-  if(e.target?.id==='excelUpload')setTimeout(run,250);
-  if(['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].includes(e.target?.id))setTimeout(syncStockToLatest,100);
+  if(e.target?.id==='excelUpload')setTimeout(run,220);
+  if(['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].includes(e.target?.id))setTimeout(syncStockToLatest,80);
 });
 })();

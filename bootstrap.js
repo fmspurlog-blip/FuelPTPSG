@@ -3,7 +3,7 @@
     const hash=location.hash||'#dashboard';
     history.replaceState(null,'',location.pathname+hash);
   }
-  const q='75.7';
+  const q='75.8';
   const addCss=(href)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);addCss('v7.css?v='+q);addCss('v71.css?v='+q);addCss('v72.css?v='+q);addCss('v724.css?v='+q);addCss('v726.css?v='+q);addCss('v730.css?v='+q);addCss('v731.css?v='+q);addCss('v733.css?v='+q);
   function num(x){return (x===''||x==null)?null:Number(x)}
@@ -42,5 +42,5 @@
     if(!window.FUEL_DATA.length)throw new Error('No valid rows')
   }catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];window.__FUEL_DEFAULT_WB=null}
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
-  await load('app.js?v='+q);await load('v733.js?v='+q);await load('v741.js?v='+q);await load('v743-ui.js?v='+q);await load('v747-fix.js?v='+q);await load('v748-fix.js?v='+q);await load('v752-upload-fix.js?v='+q);await load('v754-persist.js?v='+q);await load('v757-time-fix.js?v='+q);
+  await load('app.js?v='+q);await load('v733.js?v='+q);await load('v741.js?v='+q);await load('v743-ui.js?v='+q);await load('v747-fix.js?v='+q);await load('v748-fix.js?v='+q);await load('v752-upload-fix.js?v='+q);await load('v754-persist.js?v='+q);await load('v757-time-fix.js?v='+q);await load('v758-stock-period-fix.js?v='+q);
 })();

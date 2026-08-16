@@ -1,16 +1,33 @@
 (async()=>{
-  // Canonical public URL: keep versioning internal, not in the user-facing URL.
-  // Old links such as ?v=73.2 continue to work but are normalized immediately.
   if(location.search){
     const hash=location.hash||'#dashboard';
     history.replaceState(null,'',location.pathname+hash);
   }
-  const q='75.5';
+  const q='75.6';
   const addCss=(href)=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);addCss('v7.css?v='+q);addCss('v71.css?v='+q);addCss('v72.css?v='+q);addCss('v724.css?v='+q);addCss('v726.css?v='+q);addCss('v730.css?v='+q);addCss('v731.css?v='+q);addCss('v733.css?v='+q);
   function num(x){return (x===''||x==null)?null:Number(x)}
-  function normalize(rows){return rows.map((r,i)=>{let date=r.Date;if(typeof date==='number'){const p=XLSX.SSF.parse_date_code(date);date=`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`;}else if(date){const dt=new Date(date);if(!Number.isNaN(dt.getTime()))date=dt.toISOString().slice(0,10);}const actual=num(r.Actual_L_per_HM_KM??r.Actual_LHM),std=num(r.Standard_LHM),vp=num(r.Variance_Pct);let st=r.Consumption_Status||r.Status||'';if(!st)st=std==null?'NO STANDARD':vp==null?'NO DATA':vp<=-.10?'EFFICIENT':vp<=.10?'NORMAL':vp<=.20?'WARNING':'OVER CONSUMPTION';return {Transaction_ID:r.Transaction_ID||`AUTO-${i+1}`,Date:date||'',Day:r.Day||'',Time:r.Time||'',Shift:r.Shift||'',Unit_Code:r.Unit_Code||'',Category:r.Category||'',Unit_Type:r.Unit_Type||'',Fuel_Liter:num(r.Fuel_Liter)||0,Meter_Before:num(r.Meter_Before),Meter_Current:num(r.Meter_Current),Delta_HM_KM:num(r.Delta_HM_KM),Actual_LHM:actual,Fuel_Truck:r.Fuel_Truck||'',Mtech_Code:r.Mtech_Code||'',Unit_Group_Code:r.Unit_Group_Code||'',Manpower:r.Manpower||'',Unit_Position:r.Unit_Position||'',Standard_LHM:std,Variance_LHM:num(r.Variance_LHM),Variance_Pct:vp,Consumption_Status:st,Standard_Match:r.Standard_Match||''};}).filter(r=>r.Date&&r.Unit_Code&&r.Fuel_Liter>0)}
-  try{const res=await fetch('Fuel_Database_Dashboard_Ready_Final.xlsx?v='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const buf=await res.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});window.__FUEL_DEFAULT_WB=wb;const sheet=wb.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':wb.SheetNames[0];window.FUEL_DATA=normalize(XLSX.utils.sheet_to_json(wb.Sheets[sheet],{defval:''}));if(!window.FUEL_DATA.length)throw new Error('No valid rows')}catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];window.__FUEL_DEFAULT_WB=null}
+  function first(r,...keys){for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return r[k]}return ''}
+  function sheetObjects(sheet,required=['Date']){
+    const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:'',raw:true});
+    let hi=-1;
+    for(let i=0;i<Math.min(grid.length,15);i++){
+      const row=(grid[i]||[]).map(v=>String(v??'').trim());
+      if(required.every(k=>row.includes(k))){hi=i;break}
+    }
+    if(hi<0)return XLSX.utils.sheet_to_json(sheet,{defval:'',raw:true});
+    const headers=(grid[hi]||[]).map(v=>String(v??'').trim());
+    return grid.slice(hi+1).map(row=>{const o={};headers.forEach((h,j)=>{if(h)o[h]=row?.[j]??''});return o});
+  }
+  function dateIso(v){if(typeof v==='number'){const p=XLSX.SSF.parse_date_code(v);return p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:''}if(v){const d=new Date(v);if(!Number.isNaN(d.getTime()))return d.toISOString().slice(0,10)}return ''}
+  function normalize(rows){return rows.map((r,i)=>{const date=dateIso(first(r,'Date','TANGGAL'));const actual=num(first(r,'Actual_L_per_HM_KM','Actual_LHM','Actual L/HM')),std=num(first(r,'Standard_LHM','Standard L/HM')),vp=num(first(r,'Variance_Pct','Variance %'));let st=first(r,'Consumption_Status','Status');if(!st)st=std==null?'NO STANDARD':vp==null?'NO DATA':vp<=-.10?'EFFICIENT':vp<=.10?'NORMAL':vp<=.20?'WARNING':'OVER CONSUMPTION';return {Transaction_ID:first(r,'Transaction_ID','Transaction ID')||`AUTO-${i+1}`,Date:date||'',Day:first(r,'Day','HARI'),Time:first(r,'Time','JAM'),Shift:first(r,'Shift','SHIFT'),Unit_Code:first(r,'Unit_Code','Unit Code'),Category:first(r,'Category','CATEGORY'),Unit_Type:first(r,'Unit_Type','Unit Type'),Fuel_Liter:num(first(r,'Fuel_Liter','Fuel Out_Liter','Fuel_Out_Liter','Fuel Out Liter'))||0,Meter_Before:num(first(r,'Meter_Before','HM_KM _Before','HM_KM_Before','HM/KM Before')),Meter_Current:num(first(r,'Meter_Current','HM_KM _Current','HM_KM_Current','HM/KM Current')),Delta_HM_KM:num(first(r,'Delta_HM_KM','Total_HM_KM','Total HM/KM')),Actual_LHM:actual,Fuel_Truck:first(r,'Fuel_Truck','Fuel Truck'),Mtech_Code:first(r,'Mtech_Code','Mtech Code'),Unit_Group_Code:first(r,'Unit_Group_Code','Unit Group Code'),Manpower:first(r,'Manpower','MANPOWER'),Unit_Position:first(r,'Unit_Position','Stock','Position'),Standard_LHM:std,Variance_LHM:num(first(r,'Variance_LHM','Variance L/HM')),Variance_Pct:vp,Consumption_Status:String(st||'').trim().toUpperCase(),Standard_Match:first(r,'Standard_Match','Standard Match')};}).filter(r=>r.Date&&r.Unit_Code&&r.Fuel_Liter>0)}
+  try{
+    const res=await fetch('Fuel_Database_Dashboard_Ready_Final.xlsx?v='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);
+    const buf=await res.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});window.__FUEL_DEFAULT_WB=wb;
+    const sheet=wb.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':wb.SheetNames[0];
+    window.FUEL_DATA=normalize(sheetObjects(wb.Sheets[sheet],['Transaction_ID','Date','Unit_Code']));
+    if(!window.FUEL_DATA.length)throw new Error('No valid rows')
+  }catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];window.__FUEL_DEFAULT_WB=null}
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
   await load('app.js?v='+q);await load('v733.js?v='+q);await load('v741.js?v='+q);await load('v743-ui.js?v='+q);await load('v747-fix.js?v='+q);await load('v748-fix.js?v='+q);await load('v752-upload-fix.js?v='+q);await load('v754-persist.js?v='+q);
 })();

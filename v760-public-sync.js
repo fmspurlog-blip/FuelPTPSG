@@ -7,14 +7,17 @@ const set=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(_){ }};
 const maxUsage=d=>Array.isArray(d)&&d.length?[...d].map(x=>x.Date||'').sort().at(-1)||'':'';
 const maxReceipt=d=>Array.isArray(d)&&d.length?[...d].map(x=>x.Date||'').sort().at(-1)||'':'';
 const maxStock=s=>s?.availableDates?.length?[...s.availableDates].sort().at(-1):Object.keys(s?.snapshots||{}).sort().at(-1)||'';
-function chooseUsage(){const l=get(UKEY),p=D.usage||[];return maxUsage(l)>=maxUsage(p)&&Array.isArray(l)&&l.length?l:p}
-function chooseReceipt(){const l=get(RKEY),p=D.receipts||[];return maxReceipt(l)>=maxReceipt(p)&&Array.isArray(l)&&l.length?l:p}
-function chooseStock(){const l=get(SKEY),p=D.stock;return maxStock(l)>=maxStock(p)&&l?.snapshots?l:p}
+// Public data is authoritative whenever the newest date is equal.
+// Local data is used only when it is genuinely newer than the published snapshot.
+function chooseUsage(){const l=get(UKEY),p=D.usage||[];return maxUsage(l)>maxUsage(p)&&Array.isArray(l)&&l.length?l:p}
+function chooseReceipt(){const l=get(RKEY),p=D.receipts||[];return maxReceipt(l)>maxReceipt(p)&&Array.isArray(l)&&l.length?l:p}
+function chooseStock(){const l=get(SKEY),p=D.stock;return maxStock(l)>maxStock(p)&&l?.snapshots?l:p}
 function applyBest(){
   const u=chooseUsage(),r=chooseReceipt(),s=chooseStock();
   if(Array.isArray(u)&&u.length){set(UKEY,u);try{if(typeof state!=='undefined'){state.raw=u.map(x=>({...x}));state.filtered=[];state.page=1;if(typeof initFilters==='function')initFilters();if(typeof applyFilters==='function')applyFilters();else if(typeof renderAll==='function'){state.filtered=[...state.raw];renderAll()}}}catch(e){console.warn('public usage',e)}}
   if(Array.isArray(r)){window.__FUEL_RECEIPTS=r.map(x=>({...x}));set(RKEY,window.__FUEL_RECEIPTS)}
   if(s?.snapshots){window.__FUEL_STOCK_DATA=JSON.parse(JSON.stringify(s));set(SKEY,window.__FUEL_STOCK_DATA);try{if(typeof stockData!=='undefined'){stockData.snapshots=window.__FUEL_STOCK_DATA.snapshots;stockData.availableDates=window.__FUEL_STOCK_DATA.availableDates}}catch(_){ }}
+  try{if(typeof renderReceipt==='function')renderReceipt()}catch(_){ }
   try{if(typeof renderStock==='function')renderStock()}catch(_){ }
   try{if(typeof renderFuelStockPage==='function')renderFuelStockPage()}catch(_){ }
 }

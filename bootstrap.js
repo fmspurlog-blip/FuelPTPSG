@@ -1,6 +1,6 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='76.0';
+  const q='76.1';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);addCss('v7.css?v='+q);addCss('v71.css?v='+q);addCss('v72.css?v='+q);addCss('v724.css?v='+q);addCss('v726.css?v='+q);addCss('v730.css?v='+q);addCss('v731.css?v='+q);addCss('v733.css?v='+q);addCss('v760-mobile.css?v='+q);
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
@@ -13,5 +13,5 @@
   try{await load('v760-public-data.js?v='+q)}catch(e){console.warn('Public data snapshot unavailable',e)}
   if(window.FUEL_STATIC_DATA?.usage?.length){window.FUEL_DATA=window.FUEL_STATIC_DATA.usage.map(r=>({...r}));window.__FUEL_DEFAULT_WB=null}
   else{try{const res=await fetch('Fuel_Database_Dashboard_Ready_Final.xlsx?v='+Date.now(),{cache:'no-store'});if(!res.ok)throw new Error('HTTP '+res.status);const buf=await res.arrayBuffer(),wb=XLSX.read(buf,{type:'array'});window.__FUEL_DEFAULT_WB=wb;const sheet=wb.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':wb.SheetNames[0];window.FUEL_DATA=normalize(sheetObjects(wb.Sheets[sheet],['Transaction_ID','Date','Unit_Code']));if(!window.FUEL_DATA.length)throw new Error('No valid rows')}catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];window.__FUEL_DEFAULT_WB=null}}
-  await load('app.js?v='+q);await load('v733.js?v='+q);await load('v741.js?v='+q);await load('v743-ui.js?v='+q);await load('v747-fix.js?v='+q);await load('v748-fix.js?v='+q);await load('v752-upload-fix.js?v='+q);await load('v754-persist.js?v='+q);await load('v757-time-fix.js?v='+q);await load('v758-stock-period-fix.js?v='+q);await load('v760-public-sync.js?v='+q);
+  await load('app.js?v='+q);await load('v733.js?v='+q);await load('v741.js?v='+q);await load('v743-ui.js?v='+q);await load('v747-fix.js?v='+q);await load('v748-fix.js?v='+q);await load('v752-upload-fix.js?v='+q);await load('v760-public-sync.js?v='+q);await load('v754-persist.js?v='+q);await load('v757-time-fix.js?v='+q);await load('v758-stock-period-fix.js?v='+q);
 })();

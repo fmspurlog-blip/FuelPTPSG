@@ -1,7 +1,7 @@
 (()=>{
 'use strict';
 
-const VERSION='75.3';
+const VERSION='75.5';
 const num=x=>(x===''||x==null)?null:Number(x);
 const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
 const isoDate=value=>{
@@ -25,35 +25,53 @@ const timeText=value=>{
   return m?`${String(m[1]).padStart(2,'0')}:${m[2]}`:s;
 };
 
+function sheetObjects(sheet, required=['Date']){
+  const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:'',raw:true});
+  let headerIndex=-1;
+  for(let i=0;i<Math.min(grid.length,12);i++){
+    const row=(grid[i]||[]).map(v=>String(v??'').trim());
+    if(required.every(key=>row.includes(key))){headerIndex=i;break;}
+  }
+  if(headerIndex<0)return XLSX.utils.sheet_to_json(sheet,{defval:'',raw:true});
+  const headers=(grid[headerIndex]||[]).map(v=>String(v??'').trim());
+  return grid.slice(headerIndex+1).map(row=>{
+    const obj={};headers.forEach((h,j)=>{if(h)obj[h]=row?.[j]??'';});return obj;
+  });
+}
+
+function first(r,...keys){for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return r[k];}return '';}
+
 function normalizeRows(rows){
   return rows.map((r,i)=>{
-    const date=isoDate(r.Date);
-    const actual=num(r.Actual_L_per_HM_KM??r.Actual_LHM);
-    const std=num(r.Standard_LHM);
-    const vp=num(r.Variance_Pct);
-    let st=r.Consumption_Status||r.Status||'';
+    const date=isoDate(first(r,'Date','TANGGAL'));
+    const actual=num(first(r,'Actual_L_per_HM_KM','Actual_LHM','Actual L/HM'));
+    const std=num(first(r,'Standard_LHM','Standard L/HM'));
+    const vp=num(first(r,'Variance_Pct','Variance %'));
+    let st=first(r,'Consumption_Status','Status');
     if(!st) st=std==null?'NO STANDARD':vp==null?'NO DATA':vp<=-.10?'EFFICIENT':vp<=.10?'NORMAL':vp<=.20?'WARNING':'OVER CONSUMPTION';
     return {
-      Transaction_ID:r.Transaction_ID||`UPLOAD-${i+1}`,
-      Date:date,Day:r.Day||'',Time:r.Time||'',Shift:r.Shift||'',
-      Unit_Code:r.Unit_Code||'',Category:r.Category||'',Unit_Type:r.Unit_Type||'',
-      Fuel_Liter:num(r.Fuel_Liter)||0,
-      Meter_Before:num(r.Meter_Before),Meter_Current:num(r.Meter_Current),Delta_HM_KM:num(r.Delta_HM_KM),
-      Actual_LHM:actual,Fuel_Truck:r.Fuel_Truck||'',Mtech_Code:r.Mtech_Code||'',
-      Unit_Group_Code:r.Unit_Group_Code||'',Manpower:r.Manpower||'',Unit_Position:r.Unit_Position||'',
-      Standard_LHM:std,Variance_LHM:num(r.Variance_LHM),Variance_Pct:vp,
-      Consumption_Status:st,Standard_Match:r.Standard_Match||''
+      Transaction_ID:first(r,'Transaction_ID','Transaction ID')||`UPLOAD-${i+1}`,
+      Date:date,Day:first(r,'Day','HARI'),Time:first(r,'Time','JAM'),Shift:first(r,'Shift','SHIFT'),
+      Unit_Code:first(r,'Unit_Code','Unit Code'),Category:first(r,'Category','CATEGORY'),Unit_Type:first(r,'Unit_Type','Unit Type'),
+      Fuel_Liter:num(first(r,'Fuel_Liter','Fuel Out_Liter','Fuel_Out_Liter','Fuel Out Liter'))||0,
+      Meter_Before:num(first(r,'Meter_Before','HM_KM _Before','HM_KM_Before','HM/KM Before')),
+      Meter_Current:num(first(r,'Meter_Current','HM_KM _Current','HM_KM_Current','HM/KM Current')),
+      Delta_HM_KM:num(first(r,'Delta_HM_KM','Total_HM_KM','Total HM/KM')),
+      Actual_LHM:actual,Fuel_Truck:first(r,'Fuel_Truck','Fuel Truck'),Mtech_Code:first(r,'Mtech_Code','Mtech Code'),
+      Unit_Group_Code:first(r,'Unit_Group_Code','Unit Group Code'),Manpower:first(r,'Manpower','MANPOWER'),Unit_Position:first(r,'Unit_Position','Stock','Position'),
+      Standard_LHM:std,Variance_LHM:num(first(r,'Variance_LHM','Variance L/HM')),Variance_Pct:vp,
+      Consumption_Status:String(st||'').trim().toUpperCase(),Standard_Match:first(r,'Standard_Match','Standard Match')
     };
   }).filter(r=>r.Date&&r.Unit_Code&&r.Fuel_Liter>0);
 }
 
 function parseReceipts(wb){
   if(!wb.SheetNames.includes('Fuel_Receipt'))return [];
-  const rows=XLSX.utils.sheet_to_json(wb.Sheets['Fuel_Receipt'],{defval:''});
+  const rows=sheetObjects(wb.Sheets['Fuel_Receipt'],['Date','Qty_Received_Liter']);
   return rows.map(r=>({
-    Date:isoDate(r.Date),Supplier:r.Supplier||'',No_Surat_Jalan:r.No_Surat_Jalan||'',
-    Qty:Number(r.Qty_Received_Liter)||0,Transporter:r.Transporter||'',Fuel_Truck:r.Fuel_Truck||'',
-    Reference:r.Reference||'',Remarks:r.Remarks||''
+    Date:isoDate(first(r,'Date','TANGGAL')),Supplier:first(r,'Supplier','SUPPLIER'),No_Surat_Jalan:first(r,'No_Surat_Jalan','No Surat Jalan'),
+    Qty:Number(first(r,'Qty_Received_Liter','Qty Received Liter','QTY'))||0,Transporter:first(r,'Transporter','TRANSPORTER'),
+    Fuel_Truck:first(r,'Fuel_Truck','FS_Fuel Truck','Fuel Truck'),Reference:first(r,'Reference','REFERENCE'),Remarks:first(r,'Remarks','REMARKS')
   })).filter(r=>r.Date&&r.Qty>0);
 }
 
@@ -61,7 +79,7 @@ function parseStock(wb){
   if(!wb.SheetNames.includes('Stock Calculasi'))return {snapshots:{},availableDates:[]};
   const rows=XLSX.utils.sheet_to_json(wb.Sheets['Stock Calculasi'],{header:1,defval:'',raw:true});
   const snapshots={};
-  for(let i=2;i<rows.length;i++){
+  for(let i=0;i<rows.length;i++){
     const r=rows[i]||[];
     const date=isoDate(r[1]);
     if(!date)continue;
@@ -136,9 +154,9 @@ async function handleExcelFile(file){
     const wb=XLSX.read(buf,{type:'array'});
     const sheetName=wb.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':wb.SheetNames[0];
     if(!sheetName) throw new Error('Workbook tidak memiliki sheet yang dapat dibaca.');
-    const rows=XLSX.utils.sheet_to_json(wb.Sheets[sheetName],{defval:''});
+    const rows=sheetObjects(wb.Sheets[sheetName],['Transaction_ID','Date','Unit_Code']);
     const data=normalizeRows(rows);
-    if(!data.length) throw new Error('Tidak ada transaksi valid. Pastikan Date, Unit_Code, dan Fuel_Liter terisi.');
+    if(!data.length) throw new Error('Tidak ada transaksi valid. Pastikan header Fuel_Usage_Clean, Date, Unit_Code, dan Fuel Out_Liter/Fuel_Liter terisi.');
     if(typeof state==='undefined') throw new Error('Dashboard state belum siap. Silakan refresh lalu coba lagi.');
 
     processAuxWorkbook(wb);
@@ -158,11 +176,8 @@ async function handleExcelFile(file){
   }
 }
 
-// Process the already-loaded default workbook so Receipt and Stock are automatic on F5.
 if(window.__FUEL_DEFAULT_WB){try{processAuxWorkbook(window.__FUEL_DEFAULT_WB);}catch(e){console.warn(e)}}
 installStableLogo();
-
-// Window capture runs before the older document-capture authorization guard.
 window.addEventListener('change',e=>{
   const input=e.target;
   if(!input||input.id!=='excelUpload')return;
@@ -170,7 +185,6 @@ window.addEventListener('change',e=>{
   const file=input.files?.[0];
   if(file)handleExcelFile(file);
 },true);
-
 ['dateFrom','dateTo','truckFilter'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>setTimeout(()=>{renderReceipt();if(typeof renderStock==='function')renderStock();installStableLogo();},100)));
 document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>setTimeout(()=>{renderReceipt();if(typeof renderStock==='function')renderStock();installStableLogo();},120)));
 window.addEventListener('resize',()=>setTimeout(installStableLogo,60),{passive:true});

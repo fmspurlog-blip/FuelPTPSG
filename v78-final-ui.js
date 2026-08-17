@@ -4,14 +4,23 @@
 function installBrand(){
   const box=document.querySelector('.logo-box');
   if(!box)return;
-  box.innerHTML='';
   box.classList.add('v78-final-brand');
+  box.innerHTML=`<div class="v78-refuel-brand" aria-label="Refueling Control">
+    <svg class="v78-fuelgun" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M23 8h28a6 6 0 0 1 6 6v42H17V14a6 6 0 0 1 6-6Z" fill="#1687f8"/>
+      <rect x="25" y="17" width="24" height="16" rx="2" fill="#dff1ff"/>
+      <path d="M57 20h7l9 10v22c0 8-4 13-11 13-7 0-11-5-11-13v-8h7v8c0 4 1 6 4 6s4-2 4-6V33l-9-10Z" fill="#ff9b25"/>
+      <rect x="12" y="56" width="50" height="10" rx="2" fill="#0b5ca8"/>
+      <circle cx="37" cy="45" r="5" fill="#fff"/>
+    </svg>
+    <div class="v78-refuel-title">REFUELING CONTROL</div>
+  </div>`;
 }
 
 function restoreUnitIcons(){
   const icons=document.querySelectorAll('.unit-type-panel .unit-icon');
-  if(icons[0])icons[0].innerHTML='<img src="excavator-icon.svg?v=78-final" alt="Excavator" loading="eager">';
-  if(icons[1])icons[1].innerHTML='<img src="gears-icon.svg?v=78-final" alt="General Support" loading="eager">';
+  if(icons[0])icons[0].innerHTML='<img src="excavator-icon.svg?v=78-final2" alt="Excavator" loading="eager">';
+  if(icons[1])icons[1].innerHTML='<img src="gears-icon.svg?v=78-final2" alt="General Support" loading="eager">';
 }
 
 function refineStock(){
@@ -56,10 +65,11 @@ function apply(){
 let s=document.getElementById('v78-final-ui-style');
 if(!s){s=document.createElement('style');s.id='v78-final-ui-style';document.head.appendChild(s)}
 s.textContent=`
-/* Permanent app identity: no external logo file */
-.logo-box.v78-final-brand{position:relative!important;background:linear-gradient(135deg,#071b2c,#0d304a)!important;display:block!important;min-height:76px!important;height:76px!important;overflow:hidden!important;border-radius:8px!important}
-.logo-box.v78-final-brand::before{content:'⛽';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:32px;line-height:1;display:block!important;opacity:1!important;visibility:visible!important}
-.logo-box.v78-final-brand::after{content:'REFUELING CONTROL\\A FUEL MANAGEMENT SYSTEM\\A PT PRIMA SARANA GEMILANG';white-space:pre;position:absolute;left:53px;right:6px;top:15px;color:#fff;font:900 11px/1.18 Segoe UI,Arial,sans-serif;letter-spacing:.25px;display:block!important;opacity:1!important;visibility:visible!important;text-align:left!important}
+/* Permanent Refueling Control identity - actual DOM, no pseudo-elements */
+.logo-box.v78-final-brand{background:linear-gradient(135deg,#071b2c,#0d304a)!important;display:flex!important;align-items:center!important;justify-content:center!important;min-height:76px!important;height:76px!important;overflow:hidden!important;border-radius:8px!important;padding:4px!important;box-sizing:border-box!important}
+.v78-refuel-brand{width:100%;height:100%;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;gap:1px!important;visibility:visible!important;opacity:1!important}
+.v78-fuelgun{display:block!important;width:44px!important;height:44px!important;flex:0 0 44px!important;visibility:visible!important;opacity:1!important}
+.v78-refuel-title{display:block!important;color:#fff!important;font:900 11px/1.05 Segoe UI,Arial,sans-serif!important;letter-spacing:.5px!important;text-align:center!important;white-space:nowrap!important;visibility:visible!important;opacity:1!important}
 
 /* Fuel stock final layout */
 .stock-panel{position:relative!important;padding-bottom:12px!important}
@@ -69,11 +79,12 @@ s.textContent=`
 .stock-panel .stock-orb strong{font-size:17px!important}
 .stock-panel .stock-orb span{font-size:9px!important}
 
-/* Shift Mix: larger but constrained inside panel */
-.shift-panel .shift-content{display:flex!important;align-items:center!important;justify-content:center!important;gap:16px!important;min-height:168px!important;overflow:hidden!important}
+/* Shift Mix: larger, legend closer to donut */
+.shift-panel .shift-content{display:flex!important;align-items:center!important;justify-content:center!important;gap:5px!important;min-height:168px!important;overflow:hidden!important}
 .shift-panel .chart.donut{width:158px!important;height:158px!important;min-width:158px!important;min-height:158px!important;max-width:158px!important;max-height:158px!important;flex:0 0 158px!important}
 .shift-panel #shiftChart{width:158px!important;height:158px!important;max-width:158px!important;max-height:158px!important}
-.shift-panel .shift-legend{min-width:0!important;max-width:145px!important}
+.shift-panel .shift-legend{min-width:0!important;max-width:132px!important;margin-left:-2px!important;transform:translateX(-5px)!important}
+.shift-panel .shift-item{gap:6px!important}
 .shift-panel .shift-item small{font-size:10px!important;font-weight:900!important;color:#fff!important}
 .shift-panel .shift-item strong{font-size:15px!important;line-height:1.1!important;color:#fff!important}
 .shift-panel .shift-item strong span{font-size:9px!important}
@@ -85,15 +96,17 @@ s.textContent=`
 
 @media(max-width:768px){
  .logo-box.v78-final-brand{min-height:64px!important;height:64px!important}
- .logo-box.v78-final-brand::before{left:9px;font-size:27px}
- .logo-box.v78-final-brand::after{left:45px;top:12px;font-size:9px}
+ .v78-fuelgun{width:36px!important;height:36px!important;flex-basis:36px!important}
+ .v78-refuel-title{font-size:9px!important}
  .stock-panel .stock-total{top:122px!important;left:75%!important}
  .shift-panel .chart.donut,.shift-panel #shiftChart{width:142px!important;height:142px!important;min-width:142px!important;min-height:142px!important;max-width:142px!important;max-height:142px!important;flex-basis:142px!important}
+ .shift-panel .shift-content{gap:2px!important}
+ .shift-panel .shift-legend{transform:translateX(-4px)!important}
 }
 `;
 
 apply();
-[250,1200,3200].forEach(t=>setTimeout(apply,t));
+[250,1200].forEach(t=>setTimeout(apply,t));
 document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>requestAnimationFrame(apply)));
 ['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].forEach(id=>document.getElementById(id)?.addEventListener(id==='unitSearch'?'input':'change',()=>requestAnimationFrame(apply)));
 window.addEventListener('pageshow',apply);

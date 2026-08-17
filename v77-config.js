@@ -1,7 +1,7 @@
 // FUEL MANAGEMENT SYSTEM V77 - REMOTE DATABASE CONFIGURATION
-// Setelah Google Apps Script Web App dibuat, tempel URL /exec pada apiUrl.
+// Permanent Google Apps Script Web App endpoint.
 window.FUEL_V77 = Object.assign({
-  apiUrl: '',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbw_TVvOc_JnE1uzqPaog4A3NRkmfys_mOyIhfybZVwVUhhIaB_T_M4awUzM6R3zFB6C/exec',
   pollMs: 60000,
   requestTimeoutMs: 20000
 }, window.FUEL_V77 || {});

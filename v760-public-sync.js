@@ -52,6 +52,6 @@ function applyBest(){
   try{if(typeof renderFuelStockPage==='function')renderFuelStockPage()}catch(_){ }
 }
 setTimeout(applyBest,50);setTimeout(applyBest,250);setTimeout(applyBest,700);
+// Do not re-apply public data on hash navigation; that used to overwrite a fresh upload.
 window.addEventListener('pageshow',()=>setTimeout(applyBest,100));
-window.addEventListener('hashchange',()=>setTimeout(applyBest,100));
 })();

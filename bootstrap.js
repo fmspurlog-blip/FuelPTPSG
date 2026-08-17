@@ -1,6 +1,6 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='77.1';
+  const q='77.2';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   addCss('v6.css?v='+q);addCss('v7.css?v='+q);addCss('v71.css?v='+q);addCss('v72.css?v='+q);addCss('v724.css?v='+q);addCss('v726.css?v='+q);addCss('v730.css?v='+q);addCss('v731.css?v='+q);addCss('v733.css?v='+q);addCss('v760-mobile.css?v='+q);
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});

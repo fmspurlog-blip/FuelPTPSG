@@ -1,11 +1,10 @@
 (()=>{
 'use strict';
-const VER='77.9';
+const VER='77.10';
 const WHITE='#fff';
 const fmt=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
 const dateLong=s=>{if(!s)return'-';const d=new Date(String(s)+'T00:00:00');return Number.isNaN(d.getTime())?String(s):new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'long',year:'numeric'}).format(d)};
 
-/* Lightweight inline SVG logo: no image request, no observer, Safari/iPhone safe. */
 function renderLogo(){
   const box=document.querySelector('.logo-box');
   if(!box||box.dataset.v779Logo==='1')return;
@@ -45,7 +44,6 @@ function patchLegend(c,type){
 }
 function fixLegends(){try{if(window.Chart){Chart.defaults.color=WHITE;if(Chart.defaults.plugins?.legend?.labels)Chart.defaults.plugins.legend.labels.color=WHITE}if(typeof state!=='undefined'&&state.charts){patchLegend(state.charts.truck,'truck');patchLegend(state.charts.status,'status')}}catch(e){console.warn('v779 legend',e)}}
 
-/* Replace receipt renderer once, instead of observers/polling. */
 try{
   if(typeof renderReceiptPage==='function'&&!renderReceiptPage.__v779){
     const original=renderReceiptPage;
@@ -80,6 +78,6 @@ document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListen
 ['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].forEach(id=>document.getElementById(id)?.addEventListener(id==='unitSearch'?'input':'change',()=>requestAnimationFrame(()=>{if(document.getElementById('fuel-receipt')?.classList.contains('active-section'))renderReceiptFinal();fixLegends();})));
 window.addEventListener('pageshow',()=>{renderLogo();requestAnimationFrame(()=>{fixLegends();if(document.getElementById('fuel-receipt')?.classList.contains('active-section'))renderReceiptFinal();})},{once:false});
 
-/* Visible version marker. */
-const h=document.querySelector('.hero h1');if(h)h.textContent='FUEL MANAGEMENT SYSTEM V77.9';
+const h=document.querySelector('.hero h1');if(h)h.textContent='FUEL MANAGEMENT SYSTEM V77.10';
+document.title='Fuel Management System V77.10 | PT Prima Sarana Gemilang';
 })();

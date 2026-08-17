@@ -1,6 +1,6 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='78.0';
+  const q='78-final';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
@@ -24,10 +24,10 @@
 
   await load('app.js?v='+q);
   if(cloudMode){
-    // V78 cloud path: only security + permanent database + one final stable UI.
     await load('v741.js?v='+q);
     await load('v770-remote-sync.js?v='+q);
     await load('v78-stable.js?v='+q);
+    await load('v78-final-ui.js?v='+q);
   }else{
     await load('v733.js?v='+q);
     await load('v741.js?v='+q);

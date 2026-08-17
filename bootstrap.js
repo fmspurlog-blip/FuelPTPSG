@@ -1,6 +1,6 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='77.10';
+  const q='77.11';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
@@ -13,7 +13,6 @@
 
   try{await load('v77-config.js?v='+q)}catch(e){console.warn('V77 config unavailable',e)}
   const cloudMode=!!String(window.FUEL_V77?.apiUrl||'').trim();
-
   if(cloudMode){
     try{const cached=JSON.parse(localStorage.getItem('fuelptpsg_usage_v756')||'[]');window.FUEL_DATA=Array.isArray(cached)?cached:[]}catch(_){window.FUEL_DATA=[]}
     window.__FUEL_DEFAULT_WB=null;
@@ -30,7 +29,6 @@
   await load('v747-fix.js?v='+q);
   await load('v748-fix.js?v='+q);
   await load('v752-upload-fix.js?v='+q);
-
   if(cloudMode){
     await load('v770-remote-sync.js?v='+q);
     await load('v779-performance.js?v='+q);

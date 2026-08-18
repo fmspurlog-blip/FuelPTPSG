@@ -3,124 +3,39 @@
 const fuelGun=`<svg class="v783-fuelgun" viewBox="0 0 62 82" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="8" y="6" width="34" height="58" rx="4" fill="#ff9800"/><rect x="14" y="13" width="22" height="14" rx="2" fill="#fff"/><rect x="18" y="17" width="14" height="7" rx="1" fill="#173249"/><path d="M25 34c-6 8-9 14-9 19a10 10 0 0 0 20 0c0-5-5-12-11-19Zm0 9c3 4 5 8 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10Z" fill="#09243a"/><path d="M42 16h6l6 7v20c0 6-4 10-9 10h-4v-6h4c2 0 3-2 3-4V26l-6-6Z" fill="#ff9800"/><rect x="5" y="64" width="41" height="5" rx="2" fill="#ff9800"/></svg>`;
 const excavator=`<svg viewBox="0 0 170 90" xmlns="http://www.w3.org/2000/svg" aria-label="Excavator"><g stroke-linecap="round" stroke-linejoin="round"><rect x="18" y="65" width="75" height="16" rx="8" fill="#7d93a5" stroke="#bdd0de" stroke-width="2.5"/><circle cx="34" cy="73" r="5" fill="#0a2134"/><circle cx="54" cy="73" r="5" fill="#0a2134"/><circle cx="74" cy="73" r="5" fill="#0a2134"/><path d="M39 63V35h29l15 16v12Z" fill="#ff9c12" stroke="#ffc04b" stroke-width="2.5"/><rect x="48" y="41" width="15" height="12" rx="1.5" fill="#edf8ff" stroke="#9fc7df" stroke-width="2"/><path d="M77 53 100 24l10 5-18 31" fill="none" stroke="#ff9c12" stroke-width="7"/><path d="m106 30 27 17-7 10-28-12" fill="none" stroke="#ff9c12" stroke-width="7"/><path d="M130 50h25l-7 22-26-2Z" fill="#ff9c12" stroke="#ffc04b" stroke-width="2.5"/></g></svg>`;
 const gearPath=`M0-26 7-25 10-18 17-20 22-15 20-8 26-4 26 4 20 8 22 15 17 20 10 18 7 25 0 26-4 20-12 22-17 17-15 10-22 7-26 0-25-7-18-10-20-17-15-22-8-20-4-26Z`;
-const gears=`<svg class="v783-gears" viewBox="0 0 170 90" xmlns="http://www.w3.org/2000/svg" aria-label="Three gears"><defs><linearGradient id="steelFinal783" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".45" stop-color="#dce8ef"/><stop offset="1" stop-color="#7892a5"/></linearGradient></defs><g fill="url(#steelFinal783)" stroke="#5d7589" stroke-width="2.2"><g transform="translate(54 52) scale(1.05)"><path d="${gearPath}"/><circle r="10" fill="#17364d" stroke="#9bb0bf"/></g><g transform="translate(103 31) scale(.82)"><path d="${gearPath}"/><circle r="10" fill="#17364d" stroke="#9bb0bf"/></g><g transform="translate(121 66) scale(.64)"><path d="${gearPath}"/><circle r="10" fill="#17364d" stroke="#9bb0bf"/></g></g></svg>`;
+const gears=`<svg class="v783-gears" viewBox="0 0 170 90" xmlns="http://www.w3.org/2000/svg" aria-label="Three gears"><defs><linearGradient id="steelFinal783" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".46" stop-color="#dce8ef"/><stop offset="1" stop-color="#7892a5"/></linearGradient></defs><g fill="url(#steelFinal783)" stroke="#5d7589" stroke-width="2.2"><g transform="translate(54 52) scale(1.05)"><path d="${gearPath}"/><circle r="10" fill="#17364d"/></g><g transform="translate(103 31) scale(.82)"><path d="${gearPath}"/><circle r="10" fill="#17364d"/></g><g transform="translate(121 66) scale(.64)"><path d="${gearPath}"/><circle r="10" fill="#17364d"/></g></g></svg>`;
 const stockHome={parent:null,next:null};
+const $=s=>document.querySelector(s);
+const fmtN=v=>new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}).format(Number(v)||0);
+const isoDate=v=>String(v||'').slice(0,10);
+const dayID=v=>{if(!v)return'-';try{return new Intl.DateTimeFormat('id-ID',{weekday:'long'}).format(new Date(v+'T00:00:00'))}catch(_){return'-'}};
+const dateID=v=>{if(!v)return'-';try{return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date(v+'T00:00:00'))}catch(_){return v}};
+const first=(o,...keys)=>{for(const k of keys)if(o&&o[k]!=null&&o[k]!=='')return o[k];return''};
 
-function paintBrand(){
-  const box=document.querySelector('.logo-box');
-  if(!box)return;
-  box.classList.add('v783-brand-box');
-  box.innerHTML=`<div class="v783-brand">${fuelGun}<div class="v783-brand-copy"><strong>REFUELING</strong><strong>CONTROL</strong></div></div>`;
-}
-
-function placeStock(){
-  const total=document.querySelector('.stock-panel .stock-total');
-  const cols=document.querySelector('.stock-panel .stock-cols');
-  if(!total||!cols)return;
-  if(!stockHome.parent){stockHome.parent=total.parentNode;stockHome.next=total.nextSibling;}
-  const mobile=window.matchMedia('(max-width:768px)').matches;
-  if(mobile){
-    const truckCol=cols.children[1];
-    if(truckCol&&total.parentNode!==truckCol)truckCol.appendChild(total);
-    total.classList.add('v783-stock-mobile');
-  }else{
-    total.classList.remove('v783-stock-mobile');
-    if(stockHome.parent&&total.parentNode!==stockHome.parent){
-      const anchor=(stockHome.next&&stockHome.next.parentNode===stockHome.parent)?stockHome.next:cols;
-      stockHome.parent.insertBefore(total,anchor);
-    }
-  }
-}
-
-function forceWhiteLegend(chart){
-  if(!chart?.options?.plugins?.legend)return;
-  const legend=chart.options.plugins.legend;
-  legend.display=true;
-  legend.position='right';
-  legend.labels=legend.labels||{};
-  legend.labels.color='#ffffff';
-  legend.labels.boxWidth=10;
-  legend.labels.padding=10;
-  legend.labels.font={size:9,weight:'700',family:'Segoe UI'};
-  if(legend.labels.generateLabels&&!legend.labels.generateLabels.__v783white){
-    const base=legend.labels.generateLabels;
-    const wrapped=function(c){return base(c).map(x=>({...x,fontColor:'#ffffff',textStrokeColor:'#ffffff'}));};
-    wrapped.__v783white=true;
-    legend.labels.generateLabels=wrapped;
-  }
-}
-
-function polishCharts(){
-  try{
-    const charts=(typeof state!=='undefined'&&state.charts)?state.charts:{};
-    ['truck','status'].forEach(name=>{
-      const c=charts[name];
-      if(!c)return;
-      forceWhiteLegend(c);
-      c.update('none');
-    });
-    const shift=charts.shift;
-    if(shift){
-      shift.options.radius='100%';
-      shift.options.cutout='61%';
-      if(shift.options.plugins.centerText)shift.options.plugins.centerText.text='';
-      const total=(typeof sumFuel==='function'&&state?.filtered)?sumFuel(state.filtered):0;
-      shift.options.plugins.v783Center={text:(typeof fmt==='function'?fmt(total):String(total||0)),sub:'Liter'};
-      shift.resize();
-      shift.update('none');
-    }
-  }catch(_){ }
-}
-
-function applyV783(){
-  paintBrand();
-  const icons=document.querySelectorAll('.unit-type-panel .unit-icon');
-  if(icons[0])icons[0].innerHTML=excavator;
-  if(icons[1])icons[1].innerHTML=gears;
-  const stockTitle=document.querySelector('.stock-panel>h3');
-  if(stockTitle)stockTitle.textContent='FUEL STOCK';
-  const stockLabel=document.querySelector('.stock-panel .stock-total>small');
-  if(stockLabel)stockLabel.textContent='TOTAL STOCK';
-  placeStock();
-  polishCharts();
-}
-
-if(typeof Chart!=='undefined'&&!Chart.registry.plugins.get('v783Center')){
-  Chart.register({id:'v783Center',afterDraw(c,args,opts){
-    if(!opts||!opts.text)return;
-    const {ctx,chartArea:{left,right,top,bottom}}=c;
-    ctx.save();
-    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#fff';
-    ctx.font='800 28px Segoe UI';ctx.fillText(opts.text,(left+right)/2,(top+bottom)/2-7);
-    ctx.fillStyle='#d9e5ef';ctx.font='600 13px Segoe UI';ctx.fillText(opts.sub||'',(left+right)/2,(top+bottom)/2+22);
-    ctx.restore();
-  }});
-}
-
-let st=document.getElementById('v783-ui-style');
-if(!st){st=document.createElement('style');st.id='v783-ui-style';document.head.appendChild(st)}
+function paintBrand(){const box=$('.logo-box');if(!box)return;box.classList.add('v783-brand-box');box.innerHTML=`<div class="v783-brand">${fuelGun}<div class="v783-brand-copy"><strong>REFUELING</strong><strong>CONTROL</strong></div></div>`;}
+function setHeader(){const h=$('.hero h1'),p=$('.hero p');if(h)h.textContent='FUEL MANAGEMENT SYSTEM V78.3';if(p)p.textContent='PT PRIMA SARANA GEMILANG SITE ABM - LUWUK';}
+function placeStock(){const total=$('.stock-panel .stock-total'),cols=$('.stock-panel .stock-cols');if(!total||!cols)return;if(!stockHome.parent){stockHome.parent=total.parentNode;stockHome.next=total.nextSibling}const mobile=matchMedia('(max-width:768px)').matches;if(mobile){const truckCol=cols.children[1];if(truckCol&&total.parentNode!==truckCol)truckCol.appendChild(total);total.classList.add('v783-stock-mobile')}else{total.classList.remove('v783-stock-mobile');if(stockHome.parent&&total.parentNode!==stockHome.parent){const anchor=(stockHome.next&&stockHome.next.parentNode===stockHome.parent)?stockHome.next:cols;stockHome.parent.insertBefore(total,anchor)}}}
+function chartById(id){try{return window.Chart?.getChart(document.getElementById(id))||null}catch(_){return null}}
+function externalLegend(canvasId,cls){const c=chartById(canvasId);const canvas=document.getElementById(canvasId);const panel=canvas?.closest('.panel');if(!c||!panel)return;panel.classList.add('v783-white-legend-panel');let host=panel.querySelector('.'+cls);if(!host){host=document.createElement('div');host.className='v783-external-legend '+cls;panel.appendChild(host)}const ds=c.data.datasets?.[0]||{},labels=c.data.labels||[],colors=Array.isArray(ds.backgroundColor)?ds.backgroundColor:[];host.innerHTML=labels.map((l,i)=>`<div><i style="background:${colors[i]||'#fff'}"></i><b>${String(l||'').toUpperCase()} ${fmtN(ds.data?.[i])} L</b></div>`).join('');if(c.options?.plugins?.legend)c.options.plugins.legend.display=false;c.resize();c.update('none')}
+function polishCharts(){try{externalLegend('truckChart','v783-truck-legend');externalLegend('statusChart','v783-status-legend');const shift=chartById('shiftChart');if(shift){shift.options.radius='86%';shift.options.cutout='65%';if(shift.options.plugins?.centerText)shift.options.plugins.centerText.text=typeof sumFuel==='function'&&window.state?.filtered?fmtN(sumFuel(state.filtered)):'';shift.resize();shift.update('none')}}catch(_){}}
+function colorUsageStatus(){document.querySelectorAll('#usageTableBody tr').forEach(tr=>{const td=tr.lastElementChild;if(!td)return;const s=(td.textContent||'').trim().toUpperCase();td.classList.remove('v783-eff','v783-over','v783-warning','v783-normal');if(s.includes('EFFIC'))td.classList.add('v783-eff');else if(s.includes('OVER'))td.classList.add('v783-over');else if(s.includes('WARN'))td.classList.add('v783-warning');else if(s.includes('NORMAL'))td.classList.add('v783-normal')})}
+function receiptRows(){const a=Array.isArray(window.__FUEL_RECEIPTS)?window.__FUEL_RECEIPTS:[];const b=Array.isArray(window.RECON_DATA?.receiptDetails)?window.RECON_DATA.receiptDetails:[];return (a.length?a:b).filter(Boolean)}
+function renderReceiptV783(){const list=document.getElementById('receiptList'),canvas=document.getElementById('receiptChart');if(!list||!canvas)return;const from=document.getElementById('dateFrom')?.value||'',to=document.getElementById('dateTo')?.value||'';const rows=receiptRows().map(r=>({raw:r,date:isoDate(first(r,'Date','date')),qty:Number(first(r,'Qty','Qty_Received_Liter','qty','Quantity'))||0})).filter(x=>x.date&&x.qty>0&&(!from||x.date>=from)&&(!to||x.date<=to)).sort((a,b)=>b.date.localeCompare(a.date));list.innerHTML=rows.length?rows.slice(0,8).map(x=>{const r=x.raw,sj=first(r,'No_Surat_Jalan','No SJ/DO','No_SJ_DO','No SJ','DO'),sup=first(r,'Supplier','SUPPLIER'),po=first(r,'Ref_PO','Ref PO','Reference','PO');return `<div class="page-list-row v783-receipt-row"><em>${dateID(x.date)}</em><div><b>${sj||'-'}</b><small>${sup||'-'} · Ref PO: ${po||'-'}</small></div><strong>${fmtN(x.qty)} L</strong></div>`}).join(''):'<div class="v783-empty">Belum ada data Fuel Receipt pada periode ini.</div>';const daily={};rows.forEach(x=>daily[x.date]=(daily[x.date]||0)+x.qty);const labels=Object.keys(daily).sort();try{const old=chartById('receiptChart');if(old)old.destroy();if(labels.length&&window.Chart)new Chart(canvas,{type:'bar',data:{labels:labels.map(d=>d.slice(8,10)+'/'+d.slice(5,7)),datasets:[{label:'Fuel Receipt',data:labels.map(d=>daily[d]),backgroundColor:'#2d80ed',borderColor:'#73b1ff',borderWidth:1,borderRadius:3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#fff',boxWidth:10}},datalabels:{anchor:'end',align:'top',color:'#fff',font:{size:9,weight:'700'},formatter:v=>fmtN(v)}},scales:{x:{ticks:{color:'#a6bad0'},grid:{display:false}},y:{beginAtZero:true,ticks:{color:'#a6bad0'},grid:{color:'#29425a80'}}}}})}catch(e){console.warn('V78.3 receipt chart',e)}}
+function renderTruckDetail(){const host=document.getElementById('truckSummaryList');if(!host)return;const data=(typeof state!=='undefined'&&Array.isArray(state.filtered)&&state.filtered.length)?state.filtered:(Array.isArray(window.FUEL_DATA)?window.FUEL_DATA:[]);const m={},total=data.reduce((a,r)=>a+(Number(r.Fuel_Liter)||0),0);data.forEach(r=>{const d=isoDate(r.Date),ft=String(r.Fuel_Truck||'').trim(),q=Number(r.Fuel_Liter)||0;if(!d||!ft||!q)return;const k=d+'|'+ft;if(!m[k])m[k]={date:d,ft,qty:0};m[k].qty+=q});const rows=Object.values(m).sort((a,b)=>b.date.localeCompare(a.date)||a.ft.localeCompare(b.ft));host.innerHTML=rows.length?rows.map(x=>`<div class="v783-truck-detail"><div><strong>${dateID(x.date)} · ${dayID(x.date)}</strong><span>${x.ft}</span></div><b>Total Distribusi ${fmtN(x.qty)} Liter <em>(${total?((x.qty/total)*100).toFixed(1):'0.0'}%)</em></b></div>`).join(''):'<div class="v783-empty">Belum ada distribusi Fuel Truck pada periode ini.</div>'}
+function clearStaleCacheOnUpload(){const input=document.getElementById('excelUpload');if(!input||input.__v783cacheGuard)return;input.__v783cacheGuard=true;input.addEventListener('change',()=>{['fuelptpsg_usage_v756','fuelptpsg_receipts_v754','fuelptpsg_stock_v754'].forEach(k=>{try{localStorage.removeItem(k)}catch(_){}});try{localStorage.setItem('fuelptpsg_latest_upload_intent',String(Date.now()))}catch(_){}},{capture:true})}
+function applyV783(){paintBrand();setHeader();const icons=document.querySelectorAll('.unit-type-panel .unit-icon');if(icons[0])icons[0].innerHTML=excavator;if(icons[1])icons[1].innerHTML=gears;const stockTitle=$('.stock-panel>h3');if(stockTitle)stockTitle.textContent='FUEL STOCK';const stockLabel=$('.stock-panel .stock-total>small');if(stockLabel)stockLabel.textContent='TOTAL STOCK';placeStock();polishCharts();colorUsageStatus();renderReceiptV783();renderTruckDetail();clearStaleCacheOnUpload()}
+let st=document.getElementById('v783-ui-style');if(!st){st=document.createElement('style');st.id='v783-ui-style';document.head.appendChild(st)}
 st.textContent=`
-.logo-box.v783-brand-box{height:96px!important;min-height:96px!important;padding:8px 10px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;background:linear-gradient(145deg,#061a2b,#092940)!important;border:1px solid #1788d8!important;border-radius:8px!important;box-sizing:border-box!important;overflow:hidden!important}
-.logo-box.v783-brand-box::before,.logo-box.v783-brand-box::after{content:none!important;display:none!important}
-.logo-box.v783-brand-box>.v783-brand{width:100%!important;height:100%!important;display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:flex-start!important;gap:11px!important;min-width:0!important}
-.logo-box.v783-brand-box .v783-fuelgun{display:block!important;flex:0 0 42px!important;width:42px!important;height:60px!important;margin:0 0 0 3px!important}
-.logo-box.v783-brand-box .v783-brand-copy{display:flex!important;flex:1 1 auto!important;min-width:0!important;flex-direction:column!important;justify-content:center!important;align-items:flex-start!important;gap:2px!important}
-.logo-box.v783-brand-box .v783-brand-copy strong{display:block!important;color:#fff!important;font:900 14px/1.08 'Segoe UI',Arial,sans-serif!important;letter-spacing:.1px!important;white-space:nowrap!important;text-shadow:0 2px 2px rgba(0,0,0,.45)!important}
+.logo-box.v783-brand-box{height:96px!important;min-height:96px!important;padding:8px 10px!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;background:linear-gradient(145deg,#061a2b,#092940)!important;border:1px solid #1788d8!important;border-radius:8px!important;box-sizing:border-box!important;overflow:hidden!important}.logo-box.v783-brand-box::before,.logo-box.v783-brand-box::after{content:none!important;display:none!important}.logo-box.v783-brand-box>.v783-brand{width:100%!important;height:100%!important;display:grid!important;grid-template-columns:46px minmax(0,1fr)!important;align-items:center!important;column-gap:12px!important}.v783-fuelgun{width:42px!important;height:60px!important;display:block!important}.v783-brand-copy{display:flex!important;min-width:0!important;flex-direction:column!important;align-items:flex-start!important;justify-content:center!important;gap:2px!important}.v783-brand-copy strong{display:block!important;color:#fff!important;font:900 14px/1.08 'Segoe UI',Arial,sans-serif!important;white-space:nowrap!important;text-shadow:0 2px 2px rgba(0,0,0,.45)!important}
+.hero h1{font-size:24px!important}.hero p{font-size:12px!important;font-weight:800!important;letter-spacing:.1px!important}
 .unit-type-panel .unit-icon{height:70px!important;display:flex!important;align-items:center!important;justify-content:center!important;margin-top:4px!important;font-size:0!important}.unit-type-panel .unit-icon svg{display:block!important;width:116px!important;height:70px!important;filter:drop-shadow(0 3px 3px rgba(0,0,0,.28))!important}.unit-type-panel .unit-types>div:nth-child(2) .unit-icon svg{width:108px!important;height:68px!important;filter:drop-shadow(0 3px 4px rgba(0,0,0,.38)) brightness(1.15)!important}
 .stock-panel{position:relative!important}.stock-panel .stock-total{position:absolute!important;top:112px!important;left:76%!important;transform:translateX(-50%)!important;width:118px!important;text-align:center!important;margin:0!important;z-index:8!important}.stock-panel .stock-total>small{display:block!important;color:#fff!important;font-size:12px!important;font-weight:900!important;margin:0 0 5px!important}.stock-panel .stock-orb{width:82px!important;height:82px!important;margin:0 auto!important}
-.shift-panel{overflow:hidden!important;min-height:335px!important}.shift-panel .title h3{font-size:23px!important;line-height:1.05!important}.shift-panel .shift-content{display:grid!important;grid-template-columns:minmax(0,1.55fr) minmax(132px,.45fr)!important;gap:4px!important;align-items:center!important;min-height:270px!important}.shift-panel .chart.donut{height:325px!important;min-height:325px!important;width:100%!important}.shift-panel .shift-legend{gap:8px!important;min-width:0!important;transform:translateX(-4px)!important}.shift-panel .shift-item{grid-template-columns:12px minmax(0,1fr)!important;gap:7px!important}.shift-panel .shift-item small{font-size:14px!important;color:#fff!important;line-height:1.08!important}.shift-panel .shift-item strong{font-size:24px!important;line-height:1.02!important;margin:4px 0!important;color:#fff!important}.shift-panel .shift-item strong span{font-size:11px!important;color:#fff!important}.shift-panel .shift-item>div>span{font-size:10px!important;color:#87c7ff!important}
-@media(max-width:768px){
-.logo-box.v783-brand-box{width:190px!important;height:82px!important;min-height:82px!important;margin:0 auto 8px!important;padding:7px 9px!important}.logo-box.v783-brand-box>.v783-brand{gap:9px!important}.logo-box.v783-brand-box .v783-fuelgun{flex-basis:38px!important;width:38px!important;height:55px!important}.logo-box.v783-brand-box .v783-brand-copy strong{font-size:13px!important}
-.stock-panel .stock-cols>div+div{border-left:0!important;padding-left:0!important;border-top:1px solid #38526b!important;padding-top:10px!important}.stock-panel .stock-total.v783-stock-mobile{position:static!important;transform:none!important;width:100%!important;margin:8px 0 0!important;display:flex!important;flex-direction:column!important;align-items:center!important}.stock-panel .stock-total.v783-stock-mobile .stock-orb{width:86px!important;height:86px!important}
-.shift-panel{min-height:370px!important}.shift-panel .shift-content{grid-template-columns:minmax(0,1fr) 120px!important;min-height:280px!important}.shift-panel .chart.donut{height:278px!important;min-height:278px!important}.shift-panel .shift-legend{transform:none!important}.shift-panel .shift-item small{font-size:11px!important}.shift-panel .shift-item strong{font-size:19px!important}.shift-panel .shift-item strong span{font-size:9px!important}.shift-panel .shift-item>div>span{font-size:9px!important}}
-@media(max-width:420px){.shift-panel .shift-content{grid-template-columns:minmax(0,1fr) 108px!important}.shift-panel .chart.donut{height:260px!important;min-height:260px!important}.shift-panel .shift-item strong{font-size:18px!important}}
+.shift-panel{overflow:hidden!important}.shift-panel .title h3{font-size:15px!important;line-height:1.15!important}.shift-panel .shift-content{display:grid!important;grid-template-columns:1.12fr .88fr!important;align-items:center!important;gap:4px!important}.shift-panel .chart.donut{height:235px!important;min-height:235px!important;width:100%!important}.shift-panel .shift-legend{gap:7px!important;min-width:0!important}.shift-panel .shift-item{grid-template-columns:10px minmax(0,1fr)!important;gap:6px!important}.shift-panel .shift-item small{font-size:10px!important;color:#fff!important;line-height:1.08!important}.shift-panel .shift-item strong{font-size:17px!important;line-height:1.05!important;margin:3px 0!important;color:#fff!important}.shift-panel .shift-item strong span{font-size:9px!important;color:#fff!important}.shift-panel .shift-item>div>span{font-size:9px!important;color:#87c7ff!important}
+.v783-white-legend-panel{position:relative!important}.v783-white-legend-panel .chart.medium{width:calc(100% - 132px)!important}.v783-external-legend{position:absolute!important;right:10px!important;top:52px!important;width:122px!important;display:grid!important;gap:8px!important;z-index:10!important}.v783-external-legend>div{display:grid!important;grid-template-columns:9px 1fr!important;gap:6px!important;align-items:center!important}.v783-external-legend i{width:9px!important;height:9px!important;display:block!important}.v783-external-legend b{color:#fff!important;font-size:8px!important;line-height:1.15!important;font-weight:800!important;white-space:normal!important;text-shadow:0 1px 2px #000!important}
+#usageTableBody td.v783-eff{color:#31d879!important;font-weight:900!important}#usageTableBody td.v783-over{color:#ff554d!important;font-weight:900!important}#usageTableBody td.v783-warning{color:#ffd137!important;font-weight:900!important}#usageTableBody td.v783-normal{color:#fff!important;font-weight:900!important}
+.v783-receipt-row b{color:#fff!important}.v783-receipt-row small{color:#91abc4!important}.v783-truck-detail{display:grid!important;grid-template-columns:1.25fr 1fr!important;gap:12px!important;align-items:center!important;padding:10px 4px!important;border-bottom:1px solid #1c3952!important}.v783-truck-detail div{display:flex!important;flex-direction:column!important;gap:4px!important}.v783-truck-detail strong{font-size:10px!important;color:#fff!important}.v783-truck-detail span{font-size:10px!important;color:#ffb12d!important;font-weight:800!important}.v783-truck-detail>b{text-align:right!important;font-size:10px!important;color:#fff!important}.v783-truck-detail em{font-style:normal!important;color:#58baff!important}.v783-empty{padding:16px!important;color:#91abc4!important;font-size:10px!important;text-align:center!important}
+@media(max-width:768px){.logo-box.v783-brand-box{width:190px!important;height:82px!important;min-height:82px!important;margin:0 auto 8px!important;padding:7px 9px!important}.logo-box.v783-brand-box>.v783-brand{grid-template-columns:42px minmax(0,1fr)!important;column-gap:10px!important}.v783-fuelgun{width:38px!important;height:55px!important}.v783-brand-copy strong{font-size:13px!important}.stock-panel .stock-cols>div+div{border-left:0!important;padding-left:0!important;border-top:1px solid #38526b!important;padding-top:10px!important}.stock-panel .stock-total.v783-stock-mobile{position:static!important;transform:none!important;width:100%!important;margin:8px 0 0!important;display:flex!important;flex-direction:column!important;align-items:center!important}.stock-panel .stock-total.v783-stock-mobile .stock-orb{width:86px!important;height:86px!important}.shift-panel .shift-content{grid-template-columns:1fr 112px!important}.shift-panel .chart.donut{height:225px!important;min-height:225px!important}.v783-white-legend-panel .chart.medium{width:100%!important;padding-right:115px!important}.v783-external-legend{width:108px!important;right:6px!important}.v783-truck-detail{grid-template-columns:1fr!important}.v783-truck-detail>b{text-align:left!important}}
 `;
-
-function refreshOnce(){applyV783();}
-refreshOnce();
-window.addEventListener('pageshow',refreshOnce,{passive:true});
-['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>setTimeout(refreshOnce,80),{passive:true}));
-document.getElementById('unitSearch')?.addEventListener('input',()=>{clearTimeout(window.__v783SearchTimer);window.__v783SearchTimer=setTimeout(refreshOnce,140)},{passive:true});
-document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>setTimeout(refreshOnce,80),{passive:true}));
-setTimeout(refreshOnce,500);
+function refreshOnce(){applyV783()}
+refreshOnce();setTimeout(refreshOnce,500);window.addEventListener('pageshow',refreshOnce,{passive:true});['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter'].forEach(id=>document.getElementById(id)?.addEventListener('change',()=>setTimeout(refreshOnce,100),{passive:true}));document.getElementById('unitSearch')?.addEventListener('input',()=>{clearTimeout(window.__v783SearchTimer);window.__v783SearchTimer=setTimeout(refreshOnce,160)},{passive:true});document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>setTimeout(refreshOnce,120),{passive:true}));
 })();

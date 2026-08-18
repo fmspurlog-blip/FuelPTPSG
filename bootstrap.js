@@ -1,49 +1,60 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='78-perf2';
+  const q='78-perf3';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
   const safeLoad=async src=>{try{await load(src)}catch(e){console.warn('Optional script failed:',src,e)}};
-  function num(x){return (x===''||x==null)?null:Number(x)}
-  function first(r,...keys){for(const k of keys){if(r[k]!==undefined&&r[k]!==null&&r[k]!=='')return r[k]}return ''}
-  function sheetObjects(sheet,required=['Date']){const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:'',raw:true});let hi=-1;for(let i=0;i<Math.min(grid.length,15);i++){const row=(grid[i]||[]).map(v=>String(v??'').trim());if(required.every(k=>row.includes(k))){hi=i;break}}if(hi<0)return XLSX.utils.sheet_to_json(sheet,{defval:'',raw:true});const headers=(grid[hi]||[]).map(v=>String(v??'').trim());return grid.slice(hi+1).map(row=>{const o={};headers.forEach((h,j)=>{if(h)o[h]=row?.[j]??''});return o})}
-  function dateIso(v){if(typeof v==='number'){const p=XLSX.SSF.parse_date_code(v);return p?`${p.y}-${String(p.m).padStart(2,'0')}-${String(p.d).padStart(2,'0')}`:''}if(v){const d=new Date(v);if(!Number.isNaN(d.getTime()))return d.toISOString().slice(0,10)}return ''}
-  function timeIso(v){if(v==null||v==='')return '';if(typeof v==='number'&&Number.isFinite(v)){const frac=((v%1)+1)%1,total=Math.round(frac*86400)%86400,h=Math.floor(total/3600),m=Math.floor((total%3600)/60);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}const s=String(v).trim();const m=s.match(/(\d{1,2})[:.](\d{2})/);return m?`${String(Number(m[1])).padStart(2,'0')}:${m[2]}`:s}
-  function normalize(rows){return rows.map((r,i)=>{const date=dateIso(first(r,'Date','TANGGAL')),actual=num(first(r,'Actual_L_per_HM_KM','Actual_LHM','Actual L/HM')),std=num(first(r,'Standard_LHM','Standard L/HM')),vp=num(first(r,'Variance_Pct','Variance %'));let st=first(r,'Consumption_Status','Status');if(!st)st=std==null?'NO STANDARD':vp==null?'NO DATA':vp<=-.10?'EFFICIENT':vp<=.10?'NORMAL':vp<=.20?'WARNING':'OVER CONSUMPTION';return {Transaction_ID:first(r,'Transaction_ID','Transaction ID')||`AUTO-${i+1}`,Date:date||'',Day:first(r,'Day','HARI'),Time:timeIso(first(r,'Time','JAM')),Shift:first(r,'Shift','SHIFT'),Unit_Code:first(r,'Unit_Code','Unit Code'),Category:first(r,'Category','CATEGORY'),Unit_Type:first(r,'Unit_Type','Unit Type'),Fuel_Liter:num(first(r,'Fuel_Liter','Fuel Out_Liter','Fuel_Out_Liter','Fuel Out Liter'))||0,Meter_Before:num(first(r,'Meter_Before','HM_KM _Before','HM_KM_Before','HM/KM Before')),Meter_Current:num(first(r,'Meter_Current','HM_KM _Current','HM_KM_Current','HM/KM Current')),Delta_HM_KM:num(first(r,'Delta_HM_KM','Total_HM_KM','Total HM/KM')),Actual_LHM:actual,Fuel_Truck:first(r,'Fuel_Truck','Fuel Truck'),Mtech_Code:first(r,'Mtech_Code','Mtech Code'),Unit_Group_Code:first(r,'Unit_Group_Code','Unit Group Code'),Manpower:first(r,'Manpower','MANPOWER'),Unit_Position:first(r,'Unit_Position','Stock','Position'),Standard_LHM:std,Variance_LHM:num(first(r,'Variance_LHM','Variance L/HM')),Variance_Pct:vp,Consumption_Status:String(st||'').trim().toUpperCase(),Standard_Match:first(r,'Standard_Match','Standard Match')}}).filter(r=>r.Date&&r.Unit_Code&&r.Fuel_Liter>0)}
+  const clone=x=>{try{return JSON.parse(JSON.stringify(x))}catch(_){return x}};
+  const validUsage=a=>Array.isArray(a)&&a.some(r=>r&&r.Date&&r.Unit_Code&&Number(r.Fuel_Liter)>0);
+  const maxDate=a=>validUsage(a)?a.reduce((m,r)=>String(r?.Date||'')>m?String(r.Date):m,''):'';
 
-  await safeLoad('v77-config.js?v='+q);
-  const cloudMode=!!String(window.FUEL_V77?.apiUrl||'').trim();
+  // V78.2 STARTUP RULE: NEVER wait for Google Apps Script before showing dashboard.
+  // The public snapshot is a local GitHub asset and is the guaranteed fallback.
+  await safeLoad('v760-public-data.js?v='+q);
+  const staticData=window.FUEL_STATIC_DATA||{};
+  let staticUsage=validUsage(staticData.usage)?staticData.usage.map(r=>({...r})):[];
+  let cachedUsage=[];
+  try{
+    const c=JSON.parse(localStorage.getItem('fuelptpsg_usage_v756')||'[]');
+    if(validUsage(c)) cachedUsage=c;
+    else if(Array.isArray(c)&&c.length) localStorage.removeItem('fuelptpsg_usage_v756');
+  }catch(_){
+    try{localStorage.removeItem('fuelptpsg_usage_v756')}catch(__){}
+  }
 
-  // FAST FIRST PAINT: always prefer browser cache, then public snapshot.
-  try{const cached=JSON.parse(localStorage.getItem('fuelptpsg_usage_v756')||'[]');window.FUEL_DATA=Array.isArray(cached)?cached:[]}catch(_){window.FUEL_DATA=[]}
+  // Use the newest valid dataset, but always have static snapshot available.
+  window.FUEL_DATA=(cachedUsage.length&&maxDate(cachedUsage)>=maxDate(staticUsage)?cachedUsage:staticUsage).map(r=>({...r}));
   window.__FUEL_DEFAULT_WB=null;
 
-  if(!window.FUEL_DATA.length){
-    await safeLoad('v760-public-data.js?v='+q);
-    if(window.FUEL_STATIC_DATA?.usage?.length){window.FUEL_DATA=window.FUEL_STATIC_DATA.usage.map(r=>({...r}))}
-  }
+  // Preload non-usage data before app.js so dashboard does not need cloud to become usable.
+  let cachedReceipts=null,cachedStock=null;
+  try{cachedReceipts=JSON.parse(localStorage.getItem('fuelptpsg_receipts_v754')||'null')}catch(_){}
+  try{cachedStock=JSON.parse(localStorage.getItem('fuelptpsg_stock_v754')||'null')}catch(_){}
+  const receipts=Array.isArray(cachedReceipts)&&cachedReceipts.length?cachedReceipts:(Array.isArray(staticData.receipts)?staticData.receipts:[]);
+  const stock=(cachedStock&&typeof cachedStock==='object'&&Object.keys(cachedStock.snapshots||{}).length)?cachedStock:(staticData.stock||{snapshots:{},availableDates:[]});
+  const recon=staticData.recon||window.RECON_DATA||{daily:[],availableDates:[],receiptDetails:receipts};
+  window.__FUEL_RECEIPTS=clone(receipts);
+  window.__FUEL_STOCK_DATA=clone(stock);
+  window.STOCK_DATA=clone(stock);
+  window.RECON_DATA=clone(recon);
 
-  if(!cloudMode&&!window.FUEL_DATA.length){
-    try{const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),7000);const res=await fetch('Fuel_Database_Dashboard_Ready_Final.xlsx?v='+q,{cache:'force-cache',signal:ctl.signal});clearTimeout(timer);if(!res.ok)throw new Error('HTTP '+res.status);const buf=await res.arrayBuffer(),wb=XLSX.read(buf,{type:'array'});window.__FUEL_DEFAULT_WB=wb;const sheet=wb.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':wb.SheetNames[0];window.FUEL_DATA=normalize(sheetObjects(wb.Sheets[sheet],['Transaction_ID','Date','Unit_Code']))}catch(err){console.error('Default fuel database load failed',err);window.FUEL_DATA=[];window.__FUEL_DEFAULT_WB=null}
-  }
-
-  // Core UI must render before cloud/network extras.
+  // Render the complete core dashboard first.
   await load('app.js?v='+q);
-  if(typeof initFilters==='function')try{initFilters()}catch(_){ }
-  if(typeof applyFilters==='function')try{applyFilters()}catch(_){ }
+  try{if(typeof stockData!=='undefined'){stockData.snapshots=clone(stock.snapshots||{});stockData.availableDates=[...(stock.availableDates||[])]}}catch(_){}
+  try{if(typeof initFilters==='function')initFilters()}catch(e){console.warn('initFilters',e)}
+  try{if(typeof applyFilters==='function')applyFilters()}catch(e){console.warn('applyFilters',e)}
 
-  const bootExtras=async()=>{
-    if(cloudMode){
-      await safeLoad('v741.js?v='+q);
-      await safeLoad('v78-stable.js?v='+q);
-      await safeLoad('v78-final-ui.js?v='+q);
-      await safeLoad('v78-ui-lock.js?v='+q);
-      // Remote synchronization is deliberately last and non-blocking.
-      safeLoad('v770-remote-sync.js?v='+q);
-    }else{
-      for(const s of ['v733.js','v741.js','v743-ui.js','v747-fix.js','v748-fix.js','v752-upload-fix.js','v760-public-sync.js','v754-persist.js','v757-time-fix.js','v758-stock-period-fix.js','v763-stock-authority.js','v764-data-integrity-fix.js']) await safeLoad(s+'?v='+q);
-    }
+  // Local UI enhancements next. None may block the dashboard.
+  const bootUI=async()=>{
+    for(const s of ['v741.js','v78-stable.js','v78-final-ui.js','v78-ui-lock.js']) await safeLoad(s+'?v='+q);
   };
-  if('requestIdleCallback' in window)requestIdleCallback(()=>bootExtras(),{timeout:1200});else setTimeout(bootExtras,80);
+  setTimeout(()=>bootUI(),40);
+
+  // Cloud configuration and synchronization are delayed deliberately.
+  // Even when Apps Script is slow/offline, the dashboard stays fully usable.
+  setTimeout(async()=>{
+    await safeLoad('v77-config.js?v='+q);
+    if(String(window.FUEL_V77?.apiUrl||'').trim()) safeLoad('v770-remote-sync.js?v='+q);
+  },5000);
 })();

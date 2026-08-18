@@ -1,6 +1,6 @@
 (async()=>{
   if(location.search){const hash=location.hash||'#dashboard';history.replaceState(null,'',location.pathname+hash)}
-  const q='78-lock2';
+  const q='78-perf1';
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});

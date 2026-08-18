@@ -1,96 +1,16 @@
 (()=>{
 'use strict';
-
-const BRAND_HTML='<div class="v78-brand-lock"><div class="v78-brand-main">REFUELING CONTROL</div><div class="v78-brand-sub">FUEL OPERATIONS DASHBOARD</div><div class="v78-brand-site">PT PRIMA SARANA GEMILANG · SITE ABM - LUWUK</div></div>';
-
-function ensureBrand(){
-  const box=document.querySelector('.logo-box');
-  if(!box)return;
-  box.className='logo-box v78-brand-panel';
-  if(!box.querySelector('.v78-brand-lock')) box.innerHTML=BRAND_HTML;
-}
-
-function ensureUnitIcons(){
-  const icons=document.querySelectorAll('.unit-type-panel .unit-icon');
-  if(icons[0]&&!icons[0].querySelector('.v78-excavator')){
-    icons[0].innerHTML=`<svg class="v78-excavator" viewBox="0 0 160 86" aria-label="Mining Excavator" role="img">
-      <defs><linearGradient id="excBody" x1="0" x2="1"><stop offset="0" stop-color="#ff9a22"/><stop offset="1" stop-color="#ffc04d"/></linearGradient></defs>
-      <g fill="none" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="18" y="63" width="64" height="13" rx="6.5" fill="#91a8bb" stroke="#c7d5e0" stroke-width="2"/>
-        <circle cx="33" cy="69.5" r="4" fill="#0a2134"/><circle cx="51" cy="69.5" r="4" fill="#0a2134"/><circle cx="69" cy="69.5" r="4" fill="#0a2134"/>
-        <path d="M35 60V34h31l14 17v9H35Z" fill="url(#excBody)" stroke="#ffb13d" stroke-width="2.5"/>
-        <path d="M44 40h14v12H44z" fill="#d9efff" stroke="#a6c8df" stroke-width="2"/>
-        <path d="M78 49 103 29l8 5-18 25" stroke="#ffae31" stroke-width="7"/>
-        <path d="M109 34 133 47l-7 7-26-7" stroke="#ffae31" stroke-width="7"/>
-        <path d="M128 51h21l-5 14h-20z" fill="#ff9b23" stroke="#ffb13d" stroke-width="2.5"/>
-      </g>
-    </svg>`;
-  }
-  if(icons[1]&&!icons[1].querySelector('.v78-gears')){
-    icons[1].innerHTML=`<svg class="v78-gears" viewBox="0 0 150 86" aria-label="General Support" role="img">
-      <defs><linearGradient id="gearFill" x1="0" x2="1"><stop offset="0" stop-color="#f4f8fb"/><stop offset="1" stop-color="#9fb6c8"/></linearGradient></defs>
-      <g fill="url(#gearFill)" stroke="#7892a8" stroke-width="2">
-        <g transform="translate(48 45)"><circle r="18"/><circle r="7" fill="#0b2236"/><path d="M-5-29h10l3 10-8 4-8-4zM-5 29h10l3-10-8-4-8 4zM-29-5v10l10 3 4-8-4-8zM29-5v10l-10 3-4-8 4-8z"/></g>
-        <g transform="translate(88 31) scale(.78)"><circle r="18"/><circle r="7" fill="#0b2236"/><path d="M-5-29h10l3 10-8 4-8-4zM-5 29h10l3-10-8-4-8 4zM-29-5v10l10 3 4-8-4-8zM29-5v10l-10 3-4-8 4-8z"/></g>
-        <g transform="translate(101 59) scale(.62)"><circle r="18"/><circle r="7" fill="#0b2236"/><path d="M-5-29h10l3 10-8 4-8-4zM-5 29h10l3-10-8-4-8 4zM-29-5v10l10 3 4-8-4-8zM29-5v10l-10 3-4-8 4-8z"/></g>
-      </g>
-    </svg>`;
-  }
-}
-
-function refineStock(){
-  const label=document.querySelector('.stock-panel .stock-total>small');
-  if(label)label.textContent='TOTAL STOCK';
-}
-
-function refineShiftMix(){
-  try{
-    if(typeof state!=='undefined'&&state.charts?.shift){
-      const c=state.charts.shift;
-      c.options.radius='92%';
-      c.options.cutout='64%';
-      c.resize();
-      c.update('none');
-    }
-  }catch(e){console.warn('V78 shift refine',e)}
-}
-
-function applyFinalUI(){
-  ensureBrand();
-  ensureUnitIcons();
-  refineStock();
-  refineShiftMix();
-}
-
-let style=document.getElementById('v78-final-ui-style');
-if(!style){style=document.createElement('style');style.id='v78-final-ui-style';document.head.appendChild(style)}
+const BRAND_HTML=`<div class="ref-brand"><svg viewBox="0 0 54 70" aria-hidden="true"><rect x="8" y="5" width="34" height="55" rx="3" fill="#ff9a00"/><rect x="14" y="12" width="22" height="14" rx="1" fill="#fff"/><rect x="18" y="16" width="14" height="7" fill="#183247"/><path d="M25 32c-5 8-9 13-9 18a10 10 0 0 0 20 0c0-5-5-11-11-18Zm0 8c3 5 5 8 5 11a5 5 0 0 1-10 0c0-3 2-6 5-11Z" fill="#09243a"/><path d="M42 15h5l4 6v20c0 5-3 8-7 8h-3v-6h3c1 0 2-1 2-3V24l-4-5Z" fill="#ff9a00"/><rect x="5" y="59" width="40" height="5" rx="2" fill="#ff9a00"/></svg><div class="ref-brand-text">REFUELING<br>CONTROL</div></div>`;
+function ensureBrand(){const box=document.querySelector('.logo-box');if(!box)return;box.className='logo-box ref-brand-panel';box.innerHTML=BRAND_HTML;}
+function ensureUnitIcons(){const icons=document.querySelectorAll('.unit-type-panel .unit-icon');if(icons[0])icons[0].innerHTML=`<svg class="ref-exca" viewBox="0 0 150 90" aria-label="Excavator"><g stroke="#ffad21" stroke-width="6" stroke-linejoin="round" stroke-linecap="round" fill="none"><path d="M52 56 78 25l11 5-19 31"/><path d="m86 31 29 17-7 9-29-10"/><path d="M111 49h23l-6 20-23-1Z" fill="#ff9a00"/></g><path d="M27 59V38h28l15 17v10H27Z" fill="#ff9a00"/><rect x="34" y="43" width="13" height="11" rx="1" fill="#e8f5ff"/><rect x="16" y="65" width="60" height="13" rx="7" fill="#9cb2c2"/><circle cx="29" cy="71.5" r="4" fill="#0a2134"/><circle cx="46" cy="71.5" r="4" fill="#0a2134"/><circle cx="63" cy="71.5" r="4" fill="#0a2134"/></svg>`;if(icons[1])icons[1].innerHTML=`<svg class="ref-gears" viewBox="0 0 140 90" aria-label="Three gears"><g fill="#dce8ef" stroke="#7894a8" stroke-width="3"><path d="M42 20l6-8 8 4 1 10 9 4 8-5 7 6-4 9 3 9 10 3v9l-10 3-4 9 5 8-7 7-9-5-9 3-3 10h-9l-3-10-9-4-8 5-7-7 5-8-4-9-10-3v-9l10-3 4-9-5-8 7-7 8 5 9-3 3-10h9l3 10Z" transform="scale(.58) translate(22 21)"/><circle cx="37" cy="44" r="10" fill="#173249"/><path d="M91 8l6-7 8 4 1 9 8 4 8-5 7 7-5 8 4 9 9 3v9l-9 3-4 9 5 8-7 7-8-5-8 4-3 9h-9l-3-9-9-4-8 5-7-7 5-8-4-9-9-3v-9l9-3 4-9-5-8 7-7 8 5 9-4 3-9h9l3 9Z" transform="scale(.56) translate(75 14)"/><circle cx="82" cy="37" r="9" fill="#173249"/><path d="M98 45l5-6 7 3 2 8 7 3 7-4 6 6-4 7 3 7 8 2v8l-8 2-3 7 4 7-6 6-7-4-7 3-2 8h-8l-2-8-7-3-7 4-6-6 4-7-3-7-8-2v-8l8-2 3-7-4-7 6-6 7 4 7-3 2-8h8l2 8Z" transform="scale(.48) translate(112 62)"/><circle cx="105" cy="66" r="8" fill="#173249"/></g></svg>`;}
+function refineStock(){const label=document.querySelector('.stock-panel .stock-total>small');if(label)label.textContent='TOTAL STOCK';}
+function applyFinalUI(){ensureBrand();ensureUnitIcons();refineStock();}
+let style=document.getElementById('v78-final-ui-style');if(!style){style=document.createElement('style');style.id='v78-final-ui-style';document.head.appendChild(style)}
 style.textContent=`
-.logo-box.v78-brand-panel{display:flex!important;align-items:center!important;justify-content:center!important;min-height:78px!important;height:78px!important;padding:8px 10px!important;box-sizing:border-box!important;overflow:hidden!important;border-radius:8px!important;background:linear-gradient(145deg,#071a2b 0%,#0a2b44 100%)!important;border:1px solid #1d4a6a!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important}
-.v78-brand-lock{width:100%!important;text-align:center!important;display:block!important;opacity:1!important;visibility:visible!important;color:#fff!important}
-.v78-brand-main{display:block!important;color:#fff!important;font:900 17px/1.05 'Segoe UI',Arial,sans-serif!important;letter-spacing:.8px!important;white-space:nowrap!important;text-shadow:0 1px 0 #000!important}
-.v78-brand-sub{display:block!important;margin-top:5px!important;color:#ffad32!important;font:800 8px/1 'Segoe UI',Arial,sans-serif!important;letter-spacing:1.1px!important;white-space:nowrap!important}
-.v78-brand-site{display:block!important;margin-top:5px!important;color:#a9bfd0!important;font:700 7px/1 'Segoe UI',Arial,sans-serif!important;letter-spacing:.15px!important;white-space:nowrap!important}
-.unit-type-panel .unit-icon{height:62px!important;display:flex!important;align-items:center!important;justify-content:center!important}
-.unit-type-panel .unit-icon svg{display:block!important;width:108px!important;height:62px!important;max-width:108px!important;max-height:62px!important;opacity:1!important;visibility:visible!important;filter:drop-shadow(0 3px 4px rgba(0,0,0,.28))!important}
-.stock-panel{position:relative!important;padding-bottom:12px!important}.stock-panel .stock-total{position:absolute!important;top:124px!important;bottom:auto!important;left:76%!important;right:auto!important;transform:translateX(-50%)!important;width:118px!important;margin:0!important;text-align:center!important;z-index:8!important}.stock-panel .stock-total>small{display:block!important;color:#fff!important;font-size:12px!important;font-weight:900!important;margin:0 0 5px!important}.stock-panel .stock-orb{width:82px!important;height:82px!important;margin:0 auto!important}
-.shift-panel .shift-content{display:flex!important;align-items:center!important;justify-content:center!important;gap:3px!important;min-height:168px!important;overflow:hidden!important}.shift-panel .chart.donut,.shift-panel #shiftChart{width:158px!important;height:158px!important;min-width:158px!important;min-height:158px!important;max-width:158px!important;max-height:158px!important;flex:0 0 158px!important}.shift-panel .shift-legend{min-width:0!important;max-width:132px!important;margin-left:-8px!important;transform:translateX(-6px)!important}.shift-panel .shift-item small{font-size:10px!important;font-weight:900!important;color:#fff!important}.shift-panel .shift-item strong{font-size:15px!important;line-height:1.1!important;color:#fff!important}.shift-panel .shift-item>div>span{font-size:9px!important;color:#7fc0ff!important}
-@media(max-width:768px){.logo-box.v78-brand-panel{min-height:68px!important;height:68px!important;padding:7px!important}.v78-brand-main{font-size:13px!important}.v78-brand-sub{font-size:6.5px!important}.v78-brand-site{font-size:5.8px!important}.unit-type-panel .unit-icon svg{width:94px!important;height:56px!important}.stock-panel .stock-total{top:122px!important;left:75%!important}.shift-panel .chart.donut,.shift-panel #shiftChart{width:142px!important;height:142px!important;min-width:142px!important;min-height:142px!important;max-width:142px!important;max-height:142px!important;flex-basis:142px!important}}
+.logo-box.ref-brand-panel{display:flex!important;align-items:center!important;justify-content:center!important;height:96px!important;min-height:96px!important;padding:7px!important;box-sizing:border-box!important;background:linear-gradient(145deg,#061a2b,#092940)!important;border:1px solid #1684d6!important;border-radius:8px!important;overflow:hidden!important}.ref-brand{width:100%;height:100%;display:flex;align-items:center;justify-content:center;gap:10px}.ref-brand svg{display:block;width:48px;height:67px;flex:0 0 48px}.ref-brand-text{color:#fff;font:900 21px/1.18 'Segoe UI',Arial,sans-serif;letter-spacing:.2px;text-align:left;text-shadow:0 2px 2px rgba(0,0,0,.45)}
+.unit-type-panel .unit-icon{height:66px!important;display:flex!important;align-items:center!important;justify-content:center!important}.unit-type-panel .unit-icon svg{display:block!important;width:105px!important;height:66px!important;filter:drop-shadow(0 3px 3px rgba(0,0,0,.3))!important}.unit-type-panel .ref-gears{width:98px!important}
+.stock-panel{position:relative!important}.stock-panel .stock-total{position:absolute!important;top:112px!important;bottom:auto!important;left:76%!important;right:auto!important;transform:translateX(-50%)!important;width:118px!important;margin:0!important;text-align:center!important;z-index:8!important}.stock-panel .stock-total>small{display:block!important;color:#fff!important;font-size:12px!important;font-weight:900!important;margin:0 0 5px!important}.stock-panel .stock-orb{width:82px!important;height:82px!important;margin:0 auto!important}
+@media(max-width:768px){.logo-box.ref-brand-panel{height:82px!important;min-height:82px!important}.ref-brand svg{width:40px;height:58px;flex-basis:40px}.ref-brand-text{font-size:16px}.stock-panel .stock-total{top:110px!important;left:75%!important}}
 `;
-
-applyFinalUI();
-setTimeout(applyFinalUI,250);
-setTimeout(applyFinalUI,1200);
-setTimeout(applyFinalUI,3000);
-
-const brandBox=document.querySelector('.logo-box');
-if(brandBox){
-  const observer=new MutationObserver(()=>{
-    if(!brandBox.querySelector('.v78-brand-lock')) ensureBrand();
-  });
-  observer.observe(brandBox,{childList:true,subtree:true});
-}
-
-document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>requestAnimationFrame(applyFinalUI)));
-['dateFrom','dateTo','shiftFilter','categoryFilter','truckFilter','unitSearch'].forEach(id=>document.getElementById(id)?.addEventListener(id==='unitSearch'?'input':'change',()=>requestAnimationFrame(applyFinalUI)));
-window.addEventListener('pageshow',applyFinalUI);
+applyFinalUI();setTimeout(applyFinalUI,250);setTimeout(applyFinalUI,1200);setTimeout(applyFinalUI,3000);window.addEventListener('pageshow',applyFinalUI);document.querySelectorAll('.nav-link[data-section]').forEach(a=>a.addEventListener('click',()=>requestAnimationFrame(applyFinalUI)));
 })();

@@ -1,7 +1,7 @@
 (async()=>{
   const params=new URLSearchParams(location.search);
   const pageVersion=params.get('v')||'78.3';
-  const q='78.3-final11-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
+  const q='78.3-final12-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});

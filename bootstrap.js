@@ -1,7 +1,7 @@
 (async()=>{
   const params=new URLSearchParams(location.search);
-  const pageVersion=params.get('v')||'78.3';
-  const q='78.3-final16-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
+  const pageVersion=params.get('v')||'78.4';
+  const q='78.4-responsive-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
   ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
@@ -29,5 +29,6 @@
   try{if(typeof applyFilters==='function')applyFilters()}catch(e){console.warn('applyFilters',e)}
   setTimeout(()=>safeLoad('v783-ui.js?v='+q),40);
   setTimeout(()=>safeLoad('v783-ops-hotfix.js?v='+q),700);
+  setTimeout(()=>safeLoad('v784-responsive-performance.js?v='+q),950);
   setTimeout(async()=>{await safeLoad('v77-config.js?v='+q);if(String(window.FUEL_V77?.apiUrl||'').trim())safeLoad('v770-remote-sync.js?v='+q)},2500);
 })();

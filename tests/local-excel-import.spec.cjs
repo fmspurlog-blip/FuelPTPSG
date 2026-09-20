@@ -4,10 +4,10 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync('local-excel-import.js','utf8');
-async function scenario({rows,readError,renderError,parseDate}={}){
-  let capture=null,legacy=0,alerts=[],renderCount=0,validateCount=0;
+async function scenario({rows,readError,renderError,parseDate,fileSize=100,fileName='sample.xlsx'}={}){
+  let capture=null,legacy=0,alerts=[],renderCount=0,validateCount=0,readCount=0;
   const original=[{Date:'2026-09-01',Unit_Code:'OLD',Fuel_Liter:10}];
-  const input={files:[{name:'sample.xlsx',size:100,arrayBuffer:async()=>{if(readError)throw Error('read failed');return new ArrayBuffer(1)}}],disabled:false,value:'sample.xlsx'};
+  const input={files:[{name:fileName,size:fileSize,arrayBuffer:async()=>{readCount++;if(readError)throw Error('read failed');return new ArrayBuffer(1)}}],disabled:false,value:'sample.xlsx'};
   const state={raw:original};
   const notice={id:'fuel-local-preview-notice',setAttribute:()=>{},style:{},textContent:''};
   const document={getElementById:id=>id==='excelUpload'?input:id==='fuel-local-preview-notice'?notice:null,addEventListener:(name,fn,useCapture)=>{assert.equal(name,'change');assert.equal(useCapture,true);capture=fn}};
@@ -20,7 +20,7 @@ async function scenario({rows,readError,renderError,parseDate}={}){
   assert.equal(legacy,0,'legacy target handler must never execute');
   assert.equal(input.disabled,false,'input must be restored');
   assert.equal(input.value,'','file selection must be cleared');
-  return {state,original,alerts,renderCount,validateCount,notice};
+  return {state,original,alerts,renderCount,validateCount,notice,readCount};
 }
 async function overlappingImports(){
   let capture,release;
@@ -76,6 +76,18 @@ async function overlappingImports(){
   assert.equal(oversized.state.raw,oversized.original,'row limit must not replace dataset');
   assert.match(oversized.alerts[0],/50\.000/);
   assert.equal(oversized.validateCount,0);
+  for(const size of [0,-1,NaN,Infinity,25*1024*1024+1]){
+    const bad=await scenario({fileSize:size});
+    assert.equal(bad.state.raw,bad.original,'invalid file size must preserve previous data');
+    assert.equal(bad.readCount,0,'invalid file size must be rejected before arrayBuffer');
+    assert.equal(bad.validateCount,0);
+    assert.equal(bad.notice.textContent,'');
+    assert.match(bad.alerts[0],/Impor Excel dibatalkan/);
+  }
+  const maxSize=await scenario({fileSize:25*1024*1024});
+  assert.equal(maxSize.readCount,1,'file exactly at 25 MB limit should be read');
+  const wrongType=await scenario({fileName:'sample.csv'});
+  assert.equal(wrongType.readCount,0,'unsupported extension must be rejected before reading');
   await overlappingImports();
-  console.log('PASS: local Excel preview validates dates, rejects markup and oversized datasets, shows notice only after success, blocks concurrent imports and rolls back (offline).');
+  console.log('PASS: local Excel preview validates dates, markup, file sizes and row limits; shows notice only after success, blocks concurrent imports and rolls back (offline).');
 })().catch(error=>{console.error(error);process.exitCode=1});

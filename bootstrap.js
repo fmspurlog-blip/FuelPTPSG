@@ -27,6 +27,9 @@
   await load('app.js?v='+q);
   try{if(typeof stockData!=='undefined'){stockData.snapshots=clone(stock.snapshots||{});stockData.availableDates=[...(stock.availableDates||[])]}}catch(_){}
   setTimeout(()=>safeLoad('brand-operations.js?v='+q),40);
-  // Retire competing legend/resize owners; no repeat initial render.
-  setTimeout(async()=>{await safeLoad('v77-config.js?v='+q);if(String(window.FUEL_V77?.apiUrl||'').trim())safeLoad('v770-remote-sync.js?v='+q)},2500);
+  // SECURITY HOLD: legacy remote sync exposes a password verifier and mutates local data before upload succeeds.
+  // Do not load v770-remote-sync.js until it is replaced and an isolated backend passes the security gate.
+  // This branch intentionally disables legacy cloud polling and remote upload; never merge as a feature-complete release.
+  window.FUEL_REMOTE_SYNC_DISABLED=true;
+  console.warn('FuelPTPSG QA security hold: legacy cloud sync/upload disabled; production deployment unchanged.');
 })();

@@ -64,7 +64,11 @@
       const rows=XLSX.utils.sheet_to_json(workbook.Sheets.Fuel_Usage_Clean,{defval:''});
       if(!Array.isArray(rows))throw new Error('Format data transaksi Excel tidak valid.');
       if(rows.length>50000)throw new Error('Terlalu banyak baris (maksimum 50.000 transaksi per impor). Pecah file Excel menjadi beberapa bagian.');
-      const nonempty=rows.filter(row=>row&&typeof row==='object'&&!Array.isArray(row)&&Object.values(row).some(value=>value!==''&&value!==null));
+      const nonempty=[];
+      rows.forEach((row,index)=>{
+        if(!row||typeof row!=='object'||Array.isArray(row))throw new Error('Struktur transaksi tidak valid pada baris '+(index+2)+'.');
+        if(Object.values(row).some(value=>value!==''&&value!==null))nonempty.push(row);
+      });
       if(!nonempty.length)throw new Error('Tidak ada transaksi untuk ditampilkan.');
       const required=['Date','Unit_Code','Fuel_Liter'];
       const missing=required.filter(column=>!Object.prototype.hasOwnProperty.call(nonempty[0],column));

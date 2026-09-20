@@ -1,0 +1,47 @@
+name: Chart refactor QA
+on:
+  pull_request:
+    paths:
+      - 'bootstrap.js'
+      - 'chart-components.js'
+      - 'brand-operations.js'
+      - 'tests/chart-refactor.spec.cjs'
+      - '.github/workflows/chart-refactor-qa.yml'
+  workflow_dispatch:
+jobs:
+  browser-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify JavaScript syntax
+        run: |
+          node --check bootstrap.js
+          node --check chart-components.js
+          node --check brand-operations.js
+          node --check tests/chart-refactor.spec.cjs
+      - name: Install isolated browser test dependencies
+        run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Serve repository locally
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/fuel-http.log 2>&1 &
+          echo $! > /tmp/fuel-http.pid
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:4173/index.html > /dev/null && exit 0; sleep 1; done
+          exit 1
+      - name: Desktop and Android-sized browser regression
+        run: node tests/chart-refactor.spec.cjs
+      - name: Screenshots and failure logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chart-refactor-screenshots
+          path: test-results/chart-refactor/
+          if-no-files-found: warn
+          retention-days: 14

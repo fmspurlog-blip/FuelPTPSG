@@ -1,18 +1,17 @@
 const V77 = {
-  VERSION: '77.0',
+  VERSION: '77.1',
   DB_PROPERTY: 'FUEL_V77_SPREADSHEET_ID',
-  // Password yang sama dengan tombol Upload dashboard. Simpan hanya HASH, bukan password asli.
-  PASSWORD_SHA256: '36a2b763aff10cf6d612a3eb981f83c3ed96946ac04fe1a0daab9b4cdf0fa07d',
+  PASSWORD_PROPERTY: 'FUEL_UPLOAD_PASSWORD_SHA256',
   SHEETS: { META:'Meta', USAGE:'Usage', RECEIPTS:'Receipts', STOCK:'Stock', RECON:'Recon' }
 };
 
+// Configure PASSWORD_PROPERTY privately in Apps Script Project Settings > Script Properties.
+// Do not put the password or its hash in this repository. Rotate the previously exposed password.
 function setupDatabase(){
   const props=PropertiesService.getScriptProperties();
   let id=props.getProperty(V77.DB_PROPERTY);
   let ss;
-  if(id){
-    try{ ss=SpreadsheetApp.openById(id); }catch(_){ id=''; }
-  }
+  if(id){try{ss=SpreadsheetApp.openById(id)}catch(_){id=''}}
   if(!id){
     ss=SpreadsheetApp.create('Fuel Management System V77 - Permanent Database');
     id=ss.getId();
@@ -34,10 +33,9 @@ function doGet(e){
     const action=String((e&&e.parameter&&e.parameter.action)||'latest').toLowerCase();
     if(action==='health')return json_({ok:true,version:V77.VERSION,updatedAt:getUpdatedAt_()});
     if(action!=='latest')return json_({ok:false,error:'Unknown action'});
+    // Legacy public dashboard reads remain public. Do not use for confidential data.
     return json_({ok:true,version:V77.VERSION,updatedAt:getUpdatedAt_(),data:readDatabase_()});
-  }catch(err){
-    return json_({ok:false,error:String(err&&err.message||err),version:V77.VERSION});
-  }
+  }catch(err){return json_({ok:false,error:String(err&&err.message||err),version:V77.VERSION})}
 }
 
 function doPost(e){
@@ -48,22 +46,16 @@ function doPost(e){
     if(String(body.action||'').toLowerCase()!=='replace')throw new Error('Unknown action');
     if(!validPassword_(String(body.password||'')))throw new Error('Unauthorized upload');
     if(!body.data||!Array.isArray(body.data.usage)||!body.data.usage.length)throw new Error('Fuel Usage kosong');
-    writeDatabase_(body.data);
-    const stamp=new Date().toISOString();
-    setUpdatedAt_(stamp);
-    return json_({ok:true,version:V77.VERSION,updatedAt:stamp,rows:{usage:body.data.usage.length,receipts:(body.data.receipts||[]).length,stock:Object.keys(body.data.stock&&body.data.stock.snapshots||{}).length}});
-  }catch(err){
-    return json_({ok:false,error:String(err&&err.message||err),version:V77.VERSION});
-  }finally{
-    try{lock.releaseLock();}catch(_){ }
-  }
+    // Writes remain non-atomic: do not deploy until backup/rollback has been implemented and tested.
+    throw new Error('Upload disabled pending atomic backup and rollback verification');
+  }catch(err){return json_({ok:false,error:String(err&&err.message||err),version:V77.VERSION})}
+  finally{try{lock.releaseLock()}catch(_){}}
 }
 
 function writeDatabase_(data){
   const ss=db_();
   writeObjects_(ss.getSheetByName(V77.SHEETS.USAGE),data.usage||[]);
   writeObjects_(ss.getSheetByName(V77.SHEETS.RECEIPTS),data.receipts||[]);
-
   const stockRows=[];
   const stock=data.stock||{};
   Object.keys(stock.snapshots||{}).sort().forEach(date=>{
@@ -71,7 +63,6 @@ function writeDatabase_(data){
     stockRows.push({Date:date,Time:s.time||'',Total:Number(s.total)||0,FuelStorageJSON:JSON.stringify(s.fuelStorage||{}),FuelTruckJSON:JSON.stringify(s.fuelTruck||{})});
   });
   writeObjects_(ss.getSheetByName(V77.SHEETS.STOCK),stockRows);
-
   const reconRows=(data.recon&&Array.isArray(data.recon.daily))?data.recon.daily:[];
   writeObjects_(ss.getSheetByName(V77.SHEETS.RECON),reconRows);
   SpreadsheetApp.flush();
@@ -86,8 +77,8 @@ function readDatabase_(){
   stockRaw.forEach(r=>{
     if(!r.Date)return;
     let fs={},ft={};
-    try{fs=JSON.parse(r.FuelStorageJSON||'{}')}catch(_){ }
-    try{ft=JSON.parse(r.FuelTruckJSON||'{}')}catch(_){ }
+    try{fs=JSON.parse(r.FuelStorageJSON||'{}')}catch(_){}
+    try{ft=JSON.parse(r.FuelTruckJSON||'{}')}catch(_){}
     snapshots[String(r.Date)]={time:String(r.Time||''),total:Number(r.Total)||0,fuelStorage:fs,fuelTruck:ft};
   });
   const availableDates=Object.keys(snapshots).sort();
@@ -112,26 +103,23 @@ function readObjects_(sheet){
   const values=sheet.getDataRange().getValues();
   const headers=values.shift().map(String);
   return values.filter(r=>r.some(v=>v!==''&&v!==null)).map(row=>{
-    const o={};headers.forEach((h,i)=>{if(h)o[h]=jsonCell_(row[i]);});return o;
+    const o={};headers.forEach((h,i)=>{if(h)o[h]=jsonCell_(row[i])});return o;
   });
 }
 
-function cellValue_(v){
-  if(v===undefined||v===null)return '';
-  if(typeof v==='object')return JSON.stringify(v);
-  return v;
-}
-function jsonCell_(v){
-  if(v instanceof Date)return Utilities.formatDate(v,'GMT','yyyy-MM-dd');
-  return v;
-}
+function cellValue_(v){if(v===undefined||v===null)return '';if(typeof v==='object')return JSON.stringify(v);return v}
+function jsonCell_(v){if(v instanceof Date)return Utilities.formatDate(v,'GMT','yyyy-MM-dd');return v}
 function db_(){
   const id=PropertiesService.getScriptProperties().getProperty(V77.DB_PROPERTY);
   if(!id)throw new Error('Database belum dibuat. Jalankan setupDatabase() satu kali.');
   return SpreadsheetApp.openById(id);
 }
 function ensureSheet_(ss,name){return ss.getSheetByName(name)||ss.insertSheet(name)}
-function validPassword_(s){return sha256_(s)===V77.PASSWORD_SHA256}
+function validPassword_(s){
+  const expected=String(PropertiesService.getScriptProperties().getProperty(V77.PASSWORD_PROPERTY)||'').trim().toLowerCase();
+  if(!/^[a-f0-9]{64}$/.test(expected)||!s)return false;
+  return sha256_(s)===expected;
+}
 function sha256_(s){return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,s,Utilities.Charset.UTF_8).map(b=>('0'+((b+256)%256).toString(16)).slice(-2)).join('')}
 function setUpdatedAt_(stamp){
   const sh=db_().getSheetByName(V77.SHEETS.META);sh.clearContents();sh.getRange(1,1,2,4).setValues([['Key','Value','UpdatedAt','Version'],['database','READY',stamp,V77.VERSION]]);

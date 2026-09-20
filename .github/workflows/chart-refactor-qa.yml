@@ -20,6 +20,7 @@ on:
       - 'tests/local-excel-import.spec.cjs'
       - 'tests/local-excel-row-number.spec.cjs'
       - 'tests/local-excel-liter-format.spec.cjs'
+      - 'tests/local-excel-schema.spec.cjs'
       - '.github/workflows/chart-refactor-qa.yml'
   workflow_dispatch:
 jobs:
@@ -45,6 +46,7 @@ jobs:
           node --check tests/local-excel-import.spec.cjs
           node --check tests/local-excel-row-number.spec.cjs
           node --check tests/local-excel-liter-format.spec.cjs
+          node --check tests/local-excel-schema.spec.cjs
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
@@ -59,6 +61,8 @@ jobs:
         run: node tests/local-excel-row-number.spec.cjs
       - name: Offline Excel liter format regression
         run: node tests/local-excel-liter-format.spec.cjs
+      - name: Offline Excel schema and malformed rows regression
+        run: node tests/local-excel-schema.spec.cjs
       - name: Install isolated browser test dependencies
         run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
       - name: Install browser

@@ -1,0 +1,11 @@
+/* Consolidated stable presentation overrides; no changes to data or calculations. */
+.logo-box.fms-brand-box{height:96px!important;min-height:96px!important;background:linear-gradient(145deg,#061a2b,#092940)!important;border:1px solid #1788d8!important;box-shadow:none!important;overflow:hidden!important}
+.logo-box.fms-brand-box::before,.logo-box.fms-brand-box::after{content:none!important;display:none!important}
+.logo-box.fms-brand-box>.fms-brand{display:grid!important;grid-template-columns:45px minmax(0,1fr)!important;align-items:center!important;gap:9px!important;width:100%!important;height:auto!important;min-width:0!important;color:#fff!important}
+.logo-box.fms-brand-box .fms-brand strong{display:block!important;color:#fff!important;visibility:visible!important;font-size:15px!important}
+.stock-panel .stock-total.v733-stock-total,.stock-panel .stock-total.v726-stock-total,.stock-panel .stock-total{position:static!important;transform:none!important;float:none!important;clear:both!important;grid-column:1/-1!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;width:100%!important;min-height:80px!important;margin:6px auto 0!important;padding:4px 0 0!important;gap:3px!important}
+.stock-panel .stock-total .stock-orb{position:relative!important;margin:0 auto!important;flex:0 0 auto!important}
+.stock-panel .stock-cols{align-items:start!important}
+.trend-panel .chart{position:relative!important;display:block!important;min-width:0!important;width:100%!important;overflow:visible!important}
+.trend-panel canvas#dailyChart{display:block!important;min-width:0!important;max-width:100%!important;visibility:visible!important;opacity:1!important}
+@media(max-width:768px){.logo-box.fms-brand-box{height:82px!important;min-height:82px!important}.logo-box.fms-brand-box .fms-brand strong{font-size:13px!important}.stock-panel .stock-total{min-height:75px!important}}

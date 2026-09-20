@@ -17,6 +17,7 @@ on:
       - 'tests/security-release-gate.cjs'
       - 'tests/safe-upload-core.spec.cjs'
       - 'tests/backend-quarantine.spec.cjs'
+      - 'tests/local-excel-import.spec.cjs'
       - '.github/workflows/chart-refactor-qa.yml'
   workflow_dispatch:
 jobs:
@@ -39,6 +40,7 @@ jobs:
           node --check local-excel-import.js
           node --check tests/safe-upload-core.spec.cjs
           node --check tests/backend-quarantine.spec.cjs
+          node --check tests/local-excel-import.spec.cjs
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
@@ -47,6 +49,8 @@ jobs:
         run: node tests/backend-quarantine.spec.cjs
       - name: Mock-only upload transaction regression (no network)
         run: node tests/safe-upload-core.spec.cjs
+      - name: Offline local Excel preview interception and rollback regression
+        run: node tests/local-excel-import.spec.cjs
       - name: Install isolated browser test dependencies
         run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
       - name: Install browser

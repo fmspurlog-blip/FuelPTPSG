@@ -8,6 +8,7 @@ on:
       - 'brand-operations.js'
       - 'tests/chart-refactor.spec.cjs'
       - 'tests/chart-debug.cjs'
+      - 'tests/chart-visual-gate.cjs'
       - '.github/workflows/chart-refactor-qa.yml'
   workflow_dispatch:
 jobs:
@@ -28,6 +29,7 @@ jobs:
           node --check brand-operations.js
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
+          node --check tests/chart-visual-gate.cjs
       - name: Install isolated browser test dependencies
         run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
       - name: Install browser
@@ -42,6 +44,8 @@ jobs:
         run: node tests/chart-debug.cjs
       - name: Desktop and Android-sized browser regression
         run: node tests/chart-refactor.spec.cjs
+      - name: Settled chart geometry and screenshot gate
+        run: node tests/chart-visual-gate.cjs
       - name: Screenshots and failure logs
         if: always()
         uses: actions/upload-artifact@v4

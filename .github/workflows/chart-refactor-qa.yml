@@ -8,6 +8,7 @@ on:
       - 'brand-operations.js'
       - 'v770-remote-sync.js'
       - 'safe-upload-core.js'
+      - 'local-excel-import.js'
       - 'app.js'
       - 'backend/Code.gs'
       - 'tests/chart-refactor.spec.cjs'
@@ -35,6 +36,7 @@ jobs:
           node --check chart-components.js
           node --check brand-operations.js
           node --check safe-upload-core.js
+          node --check local-excel-import.js
           node --check tests/safe-upload-core.spec.cjs
           node --check tests/backend-quarantine.spec.cjs
           node --check tests/chart-refactor.spec.cjs

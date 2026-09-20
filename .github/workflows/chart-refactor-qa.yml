@@ -1,4 +1,4 @@
-name: Chart refactor QA
+name: Chart refactor and security QA
 on:
   pull_request:
     paths:
@@ -6,9 +6,13 @@ on:
       - 'stable-layout.css'
       - 'chart-components.js'
       - 'brand-operations.js'
+      - 'v770-remote-sync.js'
+      - 'app.js'
+      - 'backend/Code.gs'
       - 'tests/chart-refactor.spec.cjs'
       - 'tests/chart-debug.cjs'
       - 'tests/chart-visual-gate.cjs'
+      - 'tests/security-release-gate.cjs'
       - '.github/workflows/chart-refactor-qa.yml'
   workflow_dispatch:
 jobs:
@@ -30,6 +34,7 @@ jobs:
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
+          node --check tests/security-release-gate.cjs
       - name: Install isolated browser test dependencies
         run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
       - name: Install browser
@@ -46,6 +51,8 @@ jobs:
         run: node tests/chart-refactor.spec.cjs
       - name: Settled chart geometry and screenshot gate
         run: node tests/chart-visual-gate.cjs
+      - name: Security release gate (must pass before merge)
+        run: node tests/security-release-gate.cjs
       - name: Screenshots and failure logs
         if: always()
         uses: actions/upload-artifact@v4

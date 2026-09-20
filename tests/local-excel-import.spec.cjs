@@ -1,10 +1,9 @@
-/* Offline behavioral test for local Excel preview. No network or production data. */
+/* Offline behavioral regression for local Excel preview. No network or production data. */
 'use strict';
 const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync('local-excel-import.js','utf8');
-const flush=()=>new Promise(resolve=>setImmediate(resolve));
 async function scenario({rows,readError,renderError}={}){
   let capture=null,legacy=0,alerts=[],renderCount=0,validateCount=0;
   const original=[{Date:'2026-09-01',Unit_Code:'OLD',Fuel_Liter:10}];
@@ -16,13 +15,35 @@ async function scenario({rows,readError,renderError}={}){
   assert.equal(typeof capture,'function');
   let stopped=false;
   const event={target:input,stopPropagation:()=>{stopped=true}};
-  const pending=capture(event);
+  await capture(event);
   if(!stopped)legacy++;
-  await pending;
   assert.equal(legacy,0,'legacy target handler must never execute');
   assert.equal(input.disabled,false,'input must be restored');
   assert.equal(input.value,'','file selection must be cleared');
   return {state,original,alerts,renderCount,validateCount,capture,input};
+}
+async function overlappingImports(){
+  let capture,release;
+  const gate=new Promise(resolve=>{release=resolve});
+  const input={files:[{name:'sample.xlsx',size:100,arrayBuffer:()=>gate.then(()=>new ArrayBuffer(1))}],disabled:false,value:'sample.xlsx'};
+  const state={raw:[{Unit_Code:'OLD'}]};
+  let readCount=0,applyCount=0,alerts=[];
+  const context={document:{getElementById:()=>input,addEventListener:(name,fn,capturePhase)=>{assert.equal(capturePhase,true);capture=fn}},state,window:{FUEL_SAFE_UPLOAD_CORE:{validate:()=>{}}},XLSX:{read:()=>{readCount++;return{SheetNames:['Fuel_Usage_Clean'],Sheets:{Fuel_Usage_Clean:{}}}},utils:{sheet_to_json:()=>[{Date:'2026-09-02',Unit_Code:'NEW',Fuel_Liter:12}]}},normalize:r=>r,initFilters:()=>{},applyFilters:()=>{applyCount++},alert:m=>alerts.push(m),Date,Number,String,Object,Set,Error};
+  vm.runInNewContext(source,context);
+  let stops=0;
+  const event={target:input,stopPropagation:()=>{stops++}};
+  const first=capture(event);
+  assert.equal(input.disabled,true,'input must be locked while reading');
+  const second=capture(event);
+  await second;
+  assert.equal(readCount,0,'second import must not start while first reads');
+  assert.match(alerts[0],/masih diproses/);
+  release();await first;
+  assert.equal(stops,2,'both events must block the legacy handler');
+  assert.equal(readCount,1);
+  assert.equal(applyCount,1);
+  assert.equal(state.raw[0].Unit_Code,'NEW');
+  assert.equal(input.disabled,false);
 }
 (async()=>{
   const good=await scenario();assert.equal(good.state.raw[0].Unit_Code,'NEW');assert.equal(good.validateCount,1);
@@ -30,5 +51,6 @@ async function scenario({rows,readError,renderError}={}){
   const duplicate=await scenario({rows:[{Date:'2026-09-02',Unit_Code:'A',Fuel_Liter:10,Transaction_ID:'DUP'},{Date:'2026-09-02',Unit_Code:'B',Fuel_Liter:10,Transaction_ID:'DUP'}]});assert.equal(duplicate.state.raw,duplicate.original);assert.match(duplicate.alerts[0],/duplikat/);
   const unreadable=await scenario({readError:true});assert.equal(unreadable.state.raw,unreadable.original);
   const failedRender=await scenario({renderError:true});assert.equal(failedRender.state.raw,failedRender.original);assert.equal(failedRender.renderCount,2,'previous dataset must be rerendered');
-  console.log('PASS: local preview intercepts legacy handler, validates all rows, restores input and rolls back on failure (offline).');
+  await overlappingImports();
+  console.log('PASS: local preview blocks legacy handler, rejects bad rows, rolls back and prevents concurrent imports (offline).');
 })().catch(error=>{console.error(error);process.exitCode=1});

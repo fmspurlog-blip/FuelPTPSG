@@ -1,0 +1,53 @@
+'use strict';
+// Independent visual-geometry gate: catches charts that exist but render as a pile of bars.
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const base = process.env.FMS_TEST_URL || 'http://127.0.0.1:4173/?v=78.9#dashboard';
+const out = path.resolve('test-results/chart-refactor');
+fs.mkdirSync(out,{recursive:true});
+(async()=>{
+ const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ try {
+  for(const width of [360,390,768,1024,1366,1920]){
+   const page=await browser.newPage({viewport:{width,height:900}});
+   const errors=[];page.on('pageerror',e=>errors.push(e.message));
+   await page.route('https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js',r=>r.fulfill({path:path.resolve('node_modules/chart.js/dist/chart.umd.js'),contentType:'application/javascript'}));
+   await page.route('https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0',r=>r.fulfill({path:path.resolve('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'),contentType:'application/javascript'}));
+   await page.route('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',r=>r.fulfill({path:path.resolve('node_modules/xlsx/dist/xlsx.full.min.js'),contentType:'application/javascript'}));
+   await page.route('https://script.google.com/**',r=>r.abort());
+   await page.goto(base,{waitUntil:'domcontentloaded'});
+   await page.waitForFunction(()=>window.Chart && Chart.getChart(document.getElementById('dailyChart'))?.data.labels.length>0);
+   await page.locator('.nav-link[data-section="fuel-usage"]').click();
+   await page.locator('.nav-link[data-section="dashboard"]').click();
+   await page.waitForFunction(()=>document.getElementById('dashboard').classList.contains('active-section'));
+   // Explicitly finish animation before evaluating geometry and taking screenshots.
+   await page.evaluate(async()=>{
+    await document.fonts.ready;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    Object.values(state.charts).forEach(chart=>{chart.stop();chart.resize();chart.update('none');});
+   });
+   const result=await page.evaluate(()=>{
+    const daily=Chart.getChart(document.getElementById('dailyChart'));
+    const meta=daily.getDatasetMeta(0);
+    const bars=meta.data.filter(b=>Number.isFinite(b.x)&&Number.isFinite(b.y)&&b.width>0);
+    const xs=bars.map(b=>b.x);
+    const panel=document.getElementById('dailyChart').closest('.panel').getBoundingClientRect();
+    const chart=document.getElementById('dailyChart').getBoundingClientRect();
+    const shift=document.getElementById('shiftChart').getBoundingClientRect();
+    const shiftPanel=document.getElementById('shiftChart').closest('.panel').getBoundingClientRect();
+    const inside=(a,b)=>a.left>=b.left-2&&a.right<=b.right+2&&a.top>=b.top-2&&a.bottom<=b.bottom+2;
+    return {bars:bars.length,distinctXs:new Set(xs.map(x=>Math.round(x))).size,span:xs.length?Math.max(...xs)-Math.min(...xs):0,chartWidth:chart.width,dailyInside:inside(chart,panel),shiftInside:inside(shift,shiftPanel),shiftHeight:shift.height,logoVisible:!!document.querySelector('.brand, .logo, .sidebar-brand')};
+   });
+   assert.ok(result.bars>=2,`${width}px: insufficient daily bars ${JSON.stringify(result)}`);
+   assert.equal(result.distinctXs,result.bars,`${width}px: daily bars overlap ${JSON.stringify(result)}`);
+   assert.ok(result.span>result.chartWidth*.25,`${width}px: daily bars bunched at left ${JSON.stringify(result)}`);
+   assert.ok(result.dailyInside&&result.shiftInside&&result.shiftHeight>40,`${width}px: chart outside panel ${JSON.stringify(result)}`);
+   assert.deepEqual(errors,[],`${width}px: browser errors`);
+   await page.screenshot({path:path.join(out,`visual-gate-${width}.png`),fullPage:true,animations:'disabled'});
+   console.log(`PASS visual geometry ${width}px: ${result.bars} bars, spread ${Math.round(result.span)}px`);
+   await page.close();
+  }
+ }finally{await browser.close()}
+})().catch(e=>{console.error(e);process.exitCode=1});

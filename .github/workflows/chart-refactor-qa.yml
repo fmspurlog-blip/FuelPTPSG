@@ -7,12 +7,14 @@ on:
       - 'chart-components.js'
       - 'brand-operations.js'
       - 'v770-remote-sync.js'
+      - 'safe-upload-core.js'
       - 'app.js'
       - 'backend/Code.gs'
       - 'tests/chart-refactor.spec.cjs'
       - 'tests/chart-debug.cjs'
       - 'tests/chart-visual-gate.cjs'
       - 'tests/security-release-gate.cjs'
+      - 'tests/safe-upload-core.spec.cjs'
       - '.github/workflows/chart-refactor-qa.yml'
   workflow_dispatch:
 jobs:
@@ -31,10 +33,14 @@ jobs:
           node --check bootstrap.js
           node --check chart-components.js
           node --check brand-operations.js
+          node --check safe-upload-core.js
+          node --check tests/safe-upload-core.spec.cjs
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
           node --check tests/security-release-gate.cjs
+      - name: Mock-only upload transaction regression (no network)
+        run: node tests/safe-upload-core.spec.cjs
       - name: Install isolated browser test dependencies
         run: npm install --no-save --no-package-lock playwright@1.55.0 chart.js@4.4.7 chartjs-plugin-datalabels@2.2.0 xlsx@0.18.5
       - name: Install browser

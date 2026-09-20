@@ -25,11 +25,13 @@
   window.__FUEL_RECEIPTS=clone(receipts);window.__FUEL_STOCK_DATA=clone(stock);window.STOCK_DATA=clone(stock);window.RECON_DATA=clone(recon);
   await safeLoad('chart-components.js?v='+q);
   await load('app.js?v='+q);
+  // Local preview only: validation runs before replacing dashboard data; no cloud requests.
+  await load('safe-upload-core.js?v='+q);
+  await load('local-excel-import.js?v='+q);
   try{if(typeof stockData!=='undefined'){stockData.snapshots=clone(stock.snapshots||{});stockData.availableDates=[...(stock.availableDates||[])]}}catch(_){}
   setTimeout(()=>safeLoad('brand-operations.js?v='+q),40);
-  // SECURITY HOLD: legacy remote sync exposes a password verifier and mutates local data before upload succeeds.
-  // Do not load v770-remote-sync.js until it is replaced and an isolated backend passes the security gate.
-  // This branch intentionally disables legacy cloud polling and remote upload; never merge as a feature-complete release.
+  // SECURITY HOLD: remote sync is quarantined; the validated Excel import is a local preview only.
+  // Do not enable cloud polling or remote upload before isolated backend authorization and rollback QA.
   window.FUEL_REMOTE_SYNC_DISABLED=true;
-  console.warn('FuelPTPSG QA security hold: legacy cloud sync/upload disabled; production deployment unchanged.');
+  console.warn('FuelPTPSG QA security hold: cloud sync/upload disabled; local Excel preview only; production unchanged.');
 })();

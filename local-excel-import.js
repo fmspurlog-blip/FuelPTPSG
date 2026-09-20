@@ -60,9 +60,8 @@
       if(!Number.isSafeInteger(file.size)||file.size<=0)throw new Error('File Excel kosong atau ukuran file tidak valid.');
       if(file.size>25*1024*1024)throw new Error('File terlalu besar (maksimum 25 MB).');
       const workbook=XLSX.read(await file.arrayBuffer(),{type:'array'});
-      const name=workbook.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':workbook.SheetNames[0];
-      if(!name)throw new Error('Workbook tidak memiliki sheet.');
-      const rows=XLSX.utils.sheet_to_json(workbook.Sheets[name],{defval:''});
+      if(!workbook||!Array.isArray(workbook.SheetNames)||!workbook.SheetNames.includes('Fuel_Usage_Clean')||!workbook.Sheets||!workbook.Sheets.Fuel_Usage_Clean)throw new Error('Sheet Fuel_Usage_Clean tidak ditemukan. Gunakan template transaksi fuel yang sesuai.');
+      const rows=XLSX.utils.sheet_to_json(workbook.Sheets.Fuel_Usage_Clean,{defval:''});
       if(rows.length>50000)throw new Error('Terlalu banyak baris (maksimum 50.000 transaksi per impor). Pecah file Excel menjadi beberapa bagian.');
       const nonempty=rows.filter(row=>Object.values(row).some(value=>value!==''&&value!==null));
       if(!nonempty.length)throw new Error('Tidak ada transaksi untuk ditampilkan.');

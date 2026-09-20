@@ -3,6 +3,7 @@ on:
   pull_request:
     paths:
       - 'bootstrap.js'
+      - 'stable-layout.css'
       - 'chart-components.js'
       - 'brand-operations.js'
       - 'tests/chart-refactor.spec.cjs'

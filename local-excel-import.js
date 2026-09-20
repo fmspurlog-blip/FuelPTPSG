@@ -6,6 +6,11 @@
   const input=document.getElementById('excelUpload');
   if(!input)return;
   let busy=false;
+  function validISO(value){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+    const parsed=new Date(value+'T00:00:00Z');
+    return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===value;
+  }
   function checkRows(rows){
     const ids=new Set();
     rows.forEach((row,index)=>{
@@ -13,13 +18,11 @@
       const date=row.Date;
       if(date==null||String(date).trim()==='')throw new Error('Tanggal kosong pada baris '+line+'.');
       if(typeof date==='number'){
-        if(!Number.isFinite(date)||!XLSX.SSF.parse_date_code(date))throw new Error('Tanggal Excel tidak valid pada baris '+line+'.');
+        const parsed=Number.isFinite(date)&&date>=1&&date<2958466?XLSX.SSF.parse_date_code(date):null;
+        const iso=parsed&&`${String(parsed.y).padStart(4,'0')}-${String(parsed.m).padStart(2,'0')}-${String(parsed.d).padStart(2,'0')}`;
+        if(!iso||!validISO(iso))throw new Error('Tanggal Excel tidak valid pada baris '+line+'.');
       }else if(typeof date==='string'){
-        const value=date.trim();
-        if(/^\d{4}-\d{2}-\d{2}$/.test(value)){
-          const parsed=new Date(value+'T00:00:00Z');
-          if(!Number.isFinite(parsed.getTime())||parsed.toISOString().slice(0,10)!==value)throw new Error('Tanggal tidak valid pada baris '+line+'.');
-        }else if(!Number.isFinite(new Date(value).getTime()))throw new Error('Tanggal tidak valid pada baris '+line+'.');
+        if(!validISO(date.trim()))throw new Error('Tanggal harus berformat YYYY-MM-DD pada baris '+line+'.');
       }else throw new Error('Tipe tanggal tidak valid pada baris '+line+'.');
       if(!String(row.Unit_Code||'').trim())throw new Error('Kode unit kosong pada baris '+line+'.');
       if(row.Fuel_Liter==null||String(row.Fuel_Liter).trim()===''||!Number.isFinite(Number(row.Fuel_Liter))||Number(row.Fuel_Liter)<=0)throw new Error('Liter tidak valid pada baris '+line+'.');

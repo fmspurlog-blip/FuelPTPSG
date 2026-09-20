@@ -57,6 +57,7 @@
     const previous=state.raw;
     try{
       if(!/\.(xlsx|xls)$/i.test(file.name))throw new Error('Pilih file Excel .xlsx atau .xls.');
+      if(!Number.isSafeInteger(file.size)||file.size<=0)throw new Error('File Excel kosong atau ukuran file tidak valid.');
       if(file.size>25*1024*1024)throw new Error('File terlalu besar (maksimum 25 MB).');
       const workbook=XLSX.read(await file.arrayBuffer(),{type:'array'});
       const name=workbook.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':workbook.SheetNames[0];

@@ -11,6 +11,17 @@
     const parsed=new Date(value+'T00:00:00Z');
     return Number.isFinite(parsed.getTime())&&parsed.toISOString().slice(0,10)===value;
   }
+  function showPreviewNotice(){
+    let notice=document.getElementById('fuel-local-preview-notice');
+    if(!notice){
+      notice=document.createElement('div');
+      notice.id='fuel-local-preview-notice';
+      notice.setAttribute('role','status');
+      notice.style.cssText='margin:12px 0;padding:12px 16px;border:2px solid #d97706;border-radius:8px;background:#fff7ed;color:#7c2d12;font-weight:600;line-height:1.5';
+      input.parentNode.insertBefore(notice,input.nextSibling);
+    }
+    notice.textContent='PRATINJAU LOKAL — Data konsumsi berasal dari Excel yang baru dipilih dan tidak disimpan ke cloud. Data penerimaan, stok, dan rekonsiliasi tetap dari sumber sebelumnya; jangan gunakan kombinasi angka ini untuk penutupan stok atau laporan resmi.';
+  }
   function checkRows(rows){
     const ids=new Set();
     rows.forEach((row,index)=>{
@@ -32,7 +43,6 @@
   }
   document.addEventListener('change',async function(e){
     if(e.target!==input)return;
-    // Capture phase blocks the unvalidated legacy handler on the input itself.
     e.stopPropagation();
     if(busy){alert('Impor Excel sebelumnya masih diproses. Tunggu hingga selesai.');return;}
     const file=input.files&&input.files[0];
@@ -53,13 +63,14 @@
       const normalized=normalize(nonempty);
       if(normalized.length!==nonempty.length)throw new Error('Ada transaksi dengan tanggal, unit, atau liter tidak valid. Tidak ada data yang diganti.');
       window.FUEL_SAFE_UPLOAD_CORE.validate({usage:normalized,receipts:[],stock:{snapshots:{},availableDates:[]}});
-      // Preview only. Never call the remote uploader or persist this dataset.
       state.raw=normalized;
       try{initFilters();applyFilters()}catch(renderError){
         state.raw=previous;
         try{initFilters();applyFilters()}catch(_){}
         throw renderError;
       }
+      // Display after successful render; do not claim the mixed dataset is reconciled.
+      try{showPreviewNotice()}catch(_){alert('Pratinjau lokal berhasil, tetapi peringatan stok tidak dapat ditampilkan. Jangan gunakan untuk rekonsiliasi.');}
     }catch(error){alert('Impor Excel dibatalkan: '+error.message)}
     finally{input.value='';input.disabled=false;busy=false;}
   },true);

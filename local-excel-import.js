@@ -62,9 +62,13 @@
       const workbook=XLSX.read(await file.arrayBuffer(),{type:'array'});
       if(!workbook||!Array.isArray(workbook.SheetNames)||!workbook.SheetNames.includes('Fuel_Usage_Clean')||!workbook.Sheets||!workbook.Sheets.Fuel_Usage_Clean)throw new Error('Sheet Fuel_Usage_Clean tidak ditemukan. Gunakan template transaksi fuel yang sesuai.');
       const rows=XLSX.utils.sheet_to_json(workbook.Sheets.Fuel_Usage_Clean,{defval:''});
+      if(!Array.isArray(rows))throw new Error('Format data transaksi Excel tidak valid.');
       if(rows.length>50000)throw new Error('Terlalu banyak baris (maksimum 50.000 transaksi per impor). Pecah file Excel menjadi beberapa bagian.');
-      const nonempty=rows.filter(row=>Object.values(row).some(value=>value!==''&&value!==null));
+      const nonempty=rows.filter(row=>row&&typeof row==='object'&&!Array.isArray(row)&&Object.values(row).some(value=>value!==''&&value!==null));
       if(!nonempty.length)throw new Error('Tidak ada transaksi untuk ditampilkan.');
+      const required=['Date','Unit_Code','Fuel_Liter'];
+      const missing=required.filter(column=>!Object.prototype.hasOwnProperty.call(nonempty[0],column));
+      if(missing.length)throw new Error('Kolom wajib tidak ditemukan: '+missing.join(', ')+'. Gunakan header template Fuel_Usage_Clean yang sesuai.');
       checkRows(nonempty);
       const normalized=normalize(nonempty);
       if(normalized.length!==nonempty.length)throw new Error('Ada transaksi dengan tanggal, unit, atau liter tidak valid. Tidak ada data yang diganti.');

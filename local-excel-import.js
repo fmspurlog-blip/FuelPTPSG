@@ -22,10 +22,10 @@
     }
     notice.textContent='PRATINJAU LOKAL — Data konsumsi berasal dari Excel yang baru dipilih dan tidak disimpan ke cloud. Data penerimaan, stok, dan rekonsiliasi tetap dari sumber sebelumnya; jangan gunakan kombinasi angka ini untuk penutupan stok atau laporan resmi.';
   }
-  function checkRows(rows){
+  function checkRows(rows,rowNumbers){
     const ids=new Set();
     rows.forEach((row,index)=>{
-      const line=index+2;
+      const line=rowNumbers[index];
       // Legacy dashboard renders some spreadsheet fields through innerHTML.
       // Reject markup rather than letting an untrusted workbook inject HTML.
       for(const [column,value] of Object.entries(row)){
@@ -65,15 +65,19 @@
       if(!Array.isArray(rows))throw new Error('Format data transaksi Excel tidak valid.');
       if(rows.length>50000)throw new Error('Terlalu banyak baris (maksimum 50.000 transaksi per impor). Pecah file Excel menjadi beberapa bagian.');
       const nonempty=[];
+      const rowNumbers=[];
       rows.forEach((row,index)=>{
         if(!row||typeof row!=='object'||Array.isArray(row))throw new Error('Struktur transaksi tidak valid pada baris '+(index+2)+'.');
-        if(Object.values(row).some(value=>value!==''&&value!==null))nonempty.push(row);
+        if(Object.values(row).some(value=>value!==''&&value!==null)){
+          nonempty.push(row);
+          rowNumbers.push(Number.isSafeInteger(row.__rowNum__)?row.__rowNum__+1:index+2);
+        }
       });
       if(!nonempty.length)throw new Error('Tidak ada transaksi untuk ditampilkan.');
       const required=['Date','Unit_Code','Fuel_Liter'];
       const missing=required.filter(column=>!Object.prototype.hasOwnProperty.call(nonempty[0],column));
       if(missing.length)throw new Error('Kolom wajib tidak ditemukan: '+missing.join(', ')+'. Gunakan header template Fuel_Usage_Clean yang sesuai.');
-      checkRows(nonempty);
+      checkRows(nonempty,rowNumbers);
       const normalized=normalize(nonempty);
       if(normalized.length!==nonempty.length)throw new Error('Ada transaksi dengan tanggal, unit, atau liter tidak valid. Tidak ada data yang diganti.');
       window.FUEL_SAFE_UPLOAD_CORE.validate({usage:normalized,receipts:[],stock:{snapshots:{},availableDates:[]}});

@@ -57,6 +57,7 @@
       const name=workbook.SheetNames.includes('Fuel_Usage_Clean')?'Fuel_Usage_Clean':workbook.SheetNames[0];
       if(!name)throw new Error('Workbook tidak memiliki sheet.');
       const rows=XLSX.utils.sheet_to_json(workbook.Sheets[name],{defval:''});
+      if(rows.length>50000)throw new Error('Terlalu banyak baris (maksimum 50.000 transaksi per impor). Pecah file Excel menjadi beberapa bagian.');
       const nonempty=rows.filter(row=>Object.values(row).some(value=>value!==''&&value!==null));
       if(!nonempty.length)throw new Error('Tidak ada transaksi untuk ditampilkan.');
       checkRows(nonempty);
@@ -69,7 +70,6 @@
         try{initFilters();applyFilters()}catch(_){}
         throw renderError;
       }
-      // Display after successful render; do not claim the mixed dataset is reconciled.
       try{showPreviewNotice()}catch(_){alert('Pratinjau lokal berhasil, tetapi peringatan stok tidak dapat ditampilkan. Jangan gunakan untuk rekonsiliasi.');}
     }catch(error){alert('Impor Excel dibatalkan: '+error.message)}
     finally{input.value='';input.disabled=false;busy=false;}

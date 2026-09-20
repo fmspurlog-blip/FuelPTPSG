@@ -1,10 +1,11 @@
-/* QA-only local Excel preview: intercept the legacy import before it mutates dashboard state.
- * No network, credential, localStorage or database writes. Never use this for cloud upload.
+/* QA-only local Excel preview: capture change before legacy target handler.
+ * No network, credentials, localStorage or database writes. Never use for cloud upload.
  */
 (function(){
   'use strict';
   const input=document.getElementById('excelUpload');
   if(!input)return;
+  let busy=false;
   function checkRows(rows){
     const ids=new Set();
     rows.forEach((row,index)=>{
@@ -28,10 +29,13 @@
   }
   document.addEventListener('change',async function(e){
     if(e.target!==input)return;
-    // The legacy target listener mutates state without checking rejected rows.
+    // Capture phase blocks the unvalidated legacy handler on the input itself.
     e.stopPropagation();
+    if(busy){alert('Impor Excel sebelumnya masih diproses. Tunggu hingga selesai.');return;}
     const file=input.files&&input.files[0];
     if(!file)return;
+    busy=true;
+    input.disabled=true;
     const previous=state.raw;
     try{
       if(!/\.(xlsx|xls)$/i.test(file.name))throw new Error('Pilih file Excel .xlsx atau .xls.');
@@ -54,6 +58,6 @@
         throw renderError;
       }
     }catch(error){alert('Impor Excel dibatalkan: '+error.message)}
-    finally{input.value=''}
+    finally{input.value='';input.disabled=false;busy=false;}
   },true);
 })();

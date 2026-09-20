@@ -26,6 +26,11 @@
     const ids=new Set();
     rows.forEach((row,index)=>{
       const line=index+2;
+      // Legacy dashboard renders some spreadsheet fields through innerHTML.
+      // Reject markup rather than letting an untrusted workbook inject HTML.
+      for(const [column,value] of Object.entries(row)){
+        if(typeof value==='string'&&/[<>]/.test(value))throw new Error('Karakter HTML tidak diizinkan pada kolom '+column+' baris '+line+'.');
+      }
       const date=row.Date;
       if(date==null||String(date).trim()==='')throw new Error('Tanggal kosong pada baris '+line+'.');
       if(typeof date==='number'){

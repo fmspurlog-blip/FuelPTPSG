@@ -44,7 +44,6 @@ const chartID=chart=>chart.canvas?.id||'';
 const legendHTML=chart=>{
  const panel=chart.canvas?.closest('.panel');if(!panel)return;
  panel.classList.add('fms-donut-panel');
- // Remove old legend nodes at their source: this module replaces the old UI script entirely.
  panel.querySelectorAll('.v783-ext-legend,.v783-white-legend,.v786-legend').forEach(n=>n.remove());
  let host=panel.querySelector(':scope > .fms-chart-legend');
  if(!host){host=document.createElement('div');host.className='fms-chart-legend';host.setAttribute('aria-label','Keterangan diagram');panel.appendChild(host)}
@@ -67,9 +66,24 @@ const legendHTML=chart=>{
 };
 const plugin={
  id:'fmsChartComponents',
- beforeInit(chart){const id=chartID(chart);if(ids.has(id)){chart.options.plugins.legend.display=false;chart.options.maintainAspectRatio=false;chart.options.animation=false;chart.canvas.closest('.panel')?.classList.add('fms-donut-panel')}
- if(id==='categoryChart'){chart.options.plugins.datalabels.display=false;chart.options.layout=chart.options.layout||{};chart.options.layout.padding={...(chart.options.layout.padding||{}),right:100};chart.options.animation=false}},
- beforeUpdate(chart){const id=chartID(chart);if(ids.has(id))chart.options.plugins.legend.display=false;if(id==='categoryChart'){chart.options.plugins.datalabels.display=false;chart.options.layout.padding.right=chart.width<290?82:100}},
+ beforeInit(chart){const id=chartID(chart);const opts=chart.config.options;
+  // Chart.js chart.options is a resolving proxy. Writing nested properties on it during
+  // beforeUpdate recursively triggers its setter and prevents subsequent charts rendering.
+  // Set ONLY the original raw config, once, before the first layout/update.
+  if(ids.has(id)){
+   opts.plugins=opts.plugins||{};
+   opts.plugins.legend={...(opts.plugins.legend||{}),display:false};
+   opts.maintainAspectRatio=false;
+   opts.animation=false;
+   chart.canvas.closest('.panel')?.classList.add('fms-donut-panel');
+  }
+  if(id==='categoryChart'){
+   opts.plugins=opts.plugins||{};
+   opts.plugins.datalabels={...(opts.plugins.datalabels||{}),display:false};
+   opts.layout={...(opts.layout||{}),padding:{...(opts.layout?.padding||{}),right:100}};
+   opts.animation=false;
+  }
+ },
  afterUpdate(chart){if(ids.has(chartID(chart)))legendHTML(chart)},
  afterDatasetsDraw(chart){if(chartID(chart)!=='categoryChart')return;const ctx=chart.ctx,ds=chart.data.datasets?.[0];if(!ds)return;
  let total=ds.data.reduce((n,v)=>n+(Number(v)||0),0);try{if(typeof state!=='undefined'&&Array.isArray(state.filtered))total=state.filtered.reduce((n,r)=>n+(Number(r.Fuel_Liter)||0),0)||total}catch(_){}

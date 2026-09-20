@@ -1,6 +1,6 @@
-/* Branding and operational detail display ONLY; never mutates dashboard Chart.js instances. */
+/* UI ownership: brand, latest stock placement and existing operational summaries. */
 (()=>{'use strict';
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=v=>Number(v||0).toLocaleString('id-ID',{maximumFractionDigits:0});
 const date=s=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(String(s||'')))return s||'-';return new Intl.DateTimeFormat('id-ID',{day:'2-digit',month:'long',year:'numeric'}).format(new Date(s+'T00:00:00'))};
 const fuel=`<svg viewBox="0 0 62 82" width="43" height="60" aria-hidden="true"><rect x="8" y="6" width="34" height="58" rx="4" fill="#ff9800"/><rect x="14" y="13" width="22" height="14" rx="2" fill="#fff"/><rect x="18" y="17" width="14" height="7" fill="#173249"/><path d="M25 34c-6 8-9 14-9 19a10 10 0 0 0 20 0c0-5-5-12-11-19Zm0 9c3 4 5 8 5 10a5 5 0 0 1-10 0c0-3 2-6 5-10Z" fill="#09243a"/><path d="M42 16h6l6 7v20c0 6-4 10-9 10h-4v-6h4c2 0 3-2 3-4V26l-6-6Z" fill="#ff9800"/><rect x="5" y="64" width="41" height="5" rx="2" fill="#ff9800"/></svg>`;
@@ -8,18 +8,26 @@ const excavator=`<svg viewBox="0 0 170 90" role="img" aria-label="Excavator"><re
 const tooth='M0-26 7-25 10-18 17-20 22-15 20-8 26-4 26 4 20 8 22 15 17 20 10 18 7 25 0 26-4 20-12 22-17 17-15 10-22 7-26 0-25-7-18-10-20-17-15-22-8-20-4-26Z';
 const gears=`<svg viewBox="0 0 170 90" role="img" aria-label="Three gears"><g fill="#dbe7ef" stroke="#7d9aac" stroke-width="2"><g transform="translate(55 51) scale(1.08)"><path d="${tooth}"/><circle r="10" fill="#17364d"/></g><g transform="translate(104 30) scale(.84)"><path d="${tooth}"/><circle r="10" fill="#17364d"/></g><g transform="translate(122 65) scale(.66)"><path d="${tooth}"/><circle r="10" fill="#17364d"/></g></g></svg>`;
 const css=document.createElement('style');css.id='fms-brand-operations-style';css.textContent=`
-.logo-box.fms-brand-box{width:100%;height:96px;min-height:96px;padding:8px;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#061a2b,#092940);border:1px solid #1788d8;border-radius:8px;overflow:hidden;box-sizing:border-box}
-.fms-brand{display:grid;grid-template-columns:45px minmax(0,1fr);gap:9px;align-items:center;width:100%;min-width:0}.fms-brand strong{display:block;color:#fff;font:900 15px/1.1 Segoe UI,Arial,sans-serif;white-space:normal}
+/* Overrides v733.css: it hides ALL logo children except its old v733-logo. */
+.logo-box.fms-brand-box{width:100%!important;height:96px!important;min-height:96px!important;padding:8px!important;display:flex!important;align-items:center!important;justify-content:center!important;background:linear-gradient(145deg,#061a2b,#092940)!important;border:1px solid #1788d8!important;border-radius:8px!important;overflow:hidden!important;box-sizing:border-box!important}
+.logo-box.fms-brand-box>.fms-brand{display:grid!important;grid-template-columns:45px minmax(0,1fr)!important;gap:9px!important;align-items:center!important;width:100%!important;min-width:0!important;visibility:visible!important;opacity:1!important}
+.logo-box.fms-brand-box .fms-brand strong{display:block!important;color:#fff!important;font:900 15px/1.1 Segoe UI,Arial,sans-serif!important;white-space:normal!important}
 .unit-type-panel .unit-icon{height:70px;display:flex;align-items:center;justify-content:center;font-size:0}.unit-type-panel .unit-icon svg{width:min(100%,120px);height:68px}
+/* Stock snapshot remains calculated by app.js. Only place the existing stock orb below fuel trucks. */
+.stock-panel .stock-cols>div:nth-child(2)>.stock-total{position:static!important;top:auto!important;left:auto!important;transform:none!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;margin:8px 0 0!important;width:100%!important;min-height:0!important;padding:4px 0 0!important}
+.stock-panel .stock-cols>div:nth-child(2)>.stock-total>small{display:block!important;color:#fff!important;font-size:10px!important;font-weight:900!important}
 .fms-receipt-wrap{overflow-x:auto;max-width:100%}.fms-receipt-wrap table{width:100%;min-width:570px;border-collapse:collapse}.fms-receipt-wrap th,.fms-receipt-wrap td{padding:8px;text-align:left;border-bottom:1px solid #29445c;font-size:10px}.fms-receipt-wrap th{color:#a9d5ff}
 .fms-truck-detail{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:12px}.fms-truck-detail>section{border:1px solid #27445e;border-radius:8px;padding:12px;min-width:0}.fms-truck-detail h3{font-size:12px;color:#ffb12d}.fms-truck-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;padding:7px 0;border-bottom:1px dashed #20384d;font-size:11px}.fms-truck-row b{color:#45e38b}
-@media(max-width:768px){.logo-box.fms-brand-box{width:190px!important;height:82px!important;min-height:82px!important;margin:0 auto 8px!important}.fms-brand strong{font-size:13px}.fms-truck-detail{grid-template-columns:1fr}}
+@media(max-width:768px){.logo-box.fms-brand-box{width:190px!important;height:82px!important;min-height:82px!important;margin:0 auto 8px!important}.logo-box.fms-brand-box .fms-brand strong{font-size:13px!important}.fms-truck-detail{grid-template-columns:1fr}}
 `;document.head.appendChild(css);
-function paint(){const logo=document.querySelector('.logo-box');if(logo&&!logo.classList.contains('fms-brand-box')){logo.classList.add('fms-brand-box');logo.innerHTML=`<div class="fms-brand">${fuel}<div><strong>REFUELING</strong><strong>CONTROL</strong></div></div>`}
+function paint(){
+ const logo=document.querySelector('.logo-box');if(logo&&!logo.classList.contains('fms-brand-box')){logo.classList.add('fms-brand-box');logo.innerHTML=`<div class="fms-brand">${fuel}<div><strong>REFUELING</strong><strong>CONTROL</strong></div></div>`}
  const heading=document.querySelector('.hero h1');if(heading)heading.textContent='FUEL MANAGEMENT SYSTEM V78.9';
  const sub=document.querySelector('.hero p');if(sub)sub.textContent='PT PRIMA SARANA GEMILANG SITE ABM - LUWUK';
  const icons=document.querySelectorAll('.unit-type-panel .unit-icon');if(icons[0]&&!icons[0].querySelector('svg'))icons[0].innerHTML=excavator;if(icons[1]&&!icons[1].querySelector('svg'))icons[1].innerHTML=gears;
  const label=document.querySelector('.stock-panel .stock-total>small');if(label)label.textContent='TOTAL STOCK';
+ const total=document.querySelector('.stock-panel .stock-total'),truckCol=document.querySelector('.stock-panel .stock-cols>div:nth-child(2)');
+ if(total&&truckCol&&!truckCol.contains(total))truckCol.appendChild(total);
 }
 function receipt(){const host=document.getElementById('receiptList');if(!host)return;const data=Array.isArray(window.__FUEL_RECEIPTS)?window.__FUEL_RECEIPTS:[];
  if(!data.length){host.textContent='Belum ada data Fuel Receipt pada database terbaru.';return}
@@ -32,5 +40,19 @@ function trucks(){const host=document.getElementById('truckSummaryList');if(!hos
  host.className='fms-truck-detail';host.innerHTML=`<section><h3>DISTRIBUTION</h3>${[...byTruck].sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="fms-truck-row"><span>${esc(k)}</span><b>${fmt(v)} L · ${grand?(100*v/grand).toFixed(2):'0.00'}%</b></div>`).join('')}</section><section><h3>Distribution &amp; Truck Performance</h3>${[...byDay].sort((a,b)=>a[0].localeCompare(b[0])).map(([key,v])=>{const [d,ft]=key.split('|');return `<div class="fms-truck-row"><span>${esc(date(d))} · ${esc(ft)}</span><b>${fmt(v)} L · ${grand?(100*v/grand).toFixed(2):'0.00'}%</b></div>`}).join('')}</section>`;
 }
 function refresh(){paint();receipt();trucks()}
-refresh();window.addEventListener('pageshow',refresh,{passive:true});document.addEventListener('click',e=>{if(e.target.closest('.nav-link[data-section]'))setTimeout(refresh,120)},{passive:true});
+function restoreDashboardCanvases(){
+ if(!window.Chart)return;
+ for(const id of ['dailyChart','shiftChart','categoryChart','truckChart','statusChart']){
+  const canvas=document.getElementById(id),chart=canvas&&Chart.getChart(canvas);
+  if(chart){chart.stop();chart.resize();chart.update('none')}
+ }
+}
+refresh();window.addEventListener('pageshow',refresh,{passive:true});
+document.addEventListener('click',e=>{
+ const nav=e.target.closest('.nav-link[data-section]');if(!nav)return;
+ requestAnimationFrame(()=>requestAnimationFrame(()=>{
+  refresh();
+  if(nav.dataset.section==='dashboard')restoreDashboardCanvases();
+ }));
+},{passive:true});
 })();

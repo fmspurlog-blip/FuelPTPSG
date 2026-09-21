@@ -71,7 +71,8 @@ const plugin={
  beforeInit(chart){const id=chartID(chart),opts=chart.config.options;
   // Never write chart.options: it is Chart.js's resolving proxy (recursive setter).
   if(ids.has(id)){opts.plugins=opts.plugins||{};opts.plugins.legend={...(opts.plugins.legend||{}),display:false};opts.maintainAspectRatio=false;opts.animation=false;chart.canvas.closest('.panel')?.classList.add('fms-donut-panel')}
-  if(id==='categoryChart'){opts.plugins=opts.plugins||{};opts.plugins.datalabels={...(opts.plugins.datalabels||{}),display:false};opts.layout={...(opts.layout||{}),padding:{...(opts.layout?.padding||{}),right:100}};opts.animation=false}
+  // Keep a 120px label gutter for 12-digit values on narrow phones while retaining the plot.
+  if(id==='categoryChart'){opts.plugins=opts.plugins||{};opts.plugins.datalabels={...(opts.plugins.datalabels||{}),display:false};opts.layout={...(opts.layout||{}),padding:{...(opts.layout?.padding||{}),right:120}};opts.animation=false}
  },
  afterUpdate(chart){if(ids.has(chartID(chart)))legendHTML(chart)},
  afterDatasetsDraw(chart){if(chartID(chart)!=='categoryChart')return;const ctx=chart.ctx,ds=chart.data.datasets?.[0];if(!ds)return;

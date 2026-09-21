@@ -73,6 +73,9 @@ const plugin={
   if(ids.has(id)){opts.plugins=opts.plugins||{};opts.plugins.legend={...(opts.plugins.legend||{}),display:false};opts.maintainAspectRatio=false;opts.animation=false;chart.canvas.closest('.panel')?.classList.add('fms-donut-panel')}
   // Keep a 120px label gutter for 12-digit values on narrow phones while retaining the plot.
   if(id==='categoryChart'){opts.plugins=opts.plugins||{};opts.plugins.datalabels={...(opts.plugins.datalabels||{}),display:false};opts.layout={...(opts.layout||{}),padding:{...(opts.layout?.padding||{}),right:120}};opts.animation=false}
+  // Daily chart values remain available via hover; hide labels when nearby bars
+  // cannot accommodate their full text width without overlapping each other.
+  if(id==='dailyChart'){opts.plugins=opts.plugins||{};const labels=opts.plugins.datalabels||{};opts.plugins.datalabels={...labels,display:context=>{const meta=context.chart.getDatasetMeta(context.datasetIndex),bars=meta?.data||[],bar=bars[context.dataIndex];if(!bar)return false;const prev=bars[context.dataIndex-1],next=bars[context.dataIndex+1];const width=30;return (!prev||Math.abs(bar.x-prev.x)>=width)&&(!next||Math.abs(next.x-bar.x)>=width)}}}
  },
  afterUpdate(chart){if(ids.has(chartID(chart)))legendHTML(chart)},
  afterDatasetsDraw(chart){if(chartID(chart)!=='categoryChart')return;const ctx=chart.ctx,ds=chart.data.datasets?.[0];if(!ds)return;

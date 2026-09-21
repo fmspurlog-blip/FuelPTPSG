@@ -5,10 +5,10 @@ const fs = require('node:fs');
 const path = require('node:path');
 const BASE = process.env.FMS_TEST_URL || 'http://127.0.0.1:4173/?v=78.9#dashboard';
 const out = path.resolve('test-results/chart-refactor/mobile-layout-metrics.json');
-// Run #78 baseline: 3805px page and first panel at 1357px at both mobile widths.
-// Allow modest rendering variation, but fail on substantial vertical regressions.
-const MAX_PAGE_HEIGHT = 4000;
-const MAX_FIRST_PANEL_TOP = 1400;
+// Verified run #81 after the two-column mobile KPI layout: page 3613px,
+// first chart panel at 1165px at both 360px and 390px. Keep a modest buffer.
+const MAX_PAGE_HEIGHT = 3750;
+const MAX_FIRST_PANEL_TOP = 1250;
 function local(name) { return path.resolve('node_modules', name); }
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
@@ -35,8 +35,8 @@ function local(name) { return path.resolve('node_modules', name); }
         assert.ok(measurement.panelCount >= 3, `${width}px: dashboard panels missing`);
         assert.ok(measurement.horizontalOverflow <= 2, `${width}px: horizontal overflow ${measurement.horizontalOverflow}px`);
         assert.ok(measurement.panels.every(p => p.width > 20 && p.height > 20 && p.left >= -2 && p.right <= width + 2), `${width}px: panel outside viewport`);
-        assert.ok(measurement.firstPanelTop <= MAX_FIRST_PANEL_TOP, `${width}px: first chart panel pushed down to ${measurement.firstPanelTop}px (baseline 1357px)`);
-        assert.ok(measurement.pageHeight <= MAX_PAGE_HEIGHT, `${width}px: page grew to ${measurement.pageHeight}px (baseline 3805px)`);
+        assert.ok(measurement.firstPanelTop <= MAX_FIRST_PANEL_TOP, `${width}px: first chart panel pushed down to ${measurement.firstPanelTop}px (run #81: 1165px)`);
+        assert.ok(measurement.pageHeight <= MAX_PAGE_HEIGHT, `${width}px: page grew to ${measurement.pageHeight}px (run #81: 3613px)`);
         console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow`);
       } finally { await context.close(); }
     }

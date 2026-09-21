@@ -52,13 +52,15 @@ fs.mkdirSync(out,{recursive:true});
       ctx.restore();
     }
     // Chart.js geometry alone can pass even when mobile screenshots show no bars.
-    // Inspect actual canvas pixels inside each positive bar, avoiding axes and labels.
+    // Use the dataset index, not bar.$context: Chart.js may omit that internal
+    // context when animation is disabled, incorrectly yielding zero painted bars.
     const ctx=daily.canvas.getContext('2d');
     const pixels=ctx.getImageData(0,0,daily.canvas.width,daily.canvas.height);
     const scaleX=daily.canvas.width/daily.width,scaleY=daily.canvas.height/daily.height;
     let paintedBars=0;
-    for(const bar of bars){
-      if(!(Number(daily.data.datasets[0].data[bar.$context?.dataIndex])>0))continue;
+    for(const [i,bar] of meta.data.entries()){
+      if(!Number.isFinite(bar.x)||!Number.isFinite(bar.y)||!(bar.width>0))continue;
+      if(!(Number(daily.data.datasets[0].data[i])>0))continue;
       const left=Math.max(plot.left,bar.x-bar.width*.35),right=Math.min(plot.right,bar.x+bar.width*.35);
       const top=Math.max(plot.top,bar.y+3),bottom=Math.min(plot.bottom,bar.base-3);
       if(right<=left||bottom<=top)continue;

@@ -8,4 +8,10 @@
 .stock-panel .stock-cols{align-items:start!important}
 .trend-panel .chart{position:relative!important;display:block!important;min-width:0!important;width:100%!important;overflow:visible!important}
 .trend-panel canvas#dailyChart{display:block!important;min-width:0!important;max-width:100%!important;visibility:visible!important;opacity:1!important}
+/* Desktop-only legibility: retain the verified mobile sizes and donut geometry. */
+@media(min-width:1301px){
+ .row-middle>.panel.fms-donut-panel .fms-legend-label{font-size:11px!important;line-height:1.3!important}
+ .row-middle>.panel.fms-donut-panel .fms-legend-value{font-size:12px!important;line-height:1.3!important}
+ .row-middle>.panel.fms-donut-panel .fms-legend-percent{font-size:10px!important;line-height:1.2!important}
+}
 @media(max-width:768px){.logo-box.fms-brand-box{height:82px!important;min-height:82px!important}.logo-box.fms-brand-box .fms-brand strong{font-size:13px!important}.stock-panel .stock-total{min-height:75px!important}}

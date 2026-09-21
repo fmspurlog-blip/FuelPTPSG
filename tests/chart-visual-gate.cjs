@@ -22,11 +22,37 @@ fs.mkdirSync(out,{recursive:true});
    await page.locator('.nav-link[data-section="fuel-usage"]').click();
    await page.locator('.nav-link[data-section="dashboard"]').click();
    await page.waitForFunction(()=>document.getElementById('dashboard').classList.contains('active-section'));
+   // Capture the actual post-navigation canvas BEFORE stop/resize/update can mask a blank frame.
    await page.evaluate(async()=>{
     await document.fonts.ready;
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    Object.values(state.charts).forEach(chart=>{chart.stop();chart.resize();chart.update('none');});
    });
+   const beforeRefresh=await page.evaluate(()=>{
+    const daily=Chart.getChart(document.getElementById('dailyChart'));
+    const meta=daily.getDatasetMeta(0),plot=daily.chartArea;
+    const pixels=daily.ctx.getImageData(0,0,daily.canvas.width,daily.canvas.height);
+    const scaleX=daily.canvas.width/daily.width,scaleY=daily.canvas.height/daily.height;
+    let positiveBars=0,paintedBars=0;
+    for(const [i,bar] of meta.data.entries()){
+      if(!Number.isFinite(bar.x)||!Number.isFinite(bar.y)||!(bar.width>0)||!(Number(daily.data.datasets[0].data[i])>0))continue;
+      positiveBars++;
+      const left=Math.max(plot.left,bar.x-bar.width*.35),right=Math.min(plot.right,bar.x+bar.width*.35);
+      const top=Math.max(plot.top,bar.y+3),bottom=Math.min(plot.bottom,bar.base-3);
+      if(right<=left||bottom<=top)continue;
+      let orange=0;
+      for(let y=Math.ceil(top*scaleY);y<Math.floor(bottom*scaleY);y+=Math.max(1,Math.floor(scaleY*3))){
+       for(let x=Math.ceil(left*scaleX);x<Math.floor(right*scaleX);x+=Math.max(1,Math.floor(scaleX*2))){
+        const p=(y*pixels.width+x)*4,r=pixels.data[p],g=pixels.data[p+1],b=pixels.data[p+2],a=pixels.data[p+3];
+        if(a>150&&r>170&&g>55&&g<205&&b<110)orange++;
+       }
+      }
+      if(orange>=3)paintedBars++;
+    }
+    return {positiveBars,paintedBars};
+   });
+   assert.ok(beforeRefresh.positiveBars>=2,`${width}px: insufficient positive daily bars before refresh ${JSON.stringify(beforeRefresh)}`);
+   assert.ok(beforeRefresh.paintedBars>=Math.min(2,beforeRefresh.positiveBars),`${width}px: daily bars invisible immediately after navigation, before forced refresh ${JSON.stringify(beforeRefresh)}`);
+   await page.evaluate(()=>Object.values(state.charts).forEach(chart=>{chart.stop();chart.resize();chart.update('none');}));
    const result=await page.evaluate(()=>{
     const daily=Chart.getChart(document.getElementById('dailyChart'));
     const meta=daily.getDatasetMeta(0);
@@ -51,9 +77,7 @@ fs.mkdirSync(out,{recursive:true});
       for(const value of data){const v=Number(value)||0;const label=format(v)+' ('+(total?(v/total*100):0).toFixed(1)+'%)';categoryLabels++;if(ctx.measureText(label).width>categoryGutter+1)categoryLabelOverflow++;}
       ctx.restore();
     }
-    // Chart.js geometry alone can pass even when mobile screenshots show no bars.
-    // Use the dataset index, not bar.$context: Chart.js may omit that internal
-    // context when animation is disabled, incorrectly yielding zero painted bars.
+    // Index by dataset order, not optional Chart.js bar.$context.
     const ctx=daily.canvas.getContext('2d');
     const pixels=ctx.getImageData(0,0,daily.canvas.width,daily.canvas.height);
     const scaleX=daily.canvas.width/daily.width,scaleY=daily.canvas.height/daily.height;
@@ -86,7 +110,7 @@ fs.mkdirSync(out,{recursive:true});
    assert.equal(result.categoryLabelOverflow,0,`${width}px: category value labels exceed reserved gutter ${JSON.stringify(result)}`);
    assert.deepEqual(errors,[],`${width}px: browser errors`);
    await page.screenshot({path:path.join(out,`visual-gate-${width}.png`),fullPage:true,animations:'disabled'});
-   console.log(`PASS visual geometry and paint ${width}px: ${result.paintedBars}/${result.bars} painted daily bars, spread ${Math.round(result.span)}px`);
+   console.log(`PASS visual geometry and paint ${width}px: before refresh ${beforeRefresh.paintedBars}/${beforeRefresh.positiveBars}, after refresh ${result.paintedBars}/${result.bars} painted daily bars, spread ${Math.round(result.span)}px`);
    await page.close();
   }
  }finally{await browser.close()}

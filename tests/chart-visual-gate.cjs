@@ -40,7 +40,19 @@ fs.mkdirSync(out,{recursive:true});
     const shift=document.getElementById('shiftChart').getBoundingClientRect();
     const shiftPanel=document.getElementById('shiftChart').closest('.panel').getBoundingClientRect();
     const inside=(a,b)=>a.left>=b.left-2&&a.right<=b.right+2&&a.top>=b.top-2&&a.bottom<=b.bottom+2;
-    return {bars:bars.length,distinctXs:new Set(xs.map(x=>Math.round(x))).size,span:xs.length?Math.max(...xs)-Math.min(...xs):0,chartWidth:chart.width,outOfPlot,plotWidth:plot.right-plot.left,dailyInside:inside(chart,panel),shiftInside:inside(shift,shiftPanel),shiftHeight:shift.height};
+    const category=Chart.getChart(document.getElementById('categoryChart'));
+    let categoryLabelOverflow=0,categoryGutter=0,categoryLabels=0;
+    if(category){
+      const data=category.data.datasets?.[0]?.data||[];
+      const format=v=>Number(v||0).toLocaleString('id-ID',{maximumFractionDigits:0});
+      let total=data.reduce((n,v)=>n+(Number(v)||0),0);
+      if(Array.isArray(state.filtered))total=state.filtered.reduce((n,r)=>n+(Number(r.Fuel_Liter)||0),0)||total;
+      const ctx=category.ctx;ctx.save();ctx.font='700 9px Segoe UI, Arial, sans-serif';
+      categoryGutter=category.width-category.chartArea.right-8;
+      for(const value of data){const v=Number(value)||0;const label=format(v)+' ('+(total?(v/total*100):0).toFixed(1)+'%)';categoryLabels++;if(ctx.measureText(label).width>categoryGutter+1)categoryLabelOverflow++;}
+      ctx.restore();
+    }
+    return {bars:bars.length,distinctXs:new Set(xs.map(x=>Math.round(x))).size,span:xs.length?Math.max(...xs)-Math.min(...xs):0,chartWidth:chart.width,outOfPlot,plotWidth:plot.right-plot.left,dailyInside:inside(chart,panel),shiftInside:inside(shift,shiftPanel),shiftHeight:shift.height,categoryLabels,categoryGutter,categoryLabelOverflow};
    });
    assert.ok(result.bars>=2,`${width}px: insufficient daily bars ${JSON.stringify(result)}`);
    assert.equal(result.distinctXs,result.bars,`${width}px: daily bars overlap ${JSON.stringify(result)}`);
@@ -48,9 +60,11 @@ fs.mkdirSync(out,{recursive:true});
    assert.ok(result.plotWidth>40,`${width}px: daily plot is too narrow ${JSON.stringify(result)}`);
    assert.equal(result.outOfPlot,0,`${width}px: daily bars escape chart plotting area ${JSON.stringify(result)}`);
    assert.ok(result.dailyInside&&result.shiftInside&&result.shiftHeight>40,`${width}px: chart outside panel ${JSON.stringify(result)}`);
+   assert.ok(result.categoryLabels>0,`${width}px: category labels missing ${JSON.stringify(result)}`);
+   assert.equal(result.categoryLabelOverflow,0,`${width}px: category value labels exceed reserved gutter ${JSON.stringify(result)}`);
    assert.deepEqual(errors,[],`${width}px: browser errors`);
    await page.screenshot({path:path.join(out,`visual-gate-${width}.png`),fullPage:true,animations:'disabled'});
-   console.log(`PASS visual geometry ${width}px: ${result.bars} bars, spread ${Math.round(result.span)}px`);
+   console.log(`PASS visual geometry ${width}px: ${result.bars} bars, spread ${Math.round(result.span)}px, ${result.categoryLabels} category labels`);
    await page.close();
   }
  }finally{await browser.close()}

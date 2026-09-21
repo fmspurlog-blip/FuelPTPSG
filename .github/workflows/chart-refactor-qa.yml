@@ -14,6 +14,7 @@ on:
       - 'tests/chart-refactor.spec.cjs'
       - 'tests/chart-debug.cjs'
       - 'tests/chart-visual-gate.cjs'
+      - 'tests/category-label-stress.spec.cjs'
       - 'tests/security-release-gate.cjs'
       - 'tests/safe-upload-core.spec.cjs'
       - 'tests/backend-quarantine.spec.cjs'
@@ -52,6 +53,7 @@ jobs:
           node --check tests/chart-refactor.spec.cjs
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
+          node --check tests/category-label-stress.spec.cjs
           node --check tests/security-release-gate.cjs
       - name: Offline backend quarantine behavioral regression (no network)
         run: node tests/backend-quarantine.spec.cjs
@@ -83,6 +85,8 @@ jobs:
         run: node tests/chart-refactor.spec.cjs
       - name: Settled chart geometry and screenshot gate
         run: node tests/chart-visual-gate.cjs
+      - name: Synthetic long category label stress (mock only)
+        run: node tests/category-label-stress.spec.cjs
       - name: Security release gate (must pass before merge)
         run: node tests/security-release-gate.cjs
       - name: Screenshots and failure logs

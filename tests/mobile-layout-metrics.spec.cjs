@@ -19,7 +19,7 @@ function local(name) { return path.resolve('node_modules', name); }
       const page = await context.newPage();
       try {
         await page.route('https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js', r => r.fulfill({ path: local('chart.js/dist/chart.umd.js'), contentType: 'application/javascript' }));
-        await page.route('https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0', r => r.fulfill({ path: local('node_modules/chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'.replace('node_modules/', '')), contentType: 'application/javascript' }));
+        await page.route('https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0', r => r.fulfill({ path: local('chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'), contentType: 'application/javascript' }));
         await page.route('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', r => r.fulfill({ path: local('xlsx/dist/xlsx.full.min.js'), contentType: 'application/javascript' }));
         await page.route('https://script.google.com/**', r => r.abort());
         await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 30000 });

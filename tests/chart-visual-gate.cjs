@@ -1,5 +1,5 @@
 'use strict';
-// Independent visual-geometry gate: catches charts that exist but render as a pile of bars.
+// Independent visual-geometry and canvas-paint gate; QA-only, cloud requests blocked.
 const { chromium } = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -22,7 +22,6 @@ fs.mkdirSync(out,{recursive:true});
    await page.locator('.nav-link[data-section="fuel-usage"]').click();
    await page.locator('.nav-link[data-section="dashboard"]').click();
    await page.waitForFunction(()=>document.getElementById('dashboard').classList.contains('active-section'));
-   // Explicitly finish animation before evaluating geometry and taking screenshots.
    await page.evaluate(async()=>{
     await document.fonts.ready;
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -52,19 +51,40 @@ fs.mkdirSync(out,{recursive:true});
       for(const value of data){const v=Number(value)||0;const label=format(v)+' ('+(total?(v/total*100):0).toFixed(1)+'%)';categoryLabels++;if(ctx.measureText(label).width>categoryGutter+1)categoryLabelOverflow++;}
       ctx.restore();
     }
-    return {bars:bars.length,distinctXs:new Set(xs.map(x=>Math.round(x))).size,span:xs.length?Math.max(...xs)-Math.min(...xs):0,chartWidth:chart.width,outOfPlot,plotWidth:plot.right-plot.left,dailyInside:inside(chart,panel),shiftInside:inside(shift,shiftPanel),shiftHeight:shift.height,categoryLabels,categoryGutter,categoryLabelOverflow};
+    // Chart.js geometry alone can pass even when mobile screenshots show no bars.
+    // Inspect actual canvas pixels inside each positive bar, avoiding axes and labels.
+    const ctx=daily.canvas.getContext('2d');
+    const pixels=ctx.getImageData(0,0,daily.canvas.width,daily.canvas.height);
+    const scaleX=daily.canvas.width/daily.width,scaleY=daily.canvas.height/daily.height;
+    let paintedBars=0;
+    for(const bar of bars){
+      if(!(Number(daily.data.datasets[0].data[bar.$context?.dataIndex])>0))continue;
+      const left=Math.max(plot.left,bar.x-bar.width*.35),right=Math.min(plot.right,bar.x+bar.width*.35);
+      const top=Math.max(plot.top,bar.y+3),bottom=Math.min(plot.bottom,bar.base-3);
+      if(right<=left||bottom<=top)continue;
+      let orange=0;
+      for(let y=Math.ceil(top*scaleY);y<Math.floor(bottom*scaleY);y+=Math.max(1,Math.floor(scaleY*3))){
+       for(let x=Math.ceil(left*scaleX);x<Math.floor(right*scaleX);x+=Math.max(1,Math.floor(scaleX*2))){
+        const p=(y*pixels.width+x)*4,r=pixels.data[p],g=pixels.data[p+1],b=pixels.data[p+2],a=pixels.data[p+3];
+        if(a>150&&r>170&&g>55&&g<205&&b<110)orange++;
+       }
+      }
+      if(orange>=3)paintedBars++;
+    }
+    return {bars:bars.length,paintedBars,distinctXs:new Set(xs.map(x=>Math.round(x))).size,span:xs.length?Math.max(...xs)-Math.min(...xs):0,chartWidth:chart.width,outOfPlot,plotWidth:plot.right-plot.left,dailyInside:inside(chart,panel),shiftInside:inside(shift,shiftPanel),shiftHeight:shift.height,categoryLabels,categoryGutter,categoryLabelOverflow};
    });
    assert.ok(result.bars>=2,`${width}px: insufficient daily bars ${JSON.stringify(result)}`);
    assert.equal(result.distinctXs,result.bars,`${width}px: daily bars overlap ${JSON.stringify(result)}`);
    assert.ok(result.span>result.chartWidth*.25,`${width}px: daily bars bunched at left ${JSON.stringify(result)}`);
    assert.ok(result.plotWidth>40,`${width}px: daily plot is too narrow ${JSON.stringify(result)}`);
    assert.equal(result.outOfPlot,0,`${width}px: daily bars escape chart plotting area ${JSON.stringify(result)}`);
+   assert.ok(result.paintedBars>=Math.min(2,result.bars),`${width}px: daily bars have geometry but no visible orange paint ${JSON.stringify(result)}`);
    assert.ok(result.dailyInside&&result.shiftInside&&result.shiftHeight>40,`${width}px: chart outside panel ${JSON.stringify(result)}`);
    assert.ok(result.categoryLabels>0,`${width}px: category labels missing ${JSON.stringify(result)}`);
    assert.equal(result.categoryLabelOverflow,0,`${width}px: category value labels exceed reserved gutter ${JSON.stringify(result)}`);
    assert.deepEqual(errors,[],`${width}px: browser errors`);
    await page.screenshot({path:path.join(out,`visual-gate-${width}.png`),fullPage:true,animations:'disabled'});
-   console.log(`PASS visual geometry ${width}px: ${result.bars} bars, spread ${Math.round(result.span)}px, ${result.categoryLabels} category labels`);
+   console.log(`PASS visual geometry and paint ${width}px: ${result.paintedBars}/${result.bars} painted daily bars, spread ${Math.round(result.span)}px`);
    await page.close();
   }
  }finally{await browser.close()}

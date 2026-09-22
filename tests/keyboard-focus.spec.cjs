@@ -24,21 +24,33 @@ const local = name => path.resolve('node_modules', name);
           const focus = await page.evaluate(() => {
             const el = document.activeElement;
             const style = getComputedStyle(el);
-            const rect = el.getBoundingClientRect();
             return {
               tag: el.tagName, id: el.id,
               className: typeof el.className === 'string' ? el.className : '',
               navigation: el.matches('.sidebar .nav-link'),
-              outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth),
-              rect: { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height },
-              viewport: { width: document.documentElement.clientWidth, height: window.innerHeight }
+              outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth)
             };
           });
           sequence.push(`${focus.tag}${focus.id ? '#' + focus.id : ''}${focus.className ? '.' + focus.className.trim().replace(/\s+/g, '.') : ''}`);
           const target = focus.navigation ? 'navigation' : focus.id === 'dateFrom' ? 'dateFrom' : focus.id === 'dateTo' ? 'dateTo' : focus.id === 'resetBtn' ? 'reset' : null;
           if (target) {
             assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${target}; order: ${sequence.join(' -> ')}`);
-            assert.ok(focus.rect.width > 0 && focus.rect.height > 0 && focus.rect.right > 0 && focus.rect.left < focus.viewport.width && focus.rect.bottom > 0 && focus.rect.top < focus.viewport.height, `${width}px: focused ${target} is outside the visible viewport: ${JSON.stringify(focus.rect)}; order: ${sequence.join(' -> ')}`);
+            // The page uses smooth scrolling. Observe natural browser scrolling; do not force scrollIntoView.
+            // A target that remains offscreen after the animation must still fail this regression.
+            try {
+              await page.waitForFunction(() => {
+                const el = document.activeElement;
+                const rect = el.getBoundingClientRect();
+                const viewportWidth = document.documentElement.clientWidth;
+                return rect.width > 0 && rect.height > 0 && rect.right > 0 && rect.left < viewportWidth && rect.bottom > 0 && rect.top < window.innerHeight;
+              }, null, { timeout: 2000, polling: 'raf' });
+            } catch (error) {
+              const rect = await page.evaluate(() => {
+                const r = document.activeElement.getBoundingClientRect();
+                return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height };
+              });
+              assert.fail(`${width}px: focused ${target} remained outside the viewport after smooth scrolling: ${JSON.stringify(rect)}; order: ${sequence.join(' -> ')}`);
+            }
             seen[target] = true;
           }
         }

@@ -24,16 +24,27 @@ const local = name => path.resolve('node_modules', name);
           const focus = await page.evaluate(() => {
             const el = document.activeElement;
             const style = getComputedStyle(el);
-            return { tag: el.tagName, id: el.id, className: typeof el.className === 'string' ? el.className : '', navigation: el.matches('.sidebar .nav-link'), date: el.id === 'dateFrom', outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth), outlineColor: style.outlineColor };
+            const rect = el.getBoundingClientRect();
+            return {
+              tag: el.tagName, id: el.id,
+              className: typeof el.className === 'string' ? el.className : '',
+              navigation: el.matches('.sidebar .nav-link'), date: el.id === 'dateFrom',
+              outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth),
+              outlineColor: style.outlineColor,
+              rect: { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height },
+              viewport: { width: document.documentElement.clientWidth, height: window.innerHeight }
+            };
           });
           sequence.push(`${focus.tag}${focus.id ? '#' + focus.id : ''}${focus.className ? '.' + focus.className.trim().replace(/\s+/g, '.') : ''}`);
           if (focus.navigation || focus.date) {
-            assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${focus.navigation ? 'navigation' : 'date filter'}; order: ${sequence.join(' -> ')}`);
+            const target = focus.navigation ? 'navigation' : 'date filter';
+            assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${target}; order: ${sequence.join(' -> ')}`);
+            assert.ok(focus.rect.width > 0 && focus.rect.height > 0 && focus.rect.right > 0 && focus.rect.left < focus.viewport.width && focus.rect.bottom > 0 && focus.rect.top < focus.viewport.height, `${width}px: focused ${target} is outside the visible viewport: ${JSON.stringify(focus.rect)}; order: ${sequence.join(' -> ')}`);
             seen[focus.navigation ? 'navigation' : 'date'] = true;
           }
         }
         assert.ok(seen.navigation && seen.date, `${width}px: keyboard Tab must reach navigation and date filter; reached: ${JSON.stringify(seen)}; order: ${sequence.join(' -> ')}`);
-        console.log(`PASS ${width}px: Tab reaches navigation and date filter with visible >=3px focus outline`);
+        console.log(`PASS ${width}px: Tab reaches visible navigation and date filter with >=3px focus outline`);
       } finally { await context.close(); }
     }
   } finally { await browser.close(); }

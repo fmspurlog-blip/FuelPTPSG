@@ -15,6 +15,7 @@ on:
       - 'tests/chart-debug.cjs'
       - 'tests/chart-visual-gate.cjs'
       - 'tests/mobile-layout-metrics.spec.cjs'
+      - 'tests/keyboard-focus.spec.cjs'
       - 'tests/category-label-stress.spec.cjs'
       - 'tests/security-release-gate.cjs'
       - 'tests/safe-upload-core.spec.cjs'
@@ -55,6 +56,7 @@ jobs:
           node --check tests/chart-debug.cjs
           node --check tests/chart-visual-gate.cjs
           node --check tests/mobile-layout-metrics.spec.cjs
+          node --check tests/keyboard-focus.spec.cjs
           node --check tests/category-label-stress.spec.cjs
           node --check tests/security-release-gate.cjs
       - name: Offline backend quarantine behavioral regression (no network)
@@ -89,6 +91,8 @@ jobs:
         run: node tests/chart-visual-gate.cjs
       - name: Mobile dashboard layout metrics (360px and 390px)
         run: node tests/mobile-layout-metrics.spec.cjs
+      - name: Mobile keyboard focus regression (360px and 390px)
+        run: node tests/keyboard-focus.spec.cjs
       - name: Synthetic long category label stress (mock only)
         run: node tests/category-label-stress.spec.cjs
       - name: Security release gate (must pass before merge)

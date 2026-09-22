@@ -27,10 +27,13 @@ function local(name) { return path.resolve('node_modules', name); }
         const measurement = await page.evaluate(async () => {
           await document.fonts.ready;
           await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          const geometry = el => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), width: Math.round(r.width), height: Math.round(r.height) }; };
           const panels = [...document.querySelectorAll('#dashboard .panel')].filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
-          const rects = panels.map((el, index) => { const r = el.getBoundingClientRect(); return { index, className: el.className, top: Math.round(r.top + scrollY), height: Math.round(r.height), width: Math.round(r.width), left: Math.round(r.left), right: Math.round(r.right) }; });
-          const kpis = [...document.querySelectorAll('#dashboard .kpis article')].map(el => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), width: Math.round(r.width) }; });
-          return { viewportWidth: innerWidth, pageHeight: document.documentElement.scrollHeight, viewportHeight: innerHeight, horizontalOverflow: document.documentElement.scrollWidth - innerWidth, panelCount: rects.length, firstPanelTop: rects.length ? rects[0].top : null, panels: rects, kpis };
+          const rects = panels.map((el, index) => ({ index, className: el.className, ...geometry(el), top: Math.round(el.getBoundingClientRect().top + scrollY) }));
+          const kpis = [...document.querySelectorAll('#dashboard .kpis article')].map(geometry);
+          const filter = document.querySelector('section.filters');
+          const filterChildren = filter ? [...filter.children].map(el => ({ className: el.className, ...geometry(el) })) : [];
+          return { viewportWidth: innerWidth, pageHeight: document.documentElement.scrollHeight, viewportHeight: innerHeight, horizontalOverflow: document.documentElement.scrollWidth - innerWidth, panelCount: rects.length, firstPanelTop: rects.length ? rects[0].top : null, panels: rects, kpis, filterChildren };
         });
         results.push(measurement);
         assert.ok(measurement.panelCount >= 3, `${width}px: dashboard panels missing`);
@@ -41,9 +44,18 @@ function local(name) { return path.resolve('node_modules', name); }
         assert.ok(Math.abs(measurement.kpis[0].top - measurement.kpis[1].top) <= 2 && measurement.kpis[1].left > measurement.kpis[0].left + 20, `${width}px: first KPI pair must share a two-column row`);
         assert.ok(Math.abs(measurement.kpis[2].top - measurement.kpis[3].top) <= 2 && measurement.kpis[2].top > measurement.kpis[0].top + 20, `${width}px: second KPI pair must share the next row`);
         assert.ok(Math.abs(measurement.kpis[4].top - measurement.kpis[5].top) <= 2 && measurement.kpis[4].top > measurement.kpis[2].top + 20, `${width}px: third KPI pair must share the final row`);
+        const filters = measurement.filterChildren;
+        assert.equal(filters.length, 8, `${width}px: expected date, four selectors and three actions`);
+        assert.ok(filters.every(f => f.width > 50 && f.left >= -2 && f.right <= width + 2), `${width}px: filter clipped or too narrow`);
+        assert.ok(filters[0].width > filters[1].width * 1.7, `${width}px: date range should span both columns`);
+        assert.ok(Math.abs(filters[1].top - filters[2].top) <= 2 && filters[2].left > filters[1].left + 20, `${width}px: shift/category must share a row`);
+        assert.ok(Math.abs(filters[3].top - filters[4].top) <= 2 && filters[4].left > filters[3].left + 20, `${width}px: truck/unit must share a row`);
+        assert.ok(Math.abs(filters[5].top - filters[6].top) <= 2 && filters[6].left > filters[5].left + 20, `${width}px: upload/export must share a row`);
+        assert.ok(filters[7].width > filters[5].width * 1.7 && filters[7].top > filters[5].top + 20, `${width}px: reset must occupy its own full-width row`);
+        assert.ok(filters.slice(5).every(f => f.height >= 44), `${width}px: filter actions need 44px touch targets`);
         assert.ok(measurement.firstPanelTop <= MAX_FIRST_PANEL_TOP, `${width}px: first chart panel pushed down to ${measurement.firstPanelTop}px (run #83: 987px)`);
         assert.ok(measurement.pageHeight <= MAX_PAGE_HEIGHT, `${width}px: page grew to ${measurement.pageHeight}px (run #83: 3435px)`);
-        console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow; six KPI cards in three rows`);
+        console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow; six KPI cards and eight filter controls in expected grid`);
       } finally { await context.close(); }
     }
   } finally {

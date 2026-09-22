@@ -23,7 +23,7 @@
  #dashboard .kpis article>.ico{width:32px!important;height:32px!important;flex:0 0 32px!important;font-size:16px!important}
  #dashboard .kpis article>div:last-child{min-width:0!important}
  #dashboard .kpis strong{font-size:19px!important;overflow-wrap:anywhere!important}
- #dashboard .kpis small{font-size:8px!important;line-height:1.3!important;overflow-wrap:anywhere!important}
+ #dashboard .kpis small{font-size:10px!important;line-height:1.3!important;overflow-wrap:anywhere!important}
  /* Preserve date input width and action targets while reducing filter scrolling. */
  .filters{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px!important}
  .filters>.filter{min-width:0!important}

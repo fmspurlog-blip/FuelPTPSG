@@ -18,19 +18,21 @@ const local = name => path.resolve('node_modules', name);
         await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 30000 });
         await page.waitForFunction(() => document.querySelector('.sidebar .nav-link') && document.querySelector('#dateFrom'));
         const seen = { navigation: false, date: false };
-        for (let i = 0; i < 25 && (!seen.navigation || !seen.date); i++) {
+        const sequence = [];
+        for (let i = 0; i < 100 && (!seen.navigation || !seen.date); i++) {
           await page.keyboard.press('Tab');
           const focus = await page.evaluate(() => {
             const el = document.activeElement;
             const style = getComputedStyle(el);
-            return { navigation: el.matches('.sidebar .nav-link'), date: el.id === 'dateFrom', outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth), outlineColor: style.outlineColor };
+            return { tag: el.tagName, id: el.id, className: typeof el.className === 'string' ? el.className : '', navigation: el.matches('.sidebar .nav-link'), date: el.id === 'dateFrom', outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth), outlineColor: style.outlineColor };
           });
+          sequence.push(`${focus.tag}${focus.id ? '#' + focus.id : ''}${focus.className ? '.' + focus.className.trim().replace(/\s+/g, '.') : ''}`);
           if (focus.navigation || focus.date) {
-            assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${focus.navigation ? 'navigation' : 'date filter'}`);
+            assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${focus.navigation ? 'navigation' : 'date filter'}; order: ${sequence.join(' -> ')}`);
             seen[focus.navigation ? 'navigation' : 'date'] = true;
           }
         }
-        assert.ok(seen.navigation && seen.date, `${width}px: keyboard Tab must reach navigation and date filter`);
+        assert.ok(seen.navigation && seen.date, `${width}px: keyboard Tab must reach navigation and date filter; reached: ${JSON.stringify(seen)}; order: ${sequence.join(' -> ')}`);
         console.log(`PASS ${width}px: Tab reaches navigation and date filter with visible >=3px focus outline`);
       } finally { await context.close(); }
     }

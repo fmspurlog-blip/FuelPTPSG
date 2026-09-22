@@ -9,6 +9,7 @@ const out = path.resolve('test-results/chart-refactor/mobile-layout-metrics.json
 // first chart panel at 987px at both 360px and 390px. Keep a modest buffer.
 const MAX_PAGE_HEIGHT = 3575;
 const MAX_FIRST_PANEL_TOP = 1080;
+const MIN_KPI_LABEL_FONT = 10;
 function local(name) { return path.resolve('node_modules', name); }
 (async () => {
   const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
@@ -31,9 +32,10 @@ function local(name) { return path.resolve('node_modules', name); }
           const panels = [...document.querySelectorAll('#dashboard .panel')].filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
           const rects = panels.map((el, index) => ({ index, className: el.className, ...geometry(el), top: Math.round(el.getBoundingClientRect().top + scrollY) }));
           const kpis = [...document.querySelectorAll('#dashboard .kpis article')].map(geometry);
+          const kpiLabels = [...document.querySelectorAll('#dashboard .kpis article small')].map(el => ({ text: el.textContent.trim(), fontSize: parseFloat(getComputedStyle(el).fontSize), ...geometry(el) }));
           const filter = document.querySelector('section.filters');
           const filterChildren = filter ? [...filter.children].map(el => ({ className: el.className, ...geometry(el) })) : [];
-          return { viewportWidth: innerWidth, pageHeight: document.documentElement.scrollHeight, viewportHeight: innerHeight, horizontalOverflow: document.documentElement.scrollWidth - innerWidth, panelCount: rects.length, firstPanelTop: rects.length ? rects[0].top : null, panels: rects, kpis, filterChildren };
+          return { viewportWidth: innerWidth, pageHeight: document.documentElement.scrollHeight, viewportHeight: innerHeight, horizontalOverflow: document.documentElement.scrollWidth - innerWidth, panelCount: rects.length, firstPanelTop: rects.length ? rects[0].top : null, panels: rects, kpis, kpiLabels, filterChildren };
         });
         results.push(measurement);
         assert.ok(measurement.panelCount >= 3, `${width}px: dashboard panels missing`);
@@ -41,6 +43,9 @@ function local(name) { return path.resolve('node_modules', name); }
         assert.ok(measurement.panels.every(p => p.width > 20 && p.height > 20 && p.left >= -2 && p.right <= width + 2), `${width}px: panel outside viewport`);
         assert.equal(measurement.kpis.length, 6, `${width}px: expected six primary KPI cards`);
         assert.ok(measurement.kpis.every(k => k.width > 50 && k.left >= -2 && k.right <= width + 2), `${width}px: KPI card clipped or too narrow`);
+        assert.equal(measurement.kpiLabels.length, 6, `${width}px: expected one label per primary KPI card`);
+        assert.ok(measurement.kpiLabels.every(label => Number.isFinite(label.fontSize) && label.fontSize >= MIN_KPI_LABEL_FONT), `${width}px: primary KPI labels must remain at least ${MIN_KPI_LABEL_FONT}px`);
+        assert.ok(measurement.kpiLabels.every(label => label.width > 0 && label.height > 0 && label.left >= -2 && label.right <= width + 2), `${width}px: KPI label hidden or outside viewport`);
         assert.ok(Math.abs(measurement.kpis[0].top - measurement.kpis[1].top) <= 2 && measurement.kpis[1].left > measurement.kpis[0].left + 20, `${width}px: first KPI pair must share a two-column row`);
         assert.ok(Math.abs(measurement.kpis[2].top - measurement.kpis[3].top) <= 2 && measurement.kpis[2].top > measurement.kpis[0].top + 20, `${width}px: second KPI pair must share the next row`);
         assert.ok(Math.abs(measurement.kpis[4].top - measurement.kpis[5].top) <= 2 && measurement.kpis[4].top > measurement.kpis[2].top + 20, `${width}px: third KPI pair must share the final row`);
@@ -55,7 +60,7 @@ function local(name) { return path.resolve('node_modules', name); }
         assert.ok(filters.slice(5).every(f => f.height >= 44), `${width}px: filter actions need 44px touch targets`);
         assert.ok(measurement.firstPanelTop <= MAX_FIRST_PANEL_TOP, `${width}px: first chart panel pushed down to ${measurement.firstPanelTop}px (run #83: 987px)`);
         assert.ok(measurement.pageHeight <= MAX_PAGE_HEIGHT, `${width}px: page grew to ${measurement.pageHeight}px (run #83: 3435px)`);
-        console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow; six KPI cards and eight filter controls in expected grid`);
+        console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow; six KPI cards with >=${MIN_KPI_LABEL_FONT}px labels and eight filter controls in expected grid`);
       } finally { await context.close(); }
     }
   } finally {

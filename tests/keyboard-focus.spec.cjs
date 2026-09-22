@@ -16,10 +16,10 @@ const local = name => path.resolve('node_modules', name);
         await page.route('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', r => r.fulfill({ path: local('xlsx/dist/xlsx.full.min.js'), contentType: 'application/javascript' }));
         await page.route('https://script.google.com/**', r => r.abort());
         await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 30000 });
-        await page.waitForFunction(() => document.querySelector('.sidebar .nav-link') && document.querySelector('#dateFrom'));
-        const seen = { navigation: false, date: false };
+        await page.waitForFunction(() => document.querySelector('.sidebar .nav-link') && document.querySelector('#dateFrom') && document.querySelector('#dateTo') && document.querySelector('#resetBtn'));
+        const seen = { navigation: false, dateFrom: false, dateTo: false, reset: false };
         const sequence = [];
-        for (let i = 0; i < 100 && (!seen.navigation || !seen.date); i++) {
+        for (let i = 0; i < 100 && !Object.values(seen).every(Boolean); i++) {
           await page.keyboard.press('Tab');
           const focus = await page.evaluate(() => {
             const el = document.activeElement;
@@ -28,23 +28,22 @@ const local = name => path.resolve('node_modules', name);
             return {
               tag: el.tagName, id: el.id,
               className: typeof el.className === 'string' ? el.className : '',
-              navigation: el.matches('.sidebar .nav-link'), date: el.id === 'dateFrom',
+              navigation: el.matches('.sidebar .nav-link'),
               outlineStyle: style.outlineStyle, outlineWidth: parseFloat(style.outlineWidth),
-              outlineColor: style.outlineColor,
               rect: { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom, width: rect.width, height: rect.height },
               viewport: { width: document.documentElement.clientWidth, height: window.innerHeight }
             };
           });
           sequence.push(`${focus.tag}${focus.id ? '#' + focus.id : ''}${focus.className ? '.' + focus.className.trim().replace(/\s+/g, '.') : ''}`);
-          if (focus.navigation || focus.date) {
-            const target = focus.navigation ? 'navigation' : 'date filter';
+          const target = focus.navigation ? 'navigation' : focus.id === 'dateFrom' ? 'dateFrom' : focus.id === 'dateTo' ? 'dateTo' : focus.id === 'resetBtn' ? 'reset' : null;
+          if (target) {
             assert.ok(focus.outlineStyle !== 'none' && focus.outlineWidth >= 3, `${width}px: keyboard focus outline missing on ${target}; order: ${sequence.join(' -> ')}`);
             assert.ok(focus.rect.width > 0 && focus.rect.height > 0 && focus.rect.right > 0 && focus.rect.left < focus.viewport.width && focus.rect.bottom > 0 && focus.rect.top < focus.viewport.height, `${width}px: focused ${target} is outside the visible viewport: ${JSON.stringify(focus.rect)}; order: ${sequence.join(' -> ')}`);
-            seen[focus.navigation ? 'navigation' : 'date'] = true;
+            seen[target] = true;
           }
         }
-        assert.ok(seen.navigation && seen.date, `${width}px: keyboard Tab must reach navigation and date filter; reached: ${JSON.stringify(seen)}; order: ${sequence.join(' -> ')}`);
-        console.log(`PASS ${width}px: Tab reaches visible navigation and date filter with >=3px focus outline`);
+        assert.ok(Object.values(seen).every(Boolean), `${width}px: Tab must reach navigation, both date inputs and reset; reached: ${JSON.stringify(seen)}; order: ${sequence.join(' -> ')}`);
+        console.log(`PASS ${width}px: Tab reaches visible navigation, both dates and reset with >=3px focus outline`);
       } finally { await context.close(); }
     }
   } finally { await browser.close(); }

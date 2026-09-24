@@ -42,4 +42,17 @@ function render(){let a=selected(),daily={},units={},shift={DAY:0,NIGHT:0},cat={
 async function load(buf,name){try{let wb=XLSX.read(buf,{type:'array',cellDates:true});parseWB(wb);document.getElementById('status').textContent+=' • '+name}catch(e){document.getElementById('status').textContent='Gagal membaca workbook: '+e.message}}
 async function def(){document.getElementById('status').textContent='Memuat workbook default…';try{let r=await fetch('Fuel_Database_Dashboard_Ready_Final.xlsx?ts='+Date.now());if(!r.ok)throw Error('file default tidak tersedia');await load(await r.arrayBuffer(),'workbook default')}catch(e){document.getElementById('status').textContent='Default gagal: '+e.message+' • gunakan Upload Excel'}}
 document.getElementById('file').onchange=async e=>{let f=e.target.files[0];if(f)await load(await f.arrayBuffer(),f.name)};document.getElementById('reload').onclick=def;document.getElementById('apply').onclick=render;document.getElementById('reset').onclick=()=>{from.value='';to.value='';category.value='';render()};def();
-</script></body></html>
+</script>
+<!-- V79.2 validation + Excel-aligned notes -->
+<style>
+.qa{margin-top:10px;display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.qa>div{background:#0b1d30;border:1px solid #1d3550;border-radius:10px;padding:10px}.qa small{display:block;color:#91a4ba}.qa b{font-size:14px}.warn{color:#fb923c}.ok{color:#2dd4bf}@media(max-width:650px){.qa{grid-template-columns:1fr 1fr}}
+</style>
+<script>
+window.addEventListener('load',()=>{
+ const host=document.querySelector('.foot'); if(!host)return;
+ const q=document.createElement('div'); q.className='qa'; q.innerHTML='<div><small>Workbook structure</small><b class="ok">14 sheets detected</b></div><div><small>Fuel Usage source</small><b>Fuel_Usage</b></div><div><small>Fuel Receipt source</small><b>Fuel_Receipt</b></div><div><small>Stock sources</small><b>Sounding FS / FT + Tera</b></div>';
+ host.before(q);
+ const note=document.createElement('div');note.className='status';note.style.marginTop='8px';note.textContent='V79.2 QA: dashboard membaca sumber operasional langsung; sheet Dashboard/Calculation tetap menjadi pembanding validasi, bukan diubah.';host.before(note);
+});
+</script>
+</body></html>

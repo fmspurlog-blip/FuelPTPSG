@@ -1,9 +1,9 @@
 (async()=>{
   const params=new URLSearchParams(location.search);
-  const pageVersion=params.get('v')||'78.8';
-  const q='78.8-chart-rollback-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
+  const pageVersion=params.get('v')||'78.9';
+  const q='78.9-stable-'+String(pageVersion).replace(/[^a-zA-Z0-9._-]/g,'');
   const addCss=href=>{const l=document.createElement('link');l.rel='stylesheet';l.href=href;document.head.appendChild(l)};
-  ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css'].forEach(x=>addCss(x+'?v='+q));
+  ['v6.css','v7.css','v71.css','v72.css','v724.css','v726.css','v730.css','v731.css','v733.css','v760-mobile.css','stable-layout.css'].forEach(x=>addCss(x+'?v='+q));
   const load=src=>new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=src;s.async=true;s.onload=resolve;s.onerror=reject;document.body.appendChild(s)});
   const safeLoad=async src=>{try{await load(src)}catch(e){console.warn('Optional script failed:',src,e)}};
   const clone=x=>{try{return JSON.parse(JSON.stringify(x))}catch(_){return x}};
@@ -23,13 +23,15 @@
   const stock=(cachedStock&&typeof cachedStock==='object'&&Object.keys(cachedStock.snapshots||{}).length)?cachedStock:(staticData.stock||{snapshots:{},availableDates:[]});
   const recon=staticData.recon||window.RECON_DATA||{daily:[],availableDates:[],receiptDetails:receipts};
   window.__FUEL_RECEIPTS=clone(receipts);window.__FUEL_STOCK_DATA=clone(stock);window.STOCK_DATA=clone(stock);window.RECON_DATA=clone(recon);
+  await safeLoad('chart-components.js?v='+q);
   await load('app.js?v='+q);
+  // Local preview only: validation runs before replacing dashboard data; no cloud requests.
+  await load('safe-upload-core.js?v='+q);
+  await load('local-excel-import.js?v='+q);
   try{if(typeof stockData!=='undefined'){stockData.snapshots=clone(stock.snapshots||{});stockData.availableDates=[...(stock.availableDates||[])]}}catch(_){}
-  try{if(typeof initFilters==='function')initFilters()}catch(e){console.warn('initFilters',e)}
-  try{if(typeof applyFilters==='function')applyFilters()}catch(e){console.warn('applyFilters',e)}
-  setTimeout(()=>safeLoad('v783-ui.js?v='+q),40);
-  setTimeout(()=>safeLoad('v784-responsive-performance.js?v='+q),700);
-  setTimeout(()=>safeLoad('v785-chart-calendar.js?v='+q),900);
-  // Rollback: v786-chart-layout.js and v787-chart-fix.js disabled after charts disappeared.
-  setTimeout(async()=>{await safeLoad('v77-config.js?v='+q);if(String(window.FUEL_V77?.apiUrl||'').trim())safeLoad('v770-remote-sync.js?v='+q)},2500);
+  setTimeout(()=>safeLoad('brand-operations.js?v='+q),40);
+  // SECURITY HOLD: remote sync is quarantined; the validated Excel import is a local preview only.
+  // Do not enable cloud polling or remote upload before isolated backend authorization and rollback QA.
+  window.FUEL_REMOTE_SYNC_DISABLED=true;
+  console.warn('FuelPTPSG QA security hold: cloud sync/upload disabled; local Excel preview only; production unchanged.');
 })();

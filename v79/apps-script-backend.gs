@@ -1,28 +1,41 @@
 /**
- * FuelPTPSG shared-data backend foundation.
- * Deploy as Google Apps Script Web App only after reviewing access settings.
- * Secrets/passwords belong in Script Properties, never in GitHub/frontend.
+ * FuelPTPSG Shared Data Backend V2
+ * Token stays in Script Properties. Operational snapshot is stored in Google Drive.
  */
 const PROP = PropertiesService.getScriptProperties();
-const DATA_KEY = 'FMS_SHARED_DATA_V1';
 const PUBLISH_KEY = 'FMS_PUBLISH_TOKEN';
+const FILE_ID_KEY = 'FMS_DATA_FILE_ID';
+const FILE_NAME = 'FuelPTPSG_Shared_Data.json';
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
 }
-
+function dataFile_() {
+  const id = PROP.getProperty(FILE_ID_KEY);
+  if (id) {
+    try { return DriveApp.getFileById(id); } catch (e) {}
+  }
+  const blob = Utilities.newBlob('{}', 'application/json', FILE_NAME);
+  const file = DriveApp.createFile(blob);
+  PROP.setProperty(FILE_ID_KEY, file.getId());
+  return file;
+}
 function doGet(e) {
   const action = String((e && e.parameter && e.parameter.action) || 'health');
-  if (action === 'health') return json_({ok:true, service:'FuelPTPSG Sync', version:'1'});
+  if (action === 'health') return json_({ok:true, service:'FuelPTPSG Sync', version:'2'});
   if (action === 'latest') {
-    const raw = PROP.getProperty(DATA_KEY);
-    if (!raw) return json_({ok:true, hasData:false});
-    return json_({ok:true, hasData:true, payload:JSON.parse(raw)});
+    const id = PROP.getProperty(FILE_ID_KEY);
+    if (!id) return json_({ok:true, hasData:false});
+    try {
+      const payload = JSON.parse(DriveApp.getFileById(id).getBlob().getDataAsString() || '{}');
+      return json_({ok:true, hasData:true, payload:payload});
+    } catch (err) {
+      return json_({ok:false, error:String(err && err.message || err)});
+    }
   }
   return json_({ok:false, error:'unsupported action'});
 }
-
 function doPost(e) {
   try {
     const body = JSON.parse((e && e.postData && e.postData.contents) || '{}');
@@ -32,10 +45,10 @@ function doPost(e) {
     const supplied = String(body.token || '');
     if (!supplied || supplied !== expected) return json_({ok:false,error:'unauthorized'});
     if (!body.payload || typeof body.payload !== 'object') return json_({ok:false,error:'payload required'});
-    const payload = body.payload;
-    payload.serverUpdatedAt = new Date().toISOString();
-    PROP.setProperty(DATA_KEY, JSON.stringify(payload));
-    return json_({ok:true, updatedAt:payload.serverUpdatedAt});
+    body.payload.serverUpdatedAt = new Date().toISOString();
+    const file = dataFile_();
+    file.setContent(JSON.stringify(body.payload));
+    return json_({ok:true, updatedAt:body.payload.serverUpdatedAt});
   } catch (err) {
     return json_({ok:false,error:String(err && err.message || err)});
   }

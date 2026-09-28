@@ -1,0 +1,71 @@
+'use strict';
+const { chromium } = require('playwright');
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const path = require('node:path');
+const BASE = process.env.FMS_TEST_URL || 'http://127.0.0.1:4173/?v=78.9#dashboard';
+const out = path.resolve('test-results/chart-refactor/mobile-layout-metrics.json');
+// Verified run #83 after mobile KPI and filter layout: page 3435px,
+// first chart panel at 987px at both 360px and 390px. Keep a modest buffer.
+const MAX_PAGE_HEIGHT = 3575;
+const MAX_FIRST_PANEL_TOP = 1080;
+const MIN_KPI_LABEL_FONT = 10;
+function local(name) { return path.resolve('node_modules', name); }
+(async () => {
+  const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+  const results = [];
+  try {
+    for (const width of [360, 390]) {
+      const context = await browser.newContext({ viewport: { width, height: 900 }, deviceScaleFactor: 1 });
+      const page = await context.newPage();
+      try {
+        await page.route('https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js', r => r.fulfill({ path: local('chart.js/dist/chart.umd.js'), contentType: 'application/javascript' }));
+        await page.route('https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0', r => r.fulfill({ path: local('chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'), contentType: 'application/javascript' }));
+        await page.route('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js', r => r.fulfill({ path: local('xlsx/dist/xlsx.full.min.js'), contentType: 'application/javascript' }));
+        await page.route('https://script.google.com/**', r => r.abort());
+        await page.goto(BASE, { waitUntil: 'domcontentloaded', timeout: 30000 });
+        await page.waitForFunction(() => window.Chart && Chart.getChart(document.getElementById('dailyChart')), { timeout: 20000 });
+        const measurement = await page.evaluate(async () => {
+          await document.fonts.ready;
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          const geometry = el => { const r = el.getBoundingClientRect(); return { left: Math.round(r.left), top: Math.round(r.top), right: Math.round(r.right), width: Math.round(r.width), height: Math.round(r.height) }; };
+          const panels = [...document.querySelectorAll('#dashboard .panel')].filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; });
+          const rects = panels.map((el, index) => ({ index, className: el.className, ...geometry(el), top: Math.round(el.getBoundingClientRect().top + scrollY) }));
+          const kpis = [...document.querySelectorAll('#dashboard .kpis article')].map(geometry);
+          const kpiLabels = [...document.querySelectorAll('#dashboard .kpis article small')].map(el => ({ text: el.textContent.trim(), fontSize: parseFloat(getComputedStyle(el).fontSize), ...geometry(el) }));
+          const filter = document.querySelector('section.filters');
+          const filterChildren = filter ? [...filter.children].map(el => ({ className: el.className, ...geometry(el) })) : [];
+          return { viewportWidth: innerWidth, pageHeight: document.documentElement.scrollHeight, viewportHeight: innerHeight, horizontalOverflow: document.documentElement.scrollWidth - innerWidth, panelCount: rects.length, firstPanelTop: rects.length ? rects[0].top : null, panels: rects, kpis, kpiLabels, filterChildren };
+        });
+        results.push(measurement);
+        assert.ok(measurement.panelCount >= 3, `${width}px: dashboard panels missing`);
+        assert.ok(measurement.horizontalOverflow <= 2, `${width}px: horizontal overflow ${measurement.horizontalOverflow}px`);
+        assert.ok(measurement.panels.every(p => p.width > 20 && p.height > 20 && p.left >= -2 && p.right <= width + 2), `${width}px: panel outside viewport`);
+        assert.equal(measurement.kpis.length, 6, `${width}px: expected six primary KPI cards`);
+        assert.ok(measurement.kpis.every(k => k.width > 50 && k.left >= -2 && k.right <= width + 2), `${width}px: KPI card clipped or too narrow`);
+        assert.equal(measurement.kpiLabels.length, 6, `${width}px: expected one label per primary KPI card`);
+        assert.ok(measurement.kpiLabels.every(label => Number.isFinite(label.fontSize) && label.fontSize >= MIN_KPI_LABEL_FONT), `${width}px: primary KPI labels must remain at least ${MIN_KPI_LABEL_FONT}px`);
+        assert.ok(measurement.kpiLabels.every(label => label.width > 0 && label.height > 0 && label.left >= -2 && label.right <= width + 2), `${width}px: KPI label hidden or outside viewport`);
+        assert.ok(Math.abs(measurement.kpis[0].top - measurement.kpis[1].top) <= 2 && measurement.kpis[1].left > measurement.kpis[0].left + 20, `${width}px: first KPI pair must share a two-column row`);
+        assert.ok(Math.abs(measurement.kpis[2].top - measurement.kpis[3].top) <= 2 && measurement.kpis[2].top > measurement.kpis[0].top + 20, `${width}px: second KPI pair must share the next row`);
+        assert.ok(Math.abs(measurement.kpis[4].top - measurement.kpis[5].top) <= 2 && measurement.kpis[4].top > measurement.kpis[2].top + 20, `${width}px: third KPI pair must share the final row`);
+        const filters = measurement.filterChildren;
+        assert.equal(filters.length, 8, `${width}px: expected date, four selectors and three actions`);
+        assert.ok(filters.every(f => f.width > 50 && f.left >= -2 && f.right <= width + 2), `${width}px: filter clipped or too narrow`);
+        assert.ok(filters[0].width > filters[1].width * 1.7, `${width}px: date range should span both columns`);
+        assert.ok(Math.abs(filters[1].top - filters[2].top) <= 2 && filters[2].left > filters[1].left + 20, `${width}px: shift/category must share a row`);
+        assert.ok(Math.abs(filters[3].top - filters[4].top) <= 2 && filters[4].left > filters[3].left + 20, `${width}px: truck/unit must share a row`);
+        assert.ok(Math.abs(filters[5].top - filters[6].top) <= 2 && filters[6].left > filters[5].left + 20, `${width}px: upload/export must share a row`);
+        assert.ok(filters[7].width > filters[5].width * 1.7 && filters[7].top > filters[5].top + 20, `${width}px: reset must occupy its own full-width row`);
+        assert.ok(filters.slice(5).every(f => f.height >= 44), `${width}px: filter actions need 44px touch targets`);
+        assert.ok(measurement.firstPanelTop <= MAX_FIRST_PANEL_TOP, `${width}px: first chart panel pushed down to ${measurement.firstPanelTop}px (run #83: 987px)`);
+        assert.ok(measurement.pageHeight <= MAX_PAGE_HEIGHT, `${width}px: page grew to ${measurement.pageHeight}px (run #83: 3435px)`);
+        console.log(`PASS ${width}px mobile layout: first panel ${measurement.firstPanelTop}px, ${measurement.panelCount} panels, ${measurement.pageHeight}px page, ${measurement.horizontalOverflow}px horizontal overflow; six KPI cards with >=${MIN_KPI_LABEL_FONT}px labels and eight filter controls in expected grid`);
+      } finally { await context.close(); }
+    }
+  } finally {
+    await browser.close();
+    fs.mkdirSync(path.dirname(out), { recursive: true });
+    fs.writeFileSync(out, JSON.stringify(results, null, 2) + '\n');
+  }
+})().catch(error => { console.error(error); process.exitCode = 1; });

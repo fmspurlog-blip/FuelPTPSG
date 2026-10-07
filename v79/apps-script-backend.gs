@@ -6,6 +6,8 @@ const PROP = PropertiesService.getScriptProperties();
 const PUBLISH_KEY = 'FMS_PUBLISH_TOKEN';
 const FILE_ID_KEY = 'FMS_DATA_FILE_ID';
 const FILE_NAME = 'FuelPTPSG_Shared_Data.json';
+const BACKUP_FILE_ID_KEY = 'FMS_BACKUP_FILE_ID';
+const BACKUP_FILE_NAME = 'FuelPTPSG_Shared_Data_Backup.json';
 
 function json_(obj) {
   return ContentService.createTextOutput(JSON.stringify(obj))
@@ -21,9 +23,22 @@ function dataFile_() {
   PROP.setProperty(FILE_ID_KEY, file.getId());
   return file;
 }
+function backupFile_() {
+  const id = PROP.getProperty(BACKUP_FILE_ID_KEY);
+  if (id) { try { return DriveApp.getFileById(id); } catch (e) {} }
+  const file = DriveApp.createFile(Utilities.newBlob('{}', 'application/json', BACKUP_FILE_NAME));
+  PROP.setProperty(BACKUP_FILE_ID_KEY, file.getId());
+  return file;
+}
 function doGet(e) {
   const action = String((e && e.parameter && e.parameter.action) || 'health');
-  if (action === 'health') return json_({ok:true, service:'FuelPTPSG Sync', version:'2'});
+  if (action === 'health') return json_({ok:true, service:'FuelPTPSG Sync', version:'3', backup:true});
+  if (action === 'backup') {
+    const id = PROP.getProperty(BACKUP_FILE_ID_KEY);
+    if (!id) return json_({ok:true, hasData:false});
+    try { const payload = JSON.parse(DriveApp.getFileById(id).getBlob().getDataAsString() || '{}'); return json_({ok:true, hasData:true, payload:payload}); }
+    catch (err) { return json_({ok:false,error:String(err && err.message || err)}); }
+  }
   if (action === 'latest') {
     const id = PROP.getProperty(FILE_ID_KEY);
     if (!id) return json_({ok:true, hasData:false});
@@ -47,6 +62,14 @@ function doPost(e) {
     if (!body.payload || typeof body.payload !== 'object') return json_({ok:false,error:'payload required'});
     body.payload.serverUpdatedAt = new Date().toISOString();
     const file = dataFile_();
+    const previous = file.getBlob().getDataAsString() || '{}';
+    try {
+      const prevObj = JSON.parse(previous);
+      if (prevObj && typeof prevObj === 'object' && Object.keys(prevObj).length) {
+        prevObj.backupCreatedAt = new Date().toISOString();
+        backupFile_().setContent(JSON.stringify(prevObj));
+      }
+    } catch (backupErr) {}
     file.setContent(JSON.stringify(body.payload));
     return json_({ok:true, updatedAt:body.payload.serverUpdatedAt});
   } catch (err) {

@@ -372,6 +372,30 @@ body{background:radial-gradient(circle at 18% -10%,#10283d 0,#071421 32%,#050d17
  .print-page.two .print-chart{height:109mm;object-fit:fill}
  .print-page.three .print-chart{height:70mm;object-fit:contain}
 }
+
+/* V80.58 final print polish — affects PDF only */
+@media print{
+ #printReport .print-page{height:180mm}
+ #printReport .print-box h3{font-size:13px!important;letter-spacing:.1px}
+ #printReport .print-kpi .kt{font-size:9px!important;color:#35536c!important}
+ #printReport .print-kpi .kv{font-size:21px!important;color:#092a43!important}
+ #printReport .print-kpi .ks{font-size:10px!important;color:#006b73!important}
+ #printReport .print-page.one .print-box{height:137mm}
+ #printReport .print-page.one .print-box:first-child .print-chart{height:117mm}
+ #printReport .print-page.one .print-box:nth-child(2) .print-chart{height:109mm}
+ #printReport .print-page.two .print-box{min-height:138mm}
+ #printReport .print-page.two .print-chart{height:122mm}
+ #printReport .print-page.three .print-chart{height:77mm}
+ #printReport .print-tables{margin-top:4mm}
+ #printReport .print-tables table{font-size:11px!important}
+ #printReport .print-tables th{color:#214b68!important;font-weight:700!important}
+ #printReport .print-tables td{color:#092a43!important}
+ #printReport .print-tables td[style*="color"]{font-weight:700!important}
+ #printReport .print-tables .pct-red{color:#b91c1c!important}
+ #printReport .print-tables .pct-green{color:#047857!important}
+ #printReport .print-page.three .print-box p{font-size:12px;line-height:1.65}
+ #printReport .print-stocks .tank{min-height:18mm}
+}
 </style><!-- BUILD V80.37 2026-09-27 SHARED-STABLE --></head><body><div class="wrap">
 <div class="head"><div class="brand"><h1>⛽ FUEL MANAGEMENT SYSTEM <span style="color:var(--a)">V80.58</span></h1><p>PT PRIMA SARANA GEMILANG SITE ABM - EXCEL WEB DASHBOARD</p></div><div class="tools"><button class="btn" id="reload">Muat Default</button><label class="filelabel">Upload Excel<input id="file" type="file" accept=".xlsx,.xls"></label></div></div>
 <div class="navtabs"><button class="tab active" data-view="dashboard">Dashboard</button><button class="tab" data-view="received">Fuel Received</button><button class="tab" data-view="usage">Fuel Usage</button><button class="tab" data-view="stock">Stock Fuel</button></div><div class="status" id="status">Menyiapkan data…</div><span id="syncBadge" class="sync-badge local">DATA • LOCAL</span><span id="syncNote" class="sync-note">Menunggu status server…</span><div id="freshnessBar" class="freshness-bar" aria-live="polite"><span class="fresh-chip neutral">FUEL USAGE • —</span><span class="fresh-chip neutral">STOCK • —</span><span class="fresh-chip neutral">SYNC • —</span></div><div class="filters"><div class="filter-dates"><label class="mobile-date-field"><span id="fromText">Tanggal Awal</span><input id="from" type="date" aria-label="Tanggal awal"></label><label class="mobile-date-field"><span id="toText">Tanggal Akhir</span><input id="to" type="date" aria-label="Tanggal akhir"></label></div><div class="filter-actions"><select id="category"><option value="">Semua Kategori</option><option>PRODUKSI</option><option>GENERAL SUPPORT</option></select><button class="btn" id="apply">Terapkan Filter</button><button class="btn" id="reset">Reset</button><button class="btn" id="print">Export PDF</button></div></div>

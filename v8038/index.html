@@ -358,6 +358,20 @@ body{background:radial-gradient(circle at 18% -10%,#10283d 0,#071421 32%,#050d17
  .print-tables .pct-red{color:#b91c1c!important}.print-tables .pct-green{color:#047857!important}
  .print-foot{font-size:9px;color:#64748b;margin-top:4mm}
 }
+
+/* Print-only chart composition; no changes to operational dashboard */
+@media print{
+ .print-page.one .print-two{grid-template-columns:1.85fr 1fr}
+ .print-page.one .print-box{height:126mm}
+ .print-page.one .print-chart{height:105mm;object-fit:fill}
+ .print-page.one .print-box:first-child .print-chart{height:106mm}
+ .print-page.one .print-box:nth-child(2) .print-chart{height:99mm;object-fit:contain}
+ .print-shift-summary{display:flex!important;gap:4mm!important;flex-wrap:wrap!important;align-items:center!important;font-size:11px!important;margin:2mm 0!important;color:#0b3451!important}
+ .print-shift-summary>*{display:inline-block!important;margin:0!important;padding:1mm 2mm!important;white-space:nowrap!important;color:#0b3451!important;border:1px solid #c5d6e2!important;border-radius:4px!important}
+ .print-page.two .print-box{min-height:123mm}
+ .print-page.two .print-chart{height:109mm;object-fit:fill}
+ .print-page.three .print-chart{height:70mm;object-fit:contain}
+}
 </style><!-- BUILD V80.37 2026-09-27 SHARED-STABLE --></head><body><div class="wrap">
 <div class="head"><div class="brand"><h1>⛽ FUEL MANAGEMENT SYSTEM <span style="color:var(--a)">V80.58</span></h1><p>PT PRIMA SARANA GEMILANG SITE ABM - EXCEL WEB DASHBOARD</p></div><div class="tools"><button class="btn" id="reload">Muat Default</button><label class="filelabel">Upload Excel<input id="file" type="file" accept=".xlsx,.xls"></label></div></div>
 <div class="navtabs"><button class="tab active" data-view="dashboard">Dashboard</button><button class="tab" data-view="received">Fuel Received</button><button class="tab" data-view="usage">Fuel Usage</button><button class="tab" data-view="stock">Stock Fuel</button></div><div class="status" id="status">Menyiapkan data…</div><span id="syncBadge" class="sync-badge local">DATA • LOCAL</span><span id="syncNote" class="sync-note">Menunggu status server…</span><div id="freshnessBar" class="freshness-bar" aria-live="polite"><span class="fresh-chip neutral">FUEL USAGE • —</span><span class="fresh-chip neutral">STOCK • —</span><span class="fresh-chip neutral">SYNC • —</span></div><div class="filters"><div class="filter-dates"><label class="mobile-date-field"><span id="fromText">Tanggal Awal</span><input id="from" type="date" aria-label="Tanggal awal"></label><label class="mobile-date-field"><span id="toText">Tanggal Akhir</span><input id="to" type="date" aria-label="Tanggal akhir"></label></div><div class="filter-actions"><select id="category"><option value="">Semua Kategori</option><option>PRODUKSI</option><option>GENERAL SUPPORT</option></select><button class="btn" id="apply">Terapkan Filter</button><button class="btn" id="reset">Reset</button><button class="btn" id="print">Export PDF</button></div></div>
@@ -461,7 +475,7 @@ window.addEventListener('error',e=>{let s=document.getElementById('status');s.cl
  const head=(num)=>'<div class="print-head"><strong>FUEL MANAGEMENT SYSTEM V80.58</strong><small>PT PRIMA SARANA GEMILANG SITE ABM &nbsp; • &nbsp; '+num+'/3</small></div>';
  const page=(num,cls='')=>{const el=document.createElement('section');el.className='print-page '+cls;el.innerHTML=head(num);root.appendChild(el);return el};
  const one=page(1,'one');const kpis=document.createElement('div');kpis.className='print-kpis';document.querySelectorAll('#dashboardView .kpis .card').forEach(c=>{const d=c.cloneNode(true);d.className='print-kpi';kpis.appendChild(d)});one.appendChild(kpis);
- one.insertAdjacentHTML('beforeend','<div class="print-two">'+box('DAILY FUEL CONSUMPTION • ACTUAL VS PLAN',chart('trend'))+box('SHIFT MIX • DAY VS NIGHT',document.getElementById('shiftSummary').innerHTML+chart('shift'))+'</div>');
+ one.insertAdjacentHTML('beforeend','<div class="print-two">'+box('DAILY FUEL CONSUMPTION • ACTUAL VS PLAN',chart('trend'))+box('SHIFT MIX • DAY VS NIGHT','<div class="print-shift-summary">'+document.getElementById('shiftSummary').innerHTML+'</div>'+chart('shift'))+'</div>');
  const two=page(2,'two');const stocks=clone('#stocks');stocks.className='print-stocks';const stockBox=document.createElement('div');stockBox.className='print-box';stockBox.innerHTML='<h3>FUEL STOCK • LATEST</h3>';stockBox.appendChild(stocks);const chartBox=document.createElement('div');chartBox.innerHTML=box('FUEL CONSUMPTION BY TYPE UNIT • MTD',chart('typeMtd'));const twoGrid=document.createElement('div');twoGrid.className='print-two';twoGrid.style.gridTemplateColumns='1fr 1.5fr';twoGrid.append(stockBox,chartBox);two.appendChild(twoGrid);
  const three=page(3,'three');three.insertAdjacentHTML('beforeend','<div class="print-two" style="grid-template-columns:1fr 1fr">'+box('PRODUKSI VS GENERAL SUPPORT',chart('cat'))+box('RINGKASAN OPERASIONAL','<p>Fuel Usage: '+(document.getElementById('kUsage').textContent||'—')+' L</p><p>Fuel Receipt: '+(document.getElementById('kReceipt').textContent||'—')+' L</p><p>Latest Stock: '+(document.getElementById('kStock').textContent||'—')+' L</p>')+'</div>');
  const tables=document.createElement('div');tables.className='print-tables';['.top-over','.top-efficient'].forEach(sel=>{const n=document.querySelector(sel);if(n){const b=document.createElement('div');b.className='print-box';b.innerHTML='<h3>'+n.querySelector('h3').textContent+'</h3>';b.appendChild(n.querySelector('table').cloneNode(true));tables.appendChild(b)}});three.appendChild(tables);

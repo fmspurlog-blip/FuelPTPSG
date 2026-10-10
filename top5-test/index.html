@@ -1,0 +1,557 @@
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TOP 5 TEST — Fuel Management System V80.58</title>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script><script>if(typeof XLSX==="undefined"){document.write('<script src="https://unpkg.com/xlsx@0.18.5/dist/xlsx.full.min.js"><\\/script>')}</script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script><script>if(typeof Chart==="undefined"){document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.7/chart.umd.min.js"><\\/script>')}</script>
+<style>:root{--bg:#07111f;--p:#0d1b2a;--p2:#10243a;--t:#f5f7fb;--m:#91a4ba;--l:#1d3550;--a:#2dd4bf}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#06101c,#0b1727);color:var(--t);font-family:Inter,Segoe UI,Arial}.wrap{max-width:1600px;margin:auto;padding:16px 18px}.head{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:8px;padding-bottom:10px;border-bottom:1px solid var(--l)}.brand{display:flex;align-items:center;gap:12px}.brand:before{content:none!important;display:none!important}.brand h1{margin:0;font-size:22px;letter-spacing:.2px}.brand h1:before{content:none}.brand h1{white-space:nowrap}.brand p{margin:3px 0 0;display:block}.brand p,.status,.foot{color:var(--m);font-size:11px}.tools{display:flex;gap:8px;flex-wrap:wrap}.btn,.filelabel,select,input[type=date]{border:1px solid var(--l);background:var(--p2);color:#fff;border-radius:9px;padding:9px 11px;font-weight:650}.filelabel{cursor:pointer}input[type=date]{padding-left:34px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%232dd4bf' stroke-width='2'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M16 3v4M8 3v4M3 11h18'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:10px center}.kv{font-size:23px!important}.kt{font-size:11px!important}.kpi-icon{font-size:17px;margin-right:6px;vertical-align:-1px}.filelabel input{display:none}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:8px 0 10px;padding:8px;background:#091827;border:1px solid var(--l);border-radius:11px}.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}.card,.panel{background:linear-gradient(180deg,#10243a,#0a1a2b);border:1px solid var(--l);border-radius:13px;box-shadow:0 8px 24px #0004}.card{padding:8px 10px;min-height:70px;position:relative;overflow:hidden}.card:after{content:'';position:absolute;left:0;bottom:0;width:100%;height:2px;background:linear-gradient(90deg,var(--a),transparent)}.kt{font-size:10px;color:var(--m);text-transform:uppercase}.kv{font-size:19px;font-weight:850;margin-top:3px}.ks{font-size:10px;color:var(--a)}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;align-items:stretch}.panel{padding:9px;min-height:154px;display:flex;flex-direction:column}.panel h3{font-size:10.5px;margin:0 0 5px}.chart{height:118px;position:relative;overflow:hidden;flex:1;min-height:0}.chart canvas{max-width:100%!important;max-height:100%!important}.wide{grid-column:span 2}.stock{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;align-content:center;flex:1}.tank{padding:8px;border:1px solid var(--l);border-radius:10px;background:linear-gradient(180deg,#102942,#0b1d30);position:relative;overflow:hidden;min-height:52px}.tank:after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--a);opacity:.7}.tank b{font-size:15px}.tank small{display:block;color:var(--m);margin-bottom:3px}.tank-visual{display:flex;align-items:center;gap:8px}.tank-icon{width:30px;height:38px;border:2px solid #6f8ba7;border-radius:7px 7px 5px 5px;position:relative;overflow:hidden;flex:0 0 30px;background:#081523}.tank-icon:before{content:'';position:absolute;top:-5px;left:8px;width:11px;height:5px;border:2px solid #6f8ba7;border-bottom:0;border-radius:3px 3px 0 0}.tank-fill{position:absolute;left:2px;right:2px;bottom:2px;height:var(--fill,0%);max-height:calc(100% - 4px);background:linear-gradient(180deg,#22d3ee,#2dd4bf);border-radius:2px 2px 3px 3px;opacity:.9}.tank-copy{min-width:0}.mining-key{display:flex;justify-content:center;gap:18px;align-items:center;margin-top:2px;font-size:9px;color:var(--m)}.mining-key span{display:flex;gap:5px;align-items:center}.mini-svg{width:22px;height:16px;stroke:var(--a);fill:none;stroke-width:1.8}.gear-svg{width:17px;height:17px;stroke:#ff6384;fill:none;stroke-width:1.8}.table{width:100%;border-collapse:collapse;font-size:10.5px;table-layout:fixed}.table th,.table td{padding:4px 5px;border-bottom:1px solid var(--l);text-align:right}.table th:first-child,.table td:first-child{text-align:left}.badge{font-size:9px;padding:3px 6px;border:1px solid var(--l);border-radius:10px}.stock-panel{min-height:245px}.stock-panel .stock{grid-template-columns:repeat(4,1fr);gap:10px;align-content:stretch}.stock-panel .tank{min-height:82px;padding:10px}.stock-panel .tank-visual{height:100%;gap:11px}.stock-panel .tank-icon{width:46px;height:60px;flex-basis:46px;border-width:2px}.stock-panel .tank-icon:before{left:13px;width:15px}.stock-panel .tank b{font-size:17px}.stock-panel .tank small{font-size:10.5px}.compact-status .chart{max-width:100%;height:150px;margin:auto}.top-over .chart{width:100%;height:150px}.top-over .table,.top-efficient .table{margin-top:4px;font-size:11px}.compact-status,.top-over,.top-efficient{min-height:190px;height:190px;max-height:190px}.top-efficient{justify-content:flex-start;overflow:hidden;height:190px}.top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:6px 6px}.pct-green{color:#34d399;font-weight:800}.pct-red{color:#ff5c6c;font-weight:800}.status-badge{display:inline-block;padding:3px 7px;border-radius:999px;font-weight:800;font-size:10px}.status-over{background:#5b1620;color:#ff6b78}.status-efficient{background:#083f35;color:#34d399}.status-normal{background:#123a59;color:#66c7ff}.status-warning{background:#5a4308;color:#ffd166}.status-nodata{background:#27384a;color:#a9bacb}.type-mtd{min-height:245px}.type-mtd .chart{height:205px}.category-panel{min-height:190px}.category-panel .chart{height:145px}.stock-panel .stock{grid-template-columns:repeat(2,1fr)}.analysis-row{} .category-panel,.top-over,.top-efficient{min-height:245px;height:245px;max-height:245px}.category-panel .chart{height:195px}.top-over .chart{height:205px}.top-over .table,.top-efficient .table{font-size:12px}.top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:7px 7px}.top-over tbody tr:last-child td,.top-efficient tbody tr:last-child td{border-bottom:0}.top-over th,.top-over td,.top-efficient th,.top-efficient td{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.history-tools{display:flex;gap:7px;flex-wrap:wrap;margin:10px 0}.history-tools input,.history-tools select{min-width:140px}.table-wrap{overflow:auto;max-height:560px;border:1px solid var(--l);border-radius:10px}.history-table{width:100%;min-width:1180px;border-collapse:collapse;font-size:12px;table-layout:auto}.history-table th,.history-table td{padding:9px 12px;border-bottom:1px solid var(--l);text-align:left;white-space:nowrap}.history-table th{position:sticky;top:0;background:#10243a;z-index:1}.history-table th:nth-child(1),.history-table td:nth-child(1){min-width:105px}.history-table th:nth-child(2),.history-table td:nth-child(2){min-width:90px}.history-table th:nth-child(3),.history-table td:nth-child(3){min-width:75px}.history-table th:nth-child(n+4),.history-table td:nth-child(n+4){min-width:78px;text-align:right}.view-title{font-size:16px;margin:8px 0}.view-total{color:var(--a);font-weight:800;margin:6px 0}.stock-history-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:8px 0 12px}.foot{margin-top:8px}@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid{grid-template-columns:1fr 1fr}.wide{grid-column:span 2}.panel{min-height:175px}.chart{height:138px}.compact-status,.top-over,.top-efficient{height:150px;min-height:150px;max-height:150px}.top-efficient{grid-column:span 2}}@media(max-width:650px){.wrap{padding:8px}.navtabs{overflow-x:auto;flex-wrap:nowrap}.tab{white-space:nowrap;flex:0 0 auto}.filters{gap:6px}.filters>*{min-width:0}.table{font-size:10px}.wrap{overflow-x:hidden}.chart{height:155px}.panel{min-height:195px}.head{align-items:flex-start;flex-direction:column}.kpis{grid-template-columns:1fr 1fr}.card{min-height:76px}.grid{grid-template-columns:1fr}.wide{grid-column:auto}.top-efficient{grid-column:auto}.compact-status,.top-over,.top-efficient{height:auto;min-height:175px;max-height:none}.stock{grid-template-columns:1fr 1fr}.kv{font-size:18px}}@media(max-width:650px){.type-mtd{min-height:280px}.type-mtd .chart{height:235px}.stock-panel .stock{grid-template-columns:1fr 1fr}.top-over,.top-efficient{min-height:245px;height:auto;max-height:none}.top-over .chart{height:200px}.top-over,.top-efficient{overflow-x:auto}.top-over .table,.top-efficient .table{min-width:430px;font-size:11px}.top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:7px 5px}}@media print{body{background:#fff;color:#111}.tools,.filters,.foot{display:none!important}.wrap{max-width:none;padding:0}.card,.panel,.tank{box-shadow:none;background:#fff;color:#111;border-color:#bbb}.brand p,.status,.kt,.ks,.tank small{color:#555!important}.grid{grid-template-columns:2fr 1fr 1fr}.wide{grid-column:span 2}.chart{height:220px}canvas{filter:none}}
+.navtabs{display:flex;gap:6px;margin:8px 0 10px;padding:4px;background:#071522;border:1px solid var(--l);border-radius:11px}.tab{border:1px solid var(--l);background:#091827;color:#91a4ba;border-radius:9px;padding:9px 14px;font-weight:750;cursor:pointer}.tab.active{background:linear-gradient(180deg,#16415f,#102f49);color:#fff;border-color:#2dd4bf;box-shadow:0 0 0 1px rgba(45,212,191,.08) inset}.dataView{display:none}.dataView.active{display:block}.histwrap{background:linear-gradient(180deg,#10243a,#0a1a2b);border:1px solid var(--l);border-radius:13px;padding:12px;margin-top:8px;max-height:68vh;overflow:auto;box-shadow:0 10px 28px rgba(0,0,0,.12)}.histwrap h3{margin:0 0 10px;font-size:13px}.histtable{width:100%;border-collapse:collapse;font-size:11px}.histtable th,.histtable td{padding:8px 10px;border-bottom:1px solid var(--l);text-align:left;white-space:nowrap}.histtable tbody tr:hover{background:rgba(45,212,191,.045)}.histtable th{position:sticky;top:0;background:#10243a;color:#91a4ba;z-index:2;text-transform:uppercase;font-size:10px;letter-spacing:.35px}.inputgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.inputgrid input,.inputgrid select{width:100%;border:1px solid var(--l);background:#091827;color:#fff;border-radius:8px;padding:9px}@media(max-width:650px){.navtabs{overflow-x:auto}.tab{white-space:nowrap}.inputgrid{grid-template-columns:1fr 1fr}}
+input[type=date]{background:var(--p2)!important;color:#fff!important;border-color:var(--l)!important;color-scheme:dark;font-weight:800;position:relative}input[type=date]::-webkit-calendar-picker-indicator{background-color:#fff;border-radius:4px;padding:3px;opacity:1;cursor:pointer;filter:none}@media(max-width:650px){input[type=date]{font-size:14px;min-height:42px;flex:1 1 145px}}
+/* V80.55 STOCK COLUMN GUARD */
+:root{--premium:#35e0cf;--premium2:#22b8cf;--danger:#ff5c70;--gold:#d7b56d}
+body{background:radial-gradient(circle at 18% -10%,#10283d 0,#071421 32%,#050d17 72%)}
+.wrap{max-width:1680px;padding:18px 22px 22px}
+.head{padding:2px 2px 14px;margin-bottom:10px}.brand:before{width:54px;height:54px;border-radius:12px;box-shadow:0 10px 28px #0006}
+.brand h1{font-size:24px;letter-spacing:.35px}.brand p{font-size:10.5px;letter-spacing:.35px;color:#a8bdd0}
+.navtabs{background:#071725;border:1px solid #203b55;border-radius:13px;padding:5px}
+.tab{border-radius:9px}.tab.active{box-shadow:0 0 0 1px #2dd4bf55 inset,0 7px 18px #0004}
+.filters{padding:10px 12px;border-radius:13px;background:linear-gradient(180deg,#091b2b,#081624)}
+.kpis{gap:10px}.card{min-height:84px;padding:11px 13px;border-radius:15px;box-shadow:0 12px 28px #0004}
+.kt{font-size:10px!important;letter-spacing:.45px}.kv{font-size:25px!important;line-height:1.08;margin-top:6px}.ks{font-size:10.5px;margin-top:3px}
+.panel{border-radius:15px;box-shadow:0 12px 30px #0004}.panel h3{font-size:11px;letter-spacing:.25px}
+.table th{color:#c7d6e5;font-size:10.5px;letter-spacing:.15px}.table td{font-variant-numeric:tabular-nums}
+.top-over tbody tr:hover,.top-efficient tbody tr:hover{background:#ffffff08}
+.pct-green{text-shadow:0 0 14px #34d39935}.pct-red{text-shadow:0 0 14px #ff5c6c35}
+.status{opacity:.82}.foot{opacity:.7}
+@media(max-width:650px){.wrap{padding:8px 7px 14px}.brand h1{font-size:18px;white-space:normal}.brand:before{width:44px;height:44px}.kv{font-size:21px!important}.card{min-height:80px;padding:10px}.filters{padding:8px}.panel{border-radius:12px}}
+
+/* V80.55 STOCK COLUMN GUARD */
+.head{border-bottom:1px solid #1d3850}.brand{gap:12px}.brand h1{font-weight:900;letter-spacing:.2px}.brand p{margin-top:4px;color:#9fb5c8}
+.kpis{margin-top:2px}.card{background:linear-gradient(145deg,#122a43,#0a1a2b 72%);border-color:#23425e}.card:hover{transform:translateY(-1px);border-color:#2b5a74;transition:.18s ease}.kt{color:#9db8cf}.kv{font-variant-numeric:tabular-nums;letter-spacing:.2px}.ks{font-weight:700}
+.panel{border-color:#203d57;background:linear-gradient(155deg,#10263d,#091a2b 76%)}.panel h3{color:#eef7ff;font-weight:850}.chart{padding-top:2px}
+.type-mtd h3,.stock-panel h3,.category-panel h3,.top-over h3,.top-efficient h3{margin-bottom:8px}
+.top-over .table,.top-efficient .table{table-layout:fixed;width:100%}.top-over th:first-child,.top-efficient th:first-child{width:34%}.top-over th:not(:first-child),.top-efficient th:not(:first-child){text-align:right}.top-over td:not(:first-child),.top-efficient td:not(:first-child){text-align:right}.top-over tbody tr,.top-efficient tbody tr{height:34px}
+@media(max-width:650px){.head{gap:8px}.brand{align-items:flex-start}.brand h1{font-size:17px;line-height:1.2}.brand p{font-size:9px}.kpis{gap:7px}.kt{font-size:9px!important}.kv{font-size:20px!important}.panel h3{font-size:10px}.top-over .table,.top-efficient .table{min-width:500px}}
+/* V80.13 readability */ .type-mtd canvas{max-width:100%}.type-mtd .chart{padding:4px 2px 0}.category-panel .chart{padding:2px 8px 8px}.category-panel h3,.type-mtd h3{line-height:1.25}@media(max-width:650px){.type-mtd .chart{height:220px}.category-panel .chart{height:185px}}
+/* V80.21 QA polish */ #status.ready{white-space:normal;line-height:1.35}.status.ready{white-space:normal}.history-table tbody tr:hover{background:rgba(53,224,207,.06)}@media(max-width:650px){#status{font-size:9px}.table-wrap{scrollbar-width:thin}}
+/* V80.22 FINAL MOBILE FIT — keep last to override legacy mobile rules */
+@media(max-width:650px){
+ html,body{width:100%;max-width:100%;overflow-x:hidden}
+ .wrap{width:100%;max-width:100%;padding:7px 6px 12px;box-sizing:border-box}
+ .head{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:7px;padding:2px 0 9px}
+ .brand{min-width:0;gap:7px;align-items:center}
+ .brand:before{width:38px;height:38px;min-width:38px;border-radius:9px}
+ .brand h1{font-size:14px!important;line-height:1.12;margin:0;white-space:normal}
+ .brand p{display:none}
+ .tools{display:flex;gap:5px;align-items:center}
+ .tools button,.btn{min-height:38px;padding:8px 9px;font-size:10px;border-radius:8px}
+ .navtabs{margin:5px 0 7px;padding:3px;gap:4px;scrollbar-width:none}
+ .navtabs::-webkit-scrollbar{display:none}
+ .tab{padding:8px 10px;font-size:10.5px;min-height:36px}
+ #status,.status{font-size:8.5px;line-height:1.3;margin:4px 1px 6px}
+ .filters{display:grid!important;grid-template-columns:1fr 1fr;gap:6px;padding:7px;margin-bottom:7px}
+ .filters input,.filters select,.filters button{width:100%;min-width:0!important;min-height:40px;font-size:11px;padding:7px 8px}
+ .filters select{grid-column:1 / -1}
+ .kpis{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px}
+ .card{min-width:0;min-height:73px;padding:8px 9px;border-radius:11px}
+ .kt{font-size:8px!important;line-height:1.15;white-space:normal}
+ .kv{font-size:18px!important;margin-top:4px;line-height:1}
+ .ks{font-size:8.5px;line-height:1.15}
+ .grid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:7px}
+ .wide,.top-efficient{grid-column:auto!important}
+ .panel{width:100%;min-width:0;min-height:0!important;height:auto!important;padding:8px;border-radius:11px;overflow:hidden}
+ .panel h3{font-size:9px;line-height:1.2;margin:0 0 6px}
+ .chart{height:180px!important;min-height:0}
+ .type-mtd{min-height:0!important}
+ .type-mtd .chart{height:205px!important;overflow-x:auto}
+ .category-panel .chart{height:165px!important}
+ .stock-panel .stock,.stock{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px}
+ .tank{min-width:0;padding:8px;border-radius:9px}
+ .tank small{font-size:8px;white-space:normal;line-height:1.2}
+ .tank b{font-size:13px}
+ .top-over,.top-efficient{overflow-x:auto!important;min-height:0!important}
+ .top-over .table,.top-efficient .table{min-width:410px;font-size:9.5px}
+ .top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:6px 4px}
+ .histwrap{padding:7px;max-height:72vh;border-radius:10px;overflow:auto}
+ .inputgrid{grid-template-columns:1fr 1fr;gap:6px}
+ .inputgrid input,.inputgrid select,.history-tools input,.history-tools select{min-width:0;width:100%;font-size:11px;min-height:40px}
+ .history-tools{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+ .table-wrap{width:100%;max-width:100%;overflow:auto;-webkit-overflow-scrolling:touch}
+ .histtable,.history-table{font-size:9.5px}
+ .histtable th,.histtable td,.history-table th,.history-table td{padding:7px 8px}
+ .stock-history-grid{grid-template-columns:1fr 1fr;gap:6px}
+ .view-title{font-size:13px}
+}
+@media(max-width:380px){
+ .brand h1{font-size:12.5px!important}
+ .tools button,.btn{padding:7px 6px;font-size:9px}
+ .kv{font-size:17px!important}
+ .filters{gap:5px;padding:6px}
+ .chart{height:165px!important}
+ .type-mtd .chart{height:190px!important}
+}
+/* V80.55 STOCK COLUMN GUARD */
+@media(max-width:650px){
+ .head{grid-template-columns:minmax(0,1fr) 178px}
+ .brand h1{font-size:13.5px!important;max-width:170px}
+ .tools{display:grid;grid-template-columns:1fr 1.12fr;gap:4px}
+ .tools .btn,.tools .filelabel{width:100%;min-width:0;min-height:38px;display:flex;align-items:center;justify-content:center;box-sizing:border-box;font-size:9.5px;padding:7px 5px;white-space:nowrap}
+ .filters input[type=date]{display:block!important;min-width:0!important;width:100%!important;font-size:11px!important;padding:6px 7px!important}
+ .filters input[type=date]::-webkit-datetime-edit{display:block;padding:0}
+ .filters input[type=date]::-webkit-calendar-picker-indicator{width:16px;height:16px;padding:2px}
+ .filters button{font-size:10px;font-weight:800}
+ .filters #print{grid-column:1 / 2}
+ #status.status.ready,#status.ready{padding:4px 2px;color:#8fb1c9;opacity:1}
+ .kpis{margin-top:2px}
+ .card{box-shadow:0 6px 16px #0003}
+ .grid>.wide:first-child .chart{height:165px!important}
+}
+@media(max-width:380px){
+ .head{grid-template-columns:minmax(0,1fr) 160px}
+ .brand h1{font-size:12px!important;max-width:145px}
+ .tools .btn,.tools .filelabel{font-size:8.5px}
+ .grid>.wide:first-child .chart{height:155px!important}
+}
+/* V80.55 STOCK COLUMN GUARD */
+@media(max-width:650px){
+ .filters{display:grid!important;grid-template-columns:1fr 1fr 1.25fr!important;gap:4px!important;padding:6px!important}
+ .filters input[type=date]{grid-column:auto!important;height:34px!important;min-height:34px!important;color:#eef7ff!important;background:#10263d!important;border:1px solid #23425e!important;-webkit-text-fill-color:#eef7ff!important;opacity:1!important;font-size:10px!important}
+ .filters input[type=date]::-webkit-datetime-edit{color:#eef7ff!important;-webkit-text-fill-color:#eef7ff!important;opacity:1!important}
+ .filters input[type=date]::-webkit-datetime-edit-fields-wrapper{display:flex!important}
+ .filters input[type=date]::-webkit-datetime-edit-text,.filters input[type=date]::-webkit-datetime-edit-month-field,.filters input[type=date]::-webkit-datetime-edit-day-field,.filters input[type=date]::-webkit-datetime-edit-year-field{color:#eef7ff!important;-webkit-text-fill-color:#eef7ff!important}
+ .filters #category{grid-column:1 / -1!important;height:34px!important;min-height:34px!important}
+ .filters .btn{height:36px!important;min-height:36px!important;padding:5px 4px!important}
+ .filters #apply{grid-column:1 / 2!important}
+ .filters #reset{grid-column:2 / 3!important}
+ .filters #print{grid-column:3 / 4!important}
+ .grid>.wide:first-child .chart{height:190px!important}
+ .grid>.wide:first-child canvas{max-height:190px!important}
+}
+@media(max-width:390px){
+ .filters{grid-template-columns:1fr 1fr 1.15fr!important}
+ .filters input[type=date]{font-size:9px!important;padding:5px!important}
+ .filters .btn{font-size:9px!important}
+}
+/* V80.25 FORCE MOBILE DATE + 10D */
+.mobile-date-field{display:contents}
+.mobile-date-field>span{display:none}
+@media(max-width:650px){
+ .mobile-date-field{display:block;position:relative;height:36px;min-width:0}
+ .mobile-date-field>span{display:flex;position:absolute;inset:0 34px 0 0;z-index:3;align-items:center;padding:0 9px;color:#f5fbff;font-size:10px;font-weight:800;pointer-events:none;white-space:nowrap;overflow:hidden}
+ .mobile-date-field input[type=date]{position:absolute!important;inset:0!important;width:100%!important;height:36px!important;min-height:36px!important;padding:0 5px!important;color:transparent!important;-webkit-text-fill-color:transparent!important;background:#10263d!important}
+ .mobile-date-field input[type=date]::-webkit-datetime-edit{opacity:0!important}
+ .mobile-date-field input[type=date]::-webkit-calendar-picker-indicator{position:absolute;right:5px;width:22px;height:22px;z-index:5}
+ .filters{grid-template-columns:1fr 1fr!important}
+ .filters .mobile-date-field:nth-child(1){grid-column:1}
+ .filters .mobile-date-field:nth-child(2){grid-column:2}
+ .filters #category{grid-column:1 / -1!important}
+ .filters #apply{grid-column:1!important}
+ .filters #reset{grid-column:2!important}
+ .filters #print{grid-column:1 / -1!important;width:50%!important}
+ .grid>.wide:first-child .chart,.grid>.wide:first-child canvas{height:205px!important;max-height:205px!important}
+}
+/* V80.26 COMPACT PHONE FILTER */
+@media(max-width:650px){
+ .filters{grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:4px!important;padding:5px!important;margin-bottom:6px!important}
+ .filters .mobile-date-field:nth-child(1){grid-column:1 / 4!important}
+ .filters .mobile-date-field:nth-child(2){grid-column:4 / 7!important}
+ .filters #category{grid-column:1 / 7!important;height:32px!important;min-height:32px!important;padding:4px 8px!important;font-size:10px!important}
+ .filters #apply{grid-column:1 / 3!important}
+ .filters #reset{grid-column:3 / 5!important}
+ .filters #print{grid-column:5 / 7!important;width:100%!important}
+ .filters .btn{height:33px!important;min-height:33px!important;padding:4px 3px!important;font-size:9px!important;border-radius:7px!important;white-space:nowrap}
+ .mobile-date-field{height:33px!important}
+ .mobile-date-field input[type=date]{height:33px!important;min-height:33px!important}
+ .mobile-date-field>span{font-size:9px!important;padding-left:7px!important}
+}
+@media(max-width:380px){
+ .filters{gap:3px!important;padding:4px!important}
+ .filters .btn{font-size:8.3px!important;padding:3px 2px!important}
+ .filters #category{font-size:9px!important}
+}
+/* V80.27 SINGLE ROW PHONE FILTER */
+@media(max-width:650px){
+ .filters{display:grid!important;grid-template-columns:35fr 27fr 15fr 23fr!important;gap:3px!important;padding:5px!important}
+ .filters .mobile-date-field:nth-child(1){grid-column:1 / 3!important;grid-row:1!important}
+ .filters .mobile-date-field:nth-child(2){grid-column:3 / 5!important;grid-row:1!important}
+ .filters #category{grid-column:1!important;grid-row:2!important;width:100%!important;min-width:0!important;height:32px!important;min-height:32px!important;padding:3px 18px 3px 6px!important;font-size:8.8px!important}
+ .filters #apply{grid-column:2!important;grid-row:2!important}
+ .filters #reset{grid-column:3!important;grid-row:2!important}
+ .filters #print{grid-column:4!important;grid-row:2!important;width:100%!important}
+ .filters .btn{width:100%!important;min-width:0!important;height:32px!important;min-height:32px!important;padding:3px 2px!important;font-size:8.2px!important;letter-spacing:-.15px!important;white-space:nowrap!important}
+}
+@media(max-width:380px){
+ .filters{grid-template-columns:36fr 27fr 14fr 23fr!important;gap:2px!important}
+ .filters #category{font-size:8px!important;padding-left:4px!important}
+ .filters .btn{font-size:7.5px!important;letter-spacing:-.25px!important}
+}
+/* V80.28 MOBILE DATE BALANCE + TYPE CHART SIZE */
+@media(max-width:650px){
+ .filters{grid-template-columns:35fr 27fr 15fr 23fr!important}
+ .filters .mobile-date-field:nth-child(1){grid-column:1 / 3!important;grid-row:1!important;margin:0!important}
+ .filters .mobile-date-field:nth-child(2){grid-column:3 / 5!important;grid-row:1!important;margin:0!important}
+ .mobile-date-field{width:100%!important;min-width:0!important;box-sizing:border-box!important}
+ .mobile-date-field input[type=date]{left:0!important;right:0!important;width:100%!important;box-sizing:border-box!important}
+ .mobile-date-field>span{left:0!important;right:32px!important;padding-left:8px!important}
+ .type-mtd{width:100%!important;min-height:225px!important}
+ .type-mtd .chart{height:205px!important;min-height:205px!important;width:100%!important;overflow:hidden!important}
+ .type-mtd canvas{height:205px!important;max-height:205px!important;width:100%!important}
+}
+@media(max-width:380px){
+ .type-mtd{min-height:215px!important}
+ .type-mtd .chart,.type-mtd canvas{height:195px!important;max-height:195px!important}
+}
+/* V80.29 TRUE 50:50 MOBILE DATE ROW */
+@media(max-width:650px){
+ .filters{position:relative!important;padding-top:43px!important}
+ .filters .mobile-date-field:nth-child(1),
+ .filters .mobile-date-field:nth-child(2){
+   position:absolute!important;top:5px!important;height:34px!important;width:calc(50% - 7px)!important;box-sizing:border-box!important
+ }
+ .filters .mobile-date-field:nth-child(1){left:5px!important}
+ .filters .mobile-date-field:nth-child(2){left:calc(50% + 2px)!important;right:auto!important}
+ .filters .mobile-date-field input[type=date]{inset:0!important;width:100%!important;height:34px!important;box-sizing:border-box!important}
+ .filters .mobile-date-field>span{inset:0 32px 0 0!important;display:flex!important;align-items:center!important}
+ .filters #category,.filters #apply,.filters #reset,.filters #print{grid-row:1!important}
+}
+@media(max-width:380px){
+ .filters .mobile-date-field:nth-child(1),
+ .filters .mobile-date-field:nth-child(2){width:calc(50% - 6px)!important}
+ .filters .mobile-date-field:nth-child(2){left:calc(50% + 1px)!important}
+}
+/* V80.30 DEFINITIVE TWO-ROW MOBILE FILTER */
+.filter-dates,.filter-actions{display:contents}
+@media(max-width:650px){
+ .filters{display:block!important;position:static!important;padding:5px!important;margin-bottom:6px!important}
+ .filter-dates{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:4px!important;width:100%!important;margin:0 0 4px!important}
+ .filter-actions{display:grid!important;grid-template-columns:35fr 27fr 15fr 23fr!important;gap:3px!important;width:100%!important}
+ .filters .mobile-date-field:nth-child(1),.filters .mobile-date-field:nth-child(2){
+  position:relative!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;
+  grid-column:auto!important;grid-row:auto!important;width:100%!important;height:33px!important;margin:0!important;min-width:0!important
+ }
+ .mobile-date-field input[type=date]{position:absolute!important;inset:0!important;width:100%!important;height:33px!important;min-height:33px!important}
+ .mobile-date-field>span{position:absolute!important;inset:0 31px 0 0!important;display:flex!important;align-items:center!important;padding:0 7px!important}
+ .filter-actions #category,.filter-actions #apply,.filter-actions #reset,.filter-actions #print{
+  grid-column:auto!important;grid-row:auto!important;width:100%!important;min-width:0!important;height:32px!important;min-height:32px!important;margin:0!important
+ }
+ .filter-actions #category{padding:3px 15px 3px 5px!important;font-size:8.2px!important}
+ .filter-actions .btn{padding:3px 2px!important;font-size:7.8px!important;white-space:nowrap!important;letter-spacing:-.2px!important}
+}
+@media(max-width:380px){
+ .filter-dates{gap:3px!important}
+ .filter-actions{grid-template-columns:36fr 27fr 14fr 23fr!important;gap:2px!important}
+ .filter-actions #category{font-size:7.6px!important}
+ .filter-actions .btn{font-size:7.1px!important}
+}
+/* V80.31 MOBILE LOWER DASHBOARD FINISH */
+@media(max-width:650px){
+ /* lock the approved filter layout */
+ .filter-dates{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+ .filter-actions{grid-template-columns:35fr 27fr 15fr 23fr!important}
+
+ /* compact stock without sacrificing values */
+ .stock-panel{min-height:auto!important}
+ .stock-panel .stock{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important}
+ .stock-panel .tank{min-height:64px!important;padding:6px!important}
+ .stock-panel .tank-visual{gap:7px!important}
+ .stock-panel .tank-icon{width:34px!important;height:48px!important;flex-basis:34px!important}
+ .stock-panel .tank-icon:before{left:9px!important;width:13px!important}
+ .stock-panel .tank small{font-size:8.5px!important}
+ .stock-panel .tank b{font-size:13px!important}
+
+ /* make MTD chart a primary mobile chart */
+ .type-mtd{min-height:255px!important}
+ .type-mtd .chart{height:220px!important;min-height:220px!important}
+ .type-mtd canvas{height:220px!important;max-height:220px!important}
+
+ /* clean compact category donut */
+ .category-panel{min-height:245px!important;height:245px!important;max-height:245px!important}
+ .category-panel .chart{height:190px!important;max-height:190px!important}
+ .category-panel .mining-key{margin-top:2px!important;font-size:9px!important;gap:14px!important}
+
+ /* top-5 tables: full width and readable */
+ .top-over,.top-efficient{min-height:auto!important;height:auto!important;max-height:none!important;overflow:visible!important}
+ .top-over .table,.top-efficient .table{width:100%!important;min-width:0!important;table-layout:fixed!important;font-size:9px!important}
+ .top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:6px 3px!important}
+ .top-over th:first-child,.top-efficient th:first-child{width:31%!important}
+ .top-over th:not(:first-child),.top-efficient th:not(:first-child){width:23%!important}
+ .top-over td,.top-efficient td{overflow:visible!important;text-overflow:clip!important}
+}
+@media(max-width:380px){
+ .stock-panel .tank{min-height:60px!important}
+ .type-mtd .chart,.type-mtd canvas{height:210px!important;max-height:210px!important}
+ .top-over .table,.top-efficient .table{font-size:8.2px!important}
+}
+/* V80.32 SAFE SOURCE STATUS */
+#status.bad{border-left:3px solid #ff5c6c;padding-left:7px}
+#status.ready{border-left:3px solid #34d399;padding-left:7px}
+@media(max-width:650px){
+ #status.bad,#status.ready{font-size:8px!important;line-height:1.35!important;padding:4px 5px!important}
+}
+/* V80.34 SYNC MODE BADGE */
+.sync-badge{display:inline-flex;align-items:center;gap:5px;margin:3px 0 5px 2px;padding:2px 7px;border:1px solid #2b4962;border-radius:999px;font-size:9px;font-weight:800;color:#9fb5c8}
+.sync-badge.shared{border-color:#22c7b8;color:#35e0cf}.sync-badge.local{border-color:#665b2e;color:#ffd166}
+@media(max-width:650px){.sync-badge{font-size:7px;padding:2px 5px;margin-left:3px}}
+
+/* V80.41 operational clarity */
+.shift-summary{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:2px 0 6px;font-size:10px;color:#b8c9d9}.shift-summary span{border:1px solid #24445f;background:#091a2a;border-radius:999px;padding:4px 8px}.shift-summary b{color:#35e0cf}.data-period{font-weight:700;color:#dce7f2}
+@media(max-width:650px){.shift-summary{font-size:9px;margin-bottom:3px}.shift-summary span{padding:3px 6px}}
+
+/* V80.42 publish workflow */
+.sync-note{font-size:10px;color:#8fa8bc;margin-left:7px}.status.ready{border-left-color:#35e0cf}.status.publish-warn{border-left-color:#d7b56d;color:#f1d99f}
+@media(max-width:650px){.sync-note{display:block;margin:3px 0 0;font-size:9px}}
+
+/* V80.43 mobile operational readability */
+@media(max-width:650px){
+.stock-panel{min-height:auto}.stock-panel .stock{gap:6px}.stock-panel .tank{min-height:68px;padding:7px}.stock-panel .tank-visual{gap:7px}.stock-panel .tank-icon{width:34px;height:48px;flex-basis:34px}.stock-panel .tank-icon:before{left:9px;width:12px}.stock-panel .tank b{font-size:15px}.stock-panel .tank small{font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;max-width:105px}
+.top-over,.top-efficient{overflow:visible;min-height:auto}.top-over .table,.top-efficient .table{min-width:0;width:100%;table-layout:fixed;font-size:10px}.top-over th,.top-over td,.top-efficient th,.top-efficient td{padding:7px 3px;overflow:visible;text-overflow:clip}.top-over th:first-child,.top-over td:first-child,.top-efficient th:first-child,.top-efficient td:first-child{width:30%}.top-over th:nth-child(2),.top-over td:nth-child(2),.top-efficient th:nth-child(2),.top-efficient td:nth-child(2){width:20%}.top-over th:nth-child(3),.top-over td:nth-child(3),.top-efficient th:nth-child(3),.top-efficient td:nth-child(3){width:24%}.top-over th:nth-child(4),.top-over td:nth-child(4),.top-efficient th:nth-child(4),.top-efficient td:nth-child(4){width:26%}
+}
+
+/* V80.45 data freshness labels */
+#stockDate,#latestDate{font-weight:700;letter-spacing:.01em}
+@media(max-width:650px){#stockDate,#latestDate{font-size:9px}}
+
+/* V80.55 STOCK COLUMN GUARD — display only; KPI logic unchanged */
+.freshness-bar{display:flex;gap:6px;flex-wrap:wrap;margin:5px 0 8px}.fresh-chip{display:inline-flex;align-items:center;gap:5px;padding:4px 8px;border:1px solid #24445e;border-radius:999px;background:#0a1a2b;color:#b8ccdc;font-size:9px;font-weight:800;letter-spacing:.2px}.fresh-chip.ok{border-color:#167c72;color:#55e6d5;background:#082824}.fresh-chip.warn{border-color:#9a7622;color:#ffd166;background:#2b2208}.fresh-chip.bad{border-color:#8c3140;color:#ff8190;background:#301019}.fresh-chip.neutral{color:#91a4ba}@media(max-width:650px){.freshness-bar{display:grid;grid-template-columns:1fr 1fr;gap:4px;margin:5px 0 7px}.fresh-chip{justify-content:center;padding:4px 3px;font-size:7.5px;white-space:nowrap}}
+
+/* Print-only layout: never modify operational calculations or chart data. */
+@page{size:A4 landscape;margin:9mm}
+@media print{
+ html,body{width:100%!important;margin:0!important;padding:0!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ .wrap{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important}
+ .head{margin:0 0 5mm!important;padding:0 0 3mm!important}
+ .brand:before,.tools,.navtabs,.filters,.foot,.sync-badge{display:none!important}
+ .brand h1{font-size:17px!important;color:#09233a!important}.brand p{color:#43546a!important}
+ .grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr))!important;gap:5px!important}
+ .card,.panel,.tank,.histwrap{break-inside:avoid!important;page-break-inside:avoid!important;box-shadow:none!important}
+ .panel{min-width:0!important;overflow:hidden!important}
+ .chart{height:190px!important;max-height:190px!important;overflow:hidden!important}
+ canvas{max-width:100%!important;max-height:100%!important;filter:none!important}
+ .dataView:not(.active){display:none!important}
+ .histwrap{max-height:none!important;overflow:visible!important}
+ .histtable thead{display:table-header-group}
+ .histtable tr{break-inside:avoid!important}
+}
+
+/* Dedicated report pages; dashboard screen remains untouched. */
+#printReport{display:none}
+@media print{
+ @page{size:A4 landscape;margin:8mm}
+ body{background:white!important;color:#0d2134!important}
+ body>.wrap{display:none!important}
+ #printReport{display:block!important;color:#0d2134!important;font-family:Arial,sans-serif}
+ .print-page{height:180mm;break-after:page;page-break-after:always;overflow:hidden}
+ .print-page:last-child{break-after:auto;page-break-after:auto}
+ .print-head{display:flex;justify-content:space-between;border-bottom:2px solid #0e7490;padding:0 0 4mm;margin-bottom:5mm;font-size:12px}
+ .print-head strong{font-size:17px}.print-head small{font-size:10px;color:#53657a}
+ .print-kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:3mm;margin-bottom:5mm}
+ .print-kpi{border:1px solid #b7cad7;border-radius:5px;padding:3mm;min-width:0;background:#f2f7fa}
+ .print-kpi .kt{color:#53657a!important;font-size:8px!important}.print-kpi .kv{color:#092a43!important;font-size:20px!important}.print-kpi .ks{color:#047c82!important;font-size:9px!important}
+ .print-two{display:grid;grid-template-columns:1.65fr 1fr;gap:5mm}
+ .print-box{border:1px solid #b7cad7;border-radius:6px;padding:3mm;min-width:0;overflow:hidden;background:#fff}
+ .print-box h3{font-size:12px;margin:0 0 3mm;color:#0c304a}
+ .print-chart{width:100%;height:112mm;object-fit:contain;display:block}
+ .print-page.two .print-chart{height:110mm}
+ .print-stocks{display:grid;grid-template-columns:repeat(2,1fr);gap:2mm}
+ .print-stocks .tank{background:#f2f7fa!important;color:#092a43!important;border:1px solid #cad6e1;min-height:16mm;padding:2mm}
+ .print-stocks .tank b{color:#092a43!important}.print-stocks .tank small{color:#53657a!important}
+ .print-tables{display:grid;grid-template-columns:1fr 1fr;gap:5mm;margin-top:5mm}
+ .print-tables table{width:100%;border-collapse:collapse;font-size:10px;color:#0d2134}
+ .print-tables th,.print-tables td{border-bottom:1px solid #d5e0e7;padding:3mm 1mm;text-align:right}
+ .print-tables th:first-child,.print-tables td:first-child{text-align:left}
+ .print-tables .pct-red{color:#b91c1c!important}.print-tables .pct-green{color:#047857!important}
+ .print-foot{font-size:9px;color:#64748b;margin-top:4mm}
+}
+
+/* Print-only chart composition; no changes to operational dashboard */
+@media print{
+ .print-page.one .print-two{grid-template-columns:1.85fr 1fr}
+ .print-page.one .print-box{height:126mm}
+ .print-page.one .print-chart{height:105mm;object-fit:fill}
+ .print-page.one .print-box:first-child .print-chart{height:106mm}
+ .print-page.one .print-box:nth-child(2) .print-chart{height:99mm;object-fit:contain}
+ .print-shift-summary{display:flex!important;gap:4mm!important;flex-wrap:wrap!important;align-items:center!important;font-size:11px!important;margin:2mm 0!important;color:#0b3451!important}
+ .print-shift-summary>*{display:inline-block!important;margin:0!important;padding:1mm 2mm!important;white-space:nowrap!important;color:#0b3451!important;border:1px solid #c5d6e2!important;border-radius:4px!important}
+ .print-page.two .print-box{min-height:123mm}
+ .print-page.two .print-chart{height:109mm;object-fit:fill}
+ .print-page.three .print-chart{height:70mm;object-fit:contain}
+}
+
+/* V80.58 final print polish — affects PDF only */
+@media print{
+ #printReport .print-page{height:180mm}
+ #printReport .print-box h3{font-size:13px!important;letter-spacing:.1px}
+ #printReport .print-kpi .kt{font-size:9px!important;color:#35536c!important}
+ #printReport .print-kpi .kv{font-size:21px!important;color:#092a43!important}
+ #printReport .print-kpi .ks{font-size:10px!important;color:#006b73!important}
+ #printReport .print-page.one .print-box{height:137mm}
+ #printReport .print-page.one .print-box:first-child .print-chart{height:117mm}
+ #printReport .print-page.one .print-box:nth-child(2) .print-chart{height:109mm}
+ #printReport .print-page.two .print-box{min-height:138mm}
+ #printReport .print-page.two .print-chart{height:122mm}
+ #printReport .print-page.three .print-chart{height:77mm}
+ #printReport .print-tables{margin-top:4mm}
+ #printReport .print-tables table{font-size:11px!important}
+ #printReport .print-tables th{color:#214b68!important;font-weight:700!important}
+ #printReport .print-tables td{color:#092a43!important}
+ #printReport .print-tables td[style*="color"]{font-weight:700!important}
+ #printReport .print-tables .pct-red{color:#b91c1c!important}
+ #printReport .print-tables .pct-green{color:#047857!important}
+ #printReport .print-page.three .print-box p{font-size:12px;line-height:1.65}
+ #printReport .print-stocks .tank{min-height:18mm}
+}
+
+/* V80.58 print legibility refinement — print presentation only; no KPI/data changes. */
+@media print{
+ #printReport .print-tables th{font-size:10.5px!important;opacity:1!important}
+ #printReport .print-tables td{font-size:11px!important}
+ #printReport .print-tables tr{break-inside:avoid!important;page-break-inside:avoid!important}
+ #printReport .print-box{break-inside:avoid!important;page-break-inside:avoid!important}
+ #printReport .print-stocks .tank small{font-size:10px!important;opacity:1!important}
+ #printReport .print-stocks .tank b{font-size:14px!important}
+}
+
+</style><!-- BUILD V80.37 2026-09-27 SHARED-STABLE --><style>body:before{content:'MODE PENGUJIAN TOP 5 — BUKAN VERSI OPERASIONAL';position:fixed;top:0;left:0;right:0;z-index:999999;background:#f59e0b;color:#111827;text-align:center;font:bold 12px Arial;padding:6px;pointer-events:none}body{padding-top:28px!important}</style></head><body><div class="wrap">
+<div class="head"><div class="brand"><h1>⛽ FUEL MANAGEMENT SYSTEM <span style="color:var(--a)">V80.58</span></h1><p>PT PRIMA SARANA GEMILANG SITE ABM - EXCEL WEB DASHBOARD</p></div><div class="tools"><button class="btn" id="reload">Muat Default</button><label class="filelabel">Upload Excel<input id="file" type="file" accept=".xlsx,.xls"></label></div></div>
+<div class="navtabs"><button class="tab active" data-view="dashboard">Dashboard</button><button class="tab" data-view="received">Fuel Received</button><button class="tab" data-view="usage">Fuel Usage</button><button class="tab" data-view="stock">Stock Fuel</button></div><div class="status" id="status">Menyiapkan data…</div><span id="syncBadge" class="sync-badge local">DATA • LOCAL</span><span id="syncNote" class="sync-note">Menunggu status server…</span><div id="freshnessBar" class="freshness-bar" aria-live="polite"><span class="fresh-chip neutral">FUEL USAGE • —</span><span class="fresh-chip neutral">STOCK • —</span><span class="fresh-chip neutral">SYNC • —</span></div><div class="filters"><div class="filter-dates"><label class="mobile-date-field"><span id="fromText">Tanggal Awal</span><input id="from" type="date" aria-label="Tanggal awal"></label><label class="mobile-date-field"><span id="toText">Tanggal Akhir</span><input id="to" type="date" aria-label="Tanggal akhir"></label></div><div class="filter-actions"><select id="category"><option value="">Semua Kategori</option><option>PRODUKSI</option><option>GENERAL SUPPORT</option></select><button class="btn" id="apply">Terapkan Filter</button><button class="btn" id="reset">Reset</button><button class="btn" id="print">Export PDF</button></div></div>
+<div id="dashboardView" class="dataView active"><div class="kpis"><div class="card"><div class="kt"><span class="kpi-icon">⛽</span>Total Fuel Issued</div><div class="kv" id="kUsage">—</div><div class="ks">Liter</div></div><div class="card"><div class="kt"><span class="kpi-icon">📈</span>Average / Day</div><div class="kv" id="kAvg">—</div><div class="ks">Liter/hari</div></div><div class="card"><div class="kt"><span class="kpi-icon">⚙️</span>Active Unit</div><div class="kv" id="kUnit">—</div><div class="ks" id="activeDate">Latest Fuel Date</div></div><div class="card"><div class="kt"><span class="kpi-icon">⛽</span>Fuel Receipt</div><div class="kv" id="kReceipt">—</div><div class="ks">Liter</div></div><div class="card"><div class="kt"><span class="kpi-icon">🛢️</span>Latest Stock</div><div class="kv" id="kStock">—</div><div class="ks" id="stockDate">Stock Date —</div></div><div class="card"><div class="kt"><span class="kpi-icon">⛽</span>Latest Fuel Out</div><div class="kv" id="kLatest">—</div><div class="ks" id="latestDate">Fuel Out Date —</div></div></div>
+<div class="grid"><div class="panel wide"><h3>DAILY FUEL CONSUMPTION • ACTUAL VS PLAN</h3><div class="chart"><canvas id="trend"></canvas></div></div><div class="panel"><h3>SHIFT MIX • DAY VS NIGHT</h3><div id="shiftSummary" class="shift-summary"></div><div class="chart"><canvas id="shift"></canvas></div></div>
+<div class="panel stock-panel"><h3>FUEL STOCK • LATEST</h3><div class="stock" id="stocks"></div></div><div class="panel wide type-mtd"><h3>FUEL CONSUMPTION TOTAL BY TYPE UNIT • MONTH TO DATE</h3><div class="chart"><canvas id="typeMtd"></canvas></div></div><div class="panel category-panel"><h3>PRODUKSI VS GENERAL SUPPORT</h3><div class="chart"><canvas id="cat"></canvas></div><div class="mining-key"><span><svg class="mini-svg" viewBox="0 0 28 18" aria-hidden="true"><path d="M3 14h16l4-4-4-2-3 3H8L6 7H3zM8 7l5-4 5 1-2 7M4 16h16"/></svg>Produksi</span><span><svg class="gear-svg" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3"/><path d="M10 1v3M10 16v3M1 10h3M16 10h3M3.6 3.6l2.1 2.1M14.3 14.3l2.1 2.1M16.4 3.6l-2.1 2.1M5.7 14.3l-2.1 2.1"/></svg>General Support</span></div></div>
+<div class="panel top-over"><h3>TOP 5 OVER • PLAN PRIORITY</h3><table class="table"><thead><tr><th>Kode Unit</th><th>Plan L/HM</th><th>Actual L/HM</th><th>Persentase</th></tr></thead><tbody id="overTable"></tbody></table></div><div class="panel top-efficient"><h3>TOP 5 EFFICIENT • PLAN PRIORITY</h3><table class="table"><thead><tr><th>Kode Unit</th><th>Plan L/HM</th><th>Actual L/HM</th><th>Persentase</th></tr></thead><tbody id="efficient"></tbody></table></div>
+</div>
+<div class="status" id="health">SYSTEM CHECK • menunggu workbook…</div><div class="status" id="recon">RECONCILIATION • menunggu data…</div><div class="foot">V80.55 STOCK COLUMN GUARD • Stock dashboard membaca AUTO LATEST FUEL STOCK • Stock Fuel: periode berjalan + Calculation Stock • Fuel Usage + Status Unit • Database Excel tidak diubah.</div></div>
+<div id="receivedView" class="dataView"><h2 class="view-title">FUEL RECEIVED</h2><div class="history-tools"><input id="rf" type="date"><input id="rt" type="date"><button class="btn" id="rapply">Terapkan</button><button class="btn" id="rreset">Reset</button></div><div id="rtotal" class="view-total">Total: —</div><div style="font-size:11px;color:#91a4ba;margin:8px 0">Before Stock dan Total Stock mengikuti nilai Excel. Fuel Receipt adalah informasi penerimaan per hari, bukan tambahan ke sounding. Tanda ⚠ menunjukkan selisih Total Stock terhadap jumlah delapan tank lebih dari 1 L.</div><div class="table-wrap"><table class="history-table"><thead><tr><th>Tanggal</th><th>Hari</th><th>Supplier</th><th>Surat Jalan</th><th>Ref PO</th><th>Qty Received (L)</th></tr></thead><tbody id="receivedRows"></tbody></table></div></div>
+<div id="usageView" class="dataView"><h2 class="view-title">FUEL USAGE</h2><div class="history-tools"><input id="uf" type="date"><input id="ut" type="date"><input id="unitSearch" placeholder="Cari kode unit"><select id="shiftFilter"><option value="">Semua Shift</option><option>DAY</option><option>NIGHT</option></select><button class="btn" id="uapply">Terapkan</button><button class="btn" id="ureset">Reset</button></div><div id="utotal" class="view-total">Total: —</div><div class="table-wrap"><table class="history-table"><thead><tr><th>Tanggal</th><th>Shift</th><th>Kode Unit</th><th>Fuel Out (L)</th><th>KM/HM Before</th><th>KM/HM After</th><th>Total HM</th><th>Plan L/HM</th><th>Act L/HM</th><th>Status</th><th>Status Unit</th></tr></thead><tbody id="usageRows"></tbody></table></div></div>
+<div id="stockView" class="dataView"><h2 class="view-title">STOCK FUEL</h2><div class="history-tools"><select id="tankFilter"><option value="">Semua Tank</option><option>FS01</option><option>FS02</option><option>FS03</option><option>FS04</option><option>FS05</option><option>FS06</option><option>FT04</option><option>FT05</option></select><input id="sf" type="date"><input id="st" type="date"><button class="btn" id="tankApply">Terapkan</button><button class="btn" id="tankReset">Reset</button></div><div id="stockHistory" class="stock-history-grid"></div><div class="table-wrap"><table class="history-table"><thead><tr><th>Tgl</th><th>Hari</th><th>Shift</th><th title="Nilai Before Stock langsung dari file Excel; tidak dihitung ulang dari penerimaan">Before Stock (Excel)</th><th>FS01</th><th>FS02</th><th>FS03</th><th>FS04</th><th>FS05</th><th>FS06</th><th>FT04</th><th>FT05</th><th title="Penerimaan harian dari Fuel Receipt; tidak dijumlahkan lagi ke sounding">Fuel Receipt / Hari</th><th title="Total Stock sesuai file Excel, diperiksa terhadap jumlah FS dan FT">Total Stock</th></tr></thead><tbody id="stockRows"></tbody></table></div></div>
+<script>
+const boot=(m,bad=false)=>{let e=document.getElementById('status');if(e){e.textContent=m;e.classList.toggle('bad',bad)}};boot('BOOT 1/4 • JavaScript aktif • memeriksa library…');
+let WB,DATA=[],RECEIPTS=[],MASTER={},STOCK={},STOCKH=[],PLAN_DAILY={},STOCK_AUTO_DATE='',STOCK_ACTUAL_DATE='',charts={};const nf=new Intl.NumberFormat('id-ID',{maximumFractionDigits:0}),df=new Intl.NumberFormat('id-ID',{maximumFractionDigits:2});
+const n=s=>String(s??'').trim(), up=s=>n(s).toUpperCase(), num=v=>{if(typeof v==='number')return v;let x=parseFloat(String(v??'').replace(/,/g,''));return Number.isFinite(x)?x:0};
+const maybeNum=v=>{if(v===null||v===undefined||String(v).trim()==='')return null;let x=typeof v==='number'?v:parseFloat(String(v).replace(/,/g,''));return Number.isFinite(x)?x:null};
+function serialDate(v){if(v instanceof Date)return new Date(v.getFullYear(),v.getMonth(),v.getDate());if(typeof v==='number'){let d=XLSX.SSF.parse_date_code(v);return d?new Date(d.y,d.m-1,d.d):null}let s=String(v??'').trim(),m=s.match(/^(\d{1,2})[-\/]([A-Za-z]{3,}|\d{1,2})(?:[-\/](\d{2,4}))$/);if(m){let day=+m[1],y=+m[3];if(y<100)y+=2000;let mons={JAN:0,FEB:1,MAR:2,APR:3,MAY:4,JUN:5,JUL:6,AUG:7,SEP:8,OCT:9,NOV:10,DEC:11};let mon=/^\d+$/.test(m[2])?(+m[2]-1):mons[m[2].slice(0,3).toUpperCase()];if(mon>=0)return new Date(y,mon,day)}let d=new Date(s);return isNaN(d)?null:new Date(d.getFullYear(),d.getMonth(),d.getDate())}function dk(v){let d=serialDate(v);if(!d)return '';let y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),day=String(d.getDate()).padStart(2,'0');return y+'-'+m+'-'+day}function sheetDate(w,s,row,colIdx){let cell=w?.Sheets?.[s]?.[XLSX.utils.encode_cell({r:row,c:colIdx})];if(cell?.w){let txt=String(cell.w).trim().replace(/\s+/g,' '),m=txt.match(/^(\d{1,2})[\s\-\/]([A-Za-z]+|\d{1,2})(?:[\s\-\/](\d{2,4}))?$/);if(m){let y=m[3]?+m[3]:new Date().getFullYear();if(y<100)y+=2000;let mons={JAN:1,JANUARI:1,JANUARY:1,FEB:2,FEBRUARI:2,FEBRUARY:2,MAR:3,MARET:3,MARCH:3,APR:4,APRIL:4,MAY:5,MEI:5,JUN:6,JUNI:6,JUNE:6,JUL:7,JULI:7,JULY:7,AUG:8,AGU:8,AGUSTUS:8,AUGUST:8,SEP:9,SEPT:9,SEPTEMBER:9,OCT:10,OKT:10,OKTOBER:10,OCTOBER:10,NOV:11,NOVEMBER:11,DEC:12,DES:12,DESEMBER:12,DECEMBER:12},key=m[2].toUpperCase(),mo=/^\d+$/.test(m[2])?+m[2]:(mons[key]||mons[key.slice(0,3)]);if(mo)return y+'-'+String(mo).padStart(2,'0')+'-'+String(+m[1]).padStart(2,'0')}}return dk(cell?.v)}
+function sh(w,names){let norm=s=>up(s).replace(/[^A-Z0-9]+/g,' ').trim();let ns=names.map(norm);return w.SheetNames.find(x=>{let nx=norm(x);return ns.some(y=>nx===y)})}function rows(w,s){if(!s||!w?.Sheets?.[s])return [];return XLSX.utils.sheet_to_json(w.Sheets[s],{header:1,defval:null,raw:true})}function set(id,v){document.getElementById(id).textContent=nf.format(v||0)}
+function destroy(id){if(charts[id])charts[id].destroy()}function chart(id,type,labels,data,label){destroy(id);let el=document.getElementById(id),has=data&&data.some(v=>Number(v)>0);if(!has){let p=el.parentElement;p.dataset.empty='Tidak ada data pada filter ini'}else delete el.parentElement.dataset.empty;let legendLabels={color:'#dce7f2',boxWidth:10,boxHeight:10,padding:10,font:{size:10}};if(type==='doughnut')legendLabels.generateLabels=ch=>{let base=Chart.defaults.plugins.legend.labels.generateLabels(ch),vals=ch.data.datasets[0]?.data||[],tot=vals.reduce((s,v)=>s+(Number(v)||0),0);return base.map((it,i)=>{let v=Number(vals[i])||0,p=tot?v/tot*100:0;it.text=ch.data.labels[i]+' • '+nf.format(v)+' L • '+p.toFixed(1).replace('.',',')+'%';return it})};charts[id]=new Chart(el,{type,data:{labels,datasets:[{label,data,borderWidth:2,tension:.25}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:type!=='doughnut',position:type==='doughnut'?'bottom':'right',labels:legendLabels},tooltip:{enabled:true,callbacks:type==='doughnut'?{label:ctx=>{let vals=ctx.dataset.data||[],tot=vals.reduce((s,v)=>s+(Number(v)||0),0),v=Number(ctx.raw)||0,p=tot?v/tot*100:0;return ctx.label+': '+nf.format(v)+' L ('+p.toFixed(1).replace('.',',')+'%)'}}:{}}},layout:{padding:6},animation:{duration:250},scales:type==='doughnut'?{}:{x:{ticks:{color:'#91a4ba'},grid:{color:'#17304a'}},y:{ticks:{color:'#91a4ba'},grid:{color:'#17304a'}}}}})}
+function simpleDonut(id,labels,data){destroy(id);let el=document.getElementById(id);charts[id]=new Chart(el,{type:'doughnut',data:{labels,datasets:[{data,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{display:false},tooltip:{enabled:true}},animation:{duration:250}}})}
+function trendChart(labels,actual,plan){destroy('trend');let el=document.getElementById('trend'),has=actual.some(v=>Number(v)>0)||plan.some(v=>Number(v)>0);if(!has)el.parentElement.dataset.empty='Tidak ada data pada filter ini';else delete el.parentElement.dataset.empty;charts.trend=new Chart(el,{type:'line',data:{labels,datasets:[{label:'Actual Fuel Out',data:actual,borderWidth:2,tension:.25,pointRadius:2},{label:'Plan Fuel',data:plan,borderWidth:2,tension:0,pointRadius:0,borderDash:[7,5]}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{position:'top',labels:{color:'#dce7f2',boxWidth:18,boxHeight:3,padding:14,font:{size:10}}},tooltip:{enabled:true}},layout:{padding:6},animation:{duration:250},scales:{x:{ticks:{color:'#91a4ba'},grid:{color:'#17304a'}},y:{beginAtZero:true,ticks:{color:'#91a4ba'},grid:{color:'#17304a'}}}}})}
+function headerInfo(a,maxRows=10){let best={},score=-1,row=0;for(let r=0;r<Math.min(maxRows,a.length);r++){let m={};(a[r]||[]).forEach((v,i)=>{let k=up(v).replace(/[^A-Z0-9]+/g,' ');if(k)m[k]=i});let s=Object.keys(m).length;if(s>score){score=s;best=m;row=r}}return {map:best,row}}function headerMap(a,maxRows=10){return headerInfo(a,maxRows).map}
+function col(h,aliases,fallback){for(let a of aliases){let A=up(a).replace(/[^A-Z0-9]+/g,' '),k=Object.keys(h).find(x=>x===A||x.includes(A));if(k!=null)return h[k]}return fallback}function tankCol(h,tank,fallback){let keys=Object.keys(h),k=keys.find(x=>x.includes(tank)&&(/STOCK|LITER|VOLUME|QTY/.test(x)));return k!=null?h[k]:fallback}
+function releaseQA(){let q=validateData(),total=DATA.reduce((s,x)=>s+x.lit,0),shift=DATA.reduce((s,x)=>(s[x.shift]=(s[x.shift]||0)+x.lit,s),{DAY:0,NIGHT:0}),cat=DATA.reduce((s,x)=>{let k=x.category==='PRODUKSI'?'PRODUKSI':'GENERAL SUPPORT';s[k]=(s[k]||0)+x.lit;return s},{PRODUKSI:0,'GENERAL SUPPORT':0}),eps=.01;if(Math.abs((shift.DAY+shift.NIGHT)-total)>eps)q.blocking.push('rekonsiliasi Day/Night');if(Math.abs((cat.PRODUKSI+cat['GENERAL SUPPORT'])-total)>eps)q.blocking.push('rekonsiliasi Produksi/General Support');let requiredTanks=['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'],missingTanks=requiredTanks.filter(t=>!STOCK[t]);if(missingTanks.length)q.blocking.push('tank belum terbaca: '+missingTanks.join(', '));let stockDates=requiredTanks.map(t=>STOCK[t]?.date).filter(Boolean).sort();if(stockDates.length===8&&stockDates[0]!==stockDates.at(-1))q.warnings.push('tanggal stock tank tidak seragam '+stockDates[0]+'–'+stockDates.at(-1));let histActual=STOCKH.filter(x=>x.total>0||x.before>0||x.receipt>0||requiredTanks.some(t=>(x[t]||0)>0)).map(x=>x.date).filter(Boolean).sort().at(-1)||'';let cardDate=stockDates.at(-1)||'';if(histActual&&cardDate&&histActual!==cardDate)q.warnings.push('QA tanggal stock: AUTO '+cardDate+' | Calculation '+histActual);q.blocking=[...new Set(q.blocking)];q.warnings=[...new Set(q.warnings)];q.total=total;return q}
+function validateData(){let issues=[],blocking=[],warnings=[];let usageTotal=DATA.reduce((s,x)=>s+x.lit,0),receiptTotal=RECEIPTS.reduce((s,x)=>s+x.q,0),dates=DATA.map(x=>x.date).filter(Boolean).sort(),stockDates=STOCKH.map(x=>x.date).filter(Boolean).sort();if(!DATA.length){issues.push('Fuel_Usage kosong/tidak terbaca');blocking.push('Fuel Usage')}if(!RECEIPTS.length){issues.push('Fuel_Receipt kosong/tidak terbaca');blocking.push('Fuel Receipt')}let sk=Object.keys(STOCK);if(sk.length<8){issues.push('Stock FS/FT belum lengkap ('+sk.length+'/8)');blocking.push('Stock '+sk.length+'/8')}let noMaster=[...new Set(DATA.map(x=>x.u).filter(u=>!MASTER[u]))];if(noMaster.length){issues.push(noMaster.length+' unit belum cocok ke Master_Unit');blocking.push(noMaster.length+' unit tanpa Master')}let noPlan=[...new Set(DATA.map(x=>x.u).filter(u=>MASTER[u]&&!MASTER[u].plan))];if(noPlan.length){issues.push(noPlan.length+' unit belum memiliki Plan L/HM');warnings.push(noPlan.length+' unit tanpa Plan')}let noLhm=DATA.filter(x=>x.hm>0&&!x.rowLhm).length;if(noLhm){issues.push(noLhm+' transaksi memakai fallback Liter/HM');warnings.push(noLhm+' fallback L/HM')}if(!usageTotal)issues.push('Total Fuel Usage = 0');if(!receiptTotal)issues.push('Total Fuel Receipt = 0');let badUsageDate=DATA.filter(x=>!x.date||!/^(20\d{2})-(0[1-9]|1[0-2])-([0-2]\d|3[01])$/.test(x.date)).length,badReceiptDate=RECEIPTS.filter(x=>!x.date||!/^(20\d{2})-(0[1-9]|1[0-2])-([0-2]\d|3[01])$/.test(x.date)).length,negativeUsage=DATA.filter(x=>Number(x.lit)<0).length,negativeReceipt=RECEIPTS.filter(x=>Number(x.q)<0).length;if(badUsageDate)blocking.push(badUsageDate+' tanggal Fuel Usage tidak valid');if(badReceiptDate)blocking.push(badReceiptDate+' tanggal Fuel Receipt tidak valid');if(negativeUsage)blocking.push(negativeUsage+' Fuel Usage negatif');if(negativeReceipt)blocking.push(negativeReceipt+' Fuel Receipt negatif');let usageFrom=dates[0]||'',usageTo=dates.at(-1)||'',stockTo=stockDates.at(-1)||'';if(usageFrom&&usageTo&&usageFrom>usageTo)blocking.push('periode Fuel Usage tidak valid');if(stockTo&&usageTo&&stockTo<usageTo)blocking.push('Stock lebih lama dari Fuel Usage ('+stockTo+' < '+usageTo+')');blocking=[...new Set(blocking)];warnings=[...new Set(warnings)];let summary={usageTotal,receiptTotal,usageFrom:usageFrom||'-',usageTo:usageTo||'-',stockTo:stockTo||'-'};return {issues,blocking,warnings,noMaster,noPlan,noLhm,summary}}
+function readStock(){
+ let out={};STOCKH=[];STOCK_AUTO_DATE='';STOCK_ACTUAL_DATE='';const tanks=['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'];
+ let cs=sh(WB,['Stock Calculasi','Stock Calculation','Stock Kalkulasi']);
+ if(cs){
+  let x=rows(WB,cs),norm=v=>up(v).replace(/[^A-Z0-9]+/g,' ').trim(),hdr=-1,h={};
+  // Main Calculation Stock table: TANGGAL/HARI/JAM/SHIFT/BEFORE STOCK/FS01..FT05/FUEL RECEIPT/TOTAL STOCK.
+  for(let r=0;r<Math.min(30,x.length);r++){let m={};(x[r]||[]).forEach((v,j)=>{let k=norm(v);if(k)m[k]=j});if(m['TANGGAL']!=null&&m['SHIFT']!=null&&m['BEFORE STOCK']!=null&&m['TOTAL STOCK']!=null){hdr=r;h=m;break}}
+  if(hdr>=0){
+   const idx=(names,fb)=>{for(let n0 of names){let n=norm(n0),k=Object.keys(h).find(z=>z===n||z.includes(n));if(k!=null)return h[k]}return fb};
+   let ci={date:idx(['TANGGAL'],1),day:idx(['HARI'],2),shift:idx(['SHIFT'],4),before:idx(['BEFORE STOCK'],5),FS01:idx(['FS 01','FS01'],6),FS02:idx(['FS 02','FS02'],7),FS03:idx(['FS 03','FS03'],8),FS04:idx(['FS 04','FS04'],9),FS05:idx(['FS 05','FS05'],10),FS06:idx(['FS 06','FS06'],11),FT04:idx(['FT 04','FT04'],12),FT05:idx(['FT 05','FT05'],13),receipt:-1,total:idx(['TOTAL STOCK'],-1)};
+   for(let r=hdr+1;r<x.length;r++){let row=x[r],date=sheetDate(WB,cs,r,ci.date)||dk(row?.[ci.date]);if(!date)continue;let rec={date,day:n(row?.[ci.day])||'—',shift:n(row?.[ci.shift])||'—',before:maybeNum(row?.[ci.before])??0,receipt:ci.receipt>=0?(maybeNum(row?.[ci.receipt])??0):null,total:ci.total>=0?(maybeNum(row?.[ci.total])??0):null,row:r};for(let t of tanks)rec[t]=maybeNum(row?.[ci[t]])??0;STOCKH.push(rec)}
+  }
+  // AUTO LATEST FUEL STOCK is authoritative for dashboard cards.
+  let latestDate='',auto={};for(let r=0;r<x.length;r++){let label=norm(x[r]?.[16]??x[r]?.[15]??'');for(let j=0;j<(x[r]||[]).length;j++){let lab=norm(x[r][j]);if(lab==='TANGGAL TERAKHIR'||lab==='UPDATE STOCK'||lab==='LAST STOCK DATE'){let dCell=sheetDate(WB,cs,r,j+1),dRaw=dk(x[r]?.[j+1]);if(dCell||dRaw)latestDate=dCell||dRaw}for(let t of tanks){let aliases=t==='FT04'?['FT04','FTRL44G004']:t==='FT05'?['FT05','FTRL44G005']:[t,t.replace('FS0','FS 0')];if(aliases.some(q=>lab.replace(/[^A-Z0-9]/g,'')===q.replace(/[^A-Z0-9]/g,''))){let v=maybeNum(x[r]?.[j+1]);if(v!==null)auto[t]=v}}}}
+  // Prefer exact AUTO LATEST values. If unavailable, use latest row of main Calculation Stock table.
+  let today=dk(new Date()),validHist=STOCKH.filter(z=>z.date&&z.date<=today),last=validHist.slice().sort((p,q)=>p.date.localeCompare(q.date)||p.row-q.row).at(-1);STOCK_AUTO_DATE=latestDate||last?.date||'';STOCK_ACTUAL_DATE=STOCK_AUTO_DATE;let d=STOCK_AUTO_DATE;
+  for(let t of tanks)out[t]={date:d,actualDate:STOCK_ACTUAL_DATE,lit:auto[t]??last?.[t]??0,row:last?.row??0,source:auto[t]!=null?'AUTO-LATEST':'CALC-ROW'};
+ }
+ return out
+}
+function readDailyPlan(wb){
+ let out={},norm=v=>up(v).replace(/[^A-Z0-9]+/g,' ').trim(),names=['Resume','Calcution Dashboard','Calculation Dashboard','Calculasi Dashboard'];
+ for(let sn of names){let s=sh(wb,[sn]);if(!s)continue;let a=rows(wb,s),lim=Math.min(a.length,140),dateCandidates=[],planCandidates=[];
+  for(let r=0;r<lim;r++){let row=a[r]||[];for(let j=0;j<row.length;j++){let h=norm(row[j]);if(h==='DATE'||h==='BY DATE'||h==='TANGGAL')dateCandidates.push({r,c:j});if(h==='PLAN'||h==='PLAN FUEL'||h==='FUEL USAGE PLAN')planCandidates.push({r,c:j})}}
+  let best=null;
+  for(let dc of dateCandidates)for(let pc of planCandidates){if(pc.c===dc.c)continue;let startRow=Math.max(dc.r,pc.r)+1,tmp={},valid=0,score=0;
+   for(let i=startRow;i<a.length;i++){let d=dk(a[i]?.[dc.c]),p=maybeNum(a[i]?.[pc.c]);if(d&&p!==null&&p>=0){tmp[d]=p;valid++;if(p>0&&p<100000)score+=2}}
+   if(valid>=3){let near=Math.abs(pc.r-dc.r)<=4?8:0,left=pc.c>dc.c?4:0,totalScore=score+valid+near+left;if(!best||totalScore>best.score)best={score:totalScore,tmp}}
+  }
+  if(best&&Object.keys(best.tmp).length){out=best.tmp;break}
+ }
+ return out}
+function parseWB(wb){
+ document.getElementById('status').classList.remove('bad','ready');WB=wb;PLAN_DAILY=readDailyPlan(wb);MASTER={};let ms=sh(wb,['Master_Unit','Master Unit','Master Unit ','MasterUnit']);let mr=ms?rows(wb,ms):[],mi=headerInfo(mr),mh=mi.map,mcU=col(mh,['UNIT CODE','KODE UNIT','UNIT'],0),mcCat=col(mh,['STATUS UNIT','UNIT STATUS'],11),mcPlan=col(mh,['STANDARD LHM','PLAN L HM','PLAN LHM','STANDARD FUEL CONSUMPTION','PLAN'],6),mcType=col(mh,['TYPE','JENIS'],2),mcGroup=col(mh,['UNIT GROUP CODE','UNIT_GROUP_CODE','GROUP CODE','UNIT GROUP'],3);for(let i=ms?mi.row+1:0;i<mr.length;i++){let r=mr[i],u=n(r[mcU]);if(u)MASTER[u]={category:n(r[mcCat])||'GENERAL SUPPORT',plan:num(r[mcPlan]),type:n(r[mcType]),group:n(r[mcGroup])||n(r[mcType])||u}}
+ DATA=[];let us=sh(wb,['Fuel_Usage_Clean','Fuel Usage Clean','Fuel_Usage','Fuel Usage']);if(!us)throw Error('sheet Fuel Usage tidak ditemukan');let ur=rows(wb,us),ui=headerInfo(ur),uh=ui.map,ucDate=col(uh,['DATE','TANGGAL'],2),ucUnit=col(uh,['UNIT CODE','KODE UNIT','UNIT'],6),ucLit=col(uh,['FUEL LITER','LITER','QTY'],9),ucShift=col(uh,['SHIFT'],5),ucBefore=col(uh,['METER BEFORE','KM HM BEFORE','HM BEFORE'],10),ucAfter=col(uh,['METER CURRENT','METER AFTER','KM HM AFTER','HM AFTER'],11),ucHm=col(uh,['DELTA HM KM','TOTAL HM','HM KM'],12),ucLhm=col(uh,['ACTUAL L PER HM KM','ACTUAL L HM KM','ACTUAL L HM','LITER PER HM','L HM'],13),ucPlan=col(uh,['STANDARD LHM','STANDARD L HM','PLAN L HM','PLAN LHM'],20),ucStatus=col(uh,['CONSUMPTION STATUS','STATUS'],23);for(let i=ui.row+1;i<ur.length;i++){let r=ur[i],u=n(r[ucUnit]),lit=num(r[ucLit]),date=sheetDate(wb,us,i,ucDate)||dk(r[ucDate]);if(!u||!lit||!date)continue;let rawShift=up(r[ucShift]),shift=rawShift.includes('NIGHT')||rawShift.includes('MALAM')?'NIGHT':'DAY';let before=maybeNum(r[ucBefore]),after=maybeNum(r[ucAfter]),hm=num(r[ucHm]),rowLhm=num(r[ucLhm]),plan=maybeNum(r[ucPlan])??MASTER[u]?.plan??0,rawCat=up(MASTER[u]?.category),prod=/EXCAVATOR|DUMP TRUCK|DOZER|BULLDOZER|MOTOR GRADER|GRADER|COMPACTOR|LOADER|PRODUK|PRODUCTION/.test(rawCat);let status=up(r[ucStatus]);if(!status&&plan>0&&rowLhm>0){let vr=(rowLhm-plan)/plan;status=vr<0?'EFFICIENT':vr<=.10?'NORMAL':vr<=.20?'WARNING':'OVER CONSUMPTION'}DATA.push({date,u,lit,before,after,hm,rowLhm,shift,category:prod?'PRODUKSI':'GENERAL SUPPORT',plan,status})}
+ RECEIPTS=[];let rs=sh(wb,['Fuel_Receipt','Fuel Receipt','FuelReceipt','Receipt','Fuel Incoming']);if(rs){let rr=rows(wb,rs),ri=headerInfo(rr),rh=ri.map,rcDate=col(rh,['DATE','TANGGAL'],0),rcQty=col(rh,['QTY RECEIVED LITER','QTY RECEIVED','RECEIVED LITER','QTY'],4),rcSupplier=col(rh,['SUPPLIER'],1),rcSj=col(rh,['NO SURAT JALAN','SURAT JALAN','DELIVERY NOTE','SJ'],3),rcPo=col(rh,['REF PO','PO','PO NUMBER','NO PO'],2);for(let i=ri.row+1;i<rr.length;i++){let d=sheetDate(wb,rs,i,rcDate)||dk(rr[i][rcDate]),q=num(rr[i][rcQty]);if(d&&q)RECEIPTS.push({date:d,q,supplier:n(rr[i][rcSupplier]),sj:n(rr[i][rcSj]),po:n(rr[i][rcPo])})}}STOCK=readStock();render();renderHistory();let q=validateData();let health=document.getElementById('health');if(health)health.textContent='SYSTEM CHECK • Fuel Usage '+DATA.length+' transaksi • Receipt '+RECEIPTS.length+' record • Stock '+Object.keys(STOCK).length+'/8 tank • Master '+Object.keys(MASTER).length+' unit';if(health&&q.summary)health.textContent+=' • Usage '+nf.format(q.summary.usageTotal)+' L • Receipt '+nf.format(q.summary.receiptTotal)+' L • Periode '+q.summary.usageFrom+'–'+q.summary.usageTo+' • Stock '+q.summary.stockTo;if(q.blocking.length){document.getElementById('status').classList.add('bad');document.getElementById('status').textContent+=' • BLOCK: '+q.blocking.join(' | ')}else{document.getElementById('status').classList.add('ready');document.getElementById('status').textContent+=' • QA CORE OK'+(q.warnings.length?' • WARN: '+q.warnings.join(' | '):'')}}
+function selected(){let f=document.getElementById('from').value,t=document.getElementById('to').value,c=document.getElementById('category').value;return DATA.filter(x=>(!f||x.date>=f)&&(!t||x.date<=t)&&(!c||x.category===c))}
+function render(){let a=selected(),daily={},units={},shift={DAY:0,NIGHT:0},cat={PRODUKSI:0,'GENERAL SUPPORT':0},total=0;for(let x of a){total+=x.lit;daily[x.date]=(daily[x.date]||0)+x.lit;shift[x.shift]=(shift[x.shift]||0)+x.lit;let ck=x.category==='PRODUKSI'?'PRODUKSI':'GENERAL SUPPORT';cat[ck]=(cat[ck]||0)+x.lit;let z=units[x.u]||(units[x.u]={lit:0,hm:0,lhmSum:0,lhmN:0,activeDays:new Set(),category:x.category,plan:MASTER[x.u]?.plan||x.plan||0});z.lit+=x.lit;z.hm+=x.hm;if(x.hm>0&&x.date)z.activeDays.add(x.date);if(x.rowLhm>0){z.lhmSum+=x.rowLhm;z.lhmN++}}
+ let ds=Object.keys(daily).sort(),latest=ds.at(-1)||'',latestOut=latest?daily[latest]:0;let f=document.getElementById('from').value,t=document.getElementById('to').value;let rec=RECEIPTS.filter(x=>(!f||x.date>=f)&&(!t||x.date<=t)).reduce((s,x)=>s+x.q,0);
+ let avgDays=ds.slice(-7),avg7=avgDays.reduce((s,d)=>s+daily[d],0)/(avgDays.length||1);let stockDates=Object.values(STOCK).map(x=>x.date).sort(),refDate=stockDates.at(-1)||ds.at(-1)||'';let rd=new Date(refDate+'T00:00:00'),tx=0;for(let back=0;back<3;back++){let z=new Date(rd);z.setDate(rd.getDate()-back);let key=dk(z);tx+=a.filter(x=>x.date===key&&x.lit>0).length}let activeLatest=latest?new Set(a.filter(x=>x.date===latest&&x.lit>0).map(x=>x.u).filter(Boolean)).size:0;set('kUsage',total);set('kAvg',avg7);set('kUnit',activeLatest);set('kReceipt',rec);set('kLatest',latestOut);document.getElementById('latestDate').textContent='Fuel Out '+(latest||'—');let ad=document.getElementById('activeDate');if(ad)ad.textContent='Active '+(latest||'—');
+ let stockTotal=Object.values(STOCK).reduce((s,x)=>s+x.lit,0),sd=Object.values(STOCK).map(x=>x.date).sort().at(-1)||'';set('kStock',stockTotal);let recon=document.getElementById('recon');if(recon){let checks=[['Fuel Usage',DATA.length>0],['Fuel Receipt',RECEIPTS.length>0],['Master Unit',Object.keys(MASTER).length>0],['Stock',Object.keys(STOCK).length===8]];let ok=checks.filter(x=>x[1]).length;recon.className='status '+(ok===checks.length?'ready':'bad');let sumShift=shift.DAY+shift.NIGHT,sumCat=cat.PRODUKSI+cat['GENERAL SUPPORT'],eps=.01;let balance=Math.abs(sumShift-total)<=eps&&Math.abs(sumCat-total)<=eps;recon.textContent='DYNAMIC QA • '+checks.map(x=>x[0]+' '+(x[1]?'✓':'✕')).join(' • ')+' • '+ok+'/'+checks.length+' sumber • Rekonsiliasi '+(balance?'✓':'✕')+' • Plan Resume '+Object.keys(PLAN_DAILY).length+' hari';if(!balance)recon.className='status bad'}document.getElementById('stockDate').textContent='Stock '+(STOCK_AUTO_DATE||sd||'—');
+ let planDaily=PLAN_DAILY,mobile10=window.matchMedia('(max-width:650px)').matches&&!f&&!t,trendDs=mobile10?ds.slice(-10):ds;trendChart(trendDs.map(x=>x.slice(5)),trendDs.map(x=>daily[x]),trendDs.map(x=>+(planDaily[x]||0).toFixed(2)));let shiftTotal=shift.DAY+shift.NIGHT,dayPct=shiftTotal?shift.DAY/shiftTotal*100:0,nightPct=shiftTotal?shift.NIGHT/shiftTotal*100:0,ss=document.getElementById('shiftSummary');if(ss)ss.innerHTML='<span>DAY <b>'+nf.format(shift.DAY)+' L</b> • '+dayPct.toFixed(1).replace('.',',')+'%</span><span>NIGHT <b>'+nf.format(shift.NIGHT)+' L</b> • '+nightPct.toFixed(1).replace('.',',')+'%</span>';chart('shift','doughnut',['Day','Night'],[shift.DAY,shift.NIGHT],'Liter');simpleDonut('cat',['Produksi','General Support'],[cat.PRODUKSI,cat['GENERAL SUPPORT']]);let typeMtd={};for(let x of a){let grp=n(MASTER[x.u]?.group)||n(MASTER[x.u]?.type)||x.u;typeMtd[grp]=(typeMtd[grp]||0)+x.lit}let typeRows=Object.entries(typeMtd).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).slice(0,20);chart('typeMtd','bar',typeRows.map(x=>x[0]),typeRows.map(x=>+x[1].toFixed(0)),'Liter');
+ document.getElementById('stocks').innerHTML=['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'].map(k=>{let v=STOCK[k]?.lit||0,cap=k.startsWith('FS')?50000:25000,p=Math.max(0,Math.min(100,v/cap*100));return '<div class="tank"><div class="tank-visual"><div class="tank-icon" title="Visual level"><div class="tank-fill" style="--fill:'+p.toFixed(1)+'%"></div></div><div class="tank-copy"><small>'+k+' • '+(STOCK_AUTO_DATE||'—')+'</small><b>'+nf.format(v)+' L</b></div></div></div>'}).join('');
+ let arr=Object.entries(units).map(([u,z])=>{let actual=z.lhmN?z.lhmSum/z.lhmN:(z.hm>0?z.lit/z.hm:0);if(!Number.isFinite(actual)||actual<0)actual=0;let vr=z.plan?((actual-z.plan)/z.plan)*100:0,status=!z.plan||!actual?'NO DATA':vr<0?'EFFICIENT':vr<=10?'NORMAL':vr<=20?'WARNING':'OVER CONSUMPTION';return {u,...z,actual,vr,status}}).filter(x=>x.plan>0&&x.actual>0);let rawStatus={EFFICIENT:0,NORMAL:0,WARNING:0,'OVER CONSUMPTION':0};for(let x of arr){rawStatus[x.status]=(rawStatus[x.status]||0)+1}let counts=['EFFICIENT','NORMAL','WARNING','OVER CONSUMPTION'].map(s=>rawStatus[s]);
+ /* TEST BRANCH ONLY: Excel Calcution Dashboard TOP 5 uses weighted L/HM and valid 7–22 HM/day. */
+ let topCandidates=arr.map(x=>{let days=x.activeDays?.size||0,avgHm=days?x.hm/days:0,weighted=x.hm>0?x.lit/x.hm:0;return {...x,actual:weighted,vr:x.plan?((weighted-x.plan)/x.plan)*100:0,validHM:days>=1&&avgHm>=7&&avgHm<=22}}).filter(x=>x.validHM&&x.actual>0&&x.plan>0);
+ let over=topCandidates.filter(x=>x.actual>x.plan).sort((a,b)=>b.plan-a.plan||b.vr-a.vr||a.u.localeCompare(b.u)).slice(0,5);document.getElementById('overTable').innerHTML=over.length?over.map(x=>'<tr><td>'+x.u+'</td><td>'+df.format(x.plan)+'</td><td>'+df.format(x.actual)+'</td><td class="pct-red">'+df.format(x.vr)+'%</td></tr>').join(''):'<tr><td colspan="4" class="muted">Tidak ada unit Over pada filter ini</td></tr>';
+ let eff=topCandidates.filter(x=>x.actual<x.plan).sort((a,b)=>b.plan-a.plan||a.actual/a.plan-b.actual/b.plan||a.u.localeCompare(b.u)).slice(0,5);document.getElementById('efficient').innerHTML=eff.length?eff.map(x=>'<tr><td>'+x.u+'</td><td>'+df.format(x.plan)+'</td><td>'+df.format(x.actual)+'</td><td class="pct-green">'+df.format(Math.abs(x.vr))+'%</td></tr>').join(''):'<tr><td colspan="4" class="muted">Tidak ada unit Efficient pada filter ini</td></tr>';
+ 
+ let noPlan=Object.values(units).filter(x=>!x.plan).length,noActual=Object.values(units).filter(x=>x.plan&&!x.lhmN&&!x.hm).length;let q=releaseQA(),hasFiltered=a.length>0,filterBalanced=!hasFiltered||(Math.abs((shift.DAY+shift.NIGHT)-total)<=.01&&Math.abs((cat.PRODUKSI+cat['GENERAL SUPPORT'])-total)<=.01),ready=q.blocking.length===0&&filterBalanced;let st=document.getElementById('status');st.classList.toggle('ready',ready);st.classList.toggle('bad',!ready);st.textContent=(ready?(hasFiltered?'OPERATIONAL READY':'OPERATIONAL READY • FILTER TANPA DATA'):'CHECK REQUIRED')+' • '+nf.format(total)+' L • '+ds.length+' hari • '+Object.keys(units).length+' unit • L/HM '+arr.length+' valid • '+noPlan+' tanpa plan • '+noActual+' tanpa actual'+(q.blocking.length?' • BLOCK: '+q.blocking.join(', '):'')+(!filterBalanced?' • BLOCK: rekonsiliasi filter':'')+(q.warnings.length?' • WARN: '+q.warnings.join(', '):'');
+}
+function statusBadge(s){let u=up(s),cls=u.includes('OVER')?'status-over':u.includes('EFFIC')?'status-efficient':u.includes('WARNING')?'status-warning':u.includes('NORMAL')?'status-normal':'status-nodata';let label=u.includes('OVER')?'OVER':u.includes('EFFIC')?'EFISIEN':u.includes('WARNING')?'WARNING':u.includes('NORMAL')?'NORMAL':(u||'NO DATA');return '<span class="status-badge '+cls+'">'+label+'</span>'}
+function renderHistory(){let rf=document.getElementById('rf')?.value||'',rt=document.getElementById('rt')?.value||'';let rrAll=RECEIPTS.filter(x=>(!rf||x.date>=rf)&&(!rt||x.date<=rt)).sort((a,b)=>b.date.localeCompare(a.date)),rr=rrAll.slice(0,300);let rtEl=document.getElementById('rtotal');if(rtEl)rtEl.textContent='Total: '+nf.format(rrAll.reduce((s,x)=>s+x.q,0))+' L • '+nf.format(rrAll.length)+' receipt';opt('receivedRows')&&(opt('receivedRows').innerHTML=rr.map(x=>{let dd=new Date(x.date+'T00:00:00'),hari=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'][dd.getDay()];return '<tr><td>'+x.date+'</td><td>'+hari+'</td><td>'+(x.supplier||'—')+'</td><td>'+(x.sj||'—')+'</td><td>'+(x.po||'—')+'</td><td>'+nf.format(x.q)+'</td></tr>'}).join(''));
+ let uf=document.getElementById('uf')?.value||'',ut=document.getElementById('ut')?.value||'',us=(document.getElementById('unitSearch')?.value||'').toUpperCase(),sf=document.getElementById('shiftFilter')?.value||'';let uuAll=DATA.filter(x=>(!uf||x.date>=uf)&&(!ut||x.date<=ut)&&(!us||String(x.u).toUpperCase().includes(us))&&(!sf||x.shift===sf)).sort((a,b)=>b.date.localeCompare(a.date)),uu=uuAll.slice(0,500);let ute=document.getElementById('utotal');if(ute)ute.textContent='Total: '+nf.format(uuAll.reduce((s,x)=>s+x.lit,0))+' L • '+nf.format(uuAll.length)+' transaksi';opt('usageRows')&&(opt('usageRows').innerHTML=uu.map(x=>'<tr><td>'+x.date+'</td><td>'+x.shift+'</td><td>'+x.u+'</td><td>'+nf.format(x.lit)+'</td><td>'+df.format(x.before??0)+'</td><td>'+df.format(x.after??0)+'</td><td>'+df.format(x.hm||0)+'</td><td>'+df.format(x.plan||0)+'</td><td>'+df.format(x.rowLhm||0)+'</td><td>'+statusBadge(x.status)+'</td><td>'+(x.category==='PRODUKSI'?'PRODUKSI':'GENERAL SUPPORT')+'</td></tr>').join(''));
+ let tf=document.getElementById('tankFilter')?.value||'',sk=['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'].filter(k=>!tf||k===tf);opt('stockHistory')&&(opt('stockHistory').innerHTML=sk.map(k=>'<div class="tank"><small>'+k+' • '+(STOCK[k]?.date||'—')+'</small><b>'+nf.format(STOCK[k]?.lit??0)+' L</b></div>').join(''));let sfrom=document.getElementById('sf')?.value||'',sto=document.getElementById('st')?.value||'';let stockRef=Object.values(STOCK).map(x=>x.date).filter(Boolean).sort().at(-1)||STOCKH.map(x=>x.date).sort().at(-1)||'',monthKey=stockRef.slice(0,7);let hist=STOCKH.filter(x=>(!monthKey||x.date.startsWith(monthKey))&&(!stockRef||x.date<=stockRef)&&(!sfrom||x.date>=sfrom)&&(!sto||x.date<=sto)&&(x.total>0||x.before>0||x.receipt>0||['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'].some(k=>(x[k]||0)>0))).sort((a,b)=>b.date.localeCompare(a.date)||b.row-a.row).slice(0,31);let dailyReceipt={};for(const rec of RECEIPTS){if(rec.date&&rec.q>0)dailyReceipt[rec.date]=(dailyReceipt[rec.date]||0)+rec.q}let receiptShown=new Set();opt('stockRows')&&(opt('stockRows').innerHTML=hist.map(x=>'<tr><td>'+x.date+'</td><td>'+x.day+'</td><td>'+x.shift+'</td><td>'+nf.format(x.before||0)+'</td>'+['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'].map(k=>'<td>'+nf.format(x[k]||0)+'</td>').join('')+'<td title="Penerimaan total per tanggal, ditampilkan sekali; bukan atribusi shift">'+(dailyReceipt[x.date]>0&&!receiptShown.has(x.date)?(receiptShown.add(x.date),nf.format(dailyReceipt[x.date])+' L/hari'):'—')+'</td><td>'+(x.total==null?'—':nf.format(x.total))+(x.total!=null&&Math.abs(x.total-['FS01','FS02','FS03','FS04','FS05','FS06','FT04','FT05'].reduce((v,k)=>v+(Number(x[k])||0),0))>1?' ⚠':'')+'</td></tr>').join(''))}
+const opt=id=>document.getElementById(id);
+opt('uapply')?.addEventListener('click',renderHistory);
+opt('ureset')?.addEventListener('click',()=>{if(opt('uf'))opt('uf').value='';if(opt('ut'))opt('ut').value='';if(opt('unitSearch'))opt('unitSearch').value='';if(opt('shiftFilter'))opt('shiftFilter').value='';renderHistory()});
+opt('unitSearch')?.addEventListener('keydown',e=>{if(e.key==='Enter')renderHistory()});
+opt('rapply')?.addEventListener('click',renderHistory);
+opt('rreset')?.addEventListener('click',()=>{if(opt('rf'))opt('rf').value='';if(opt('rt'))opt('rt').value='';renderHistory()});
+opt('tankApply')?.addEventListener('click',renderHistory);
+opt('tankReset')?.addEventListener('click',()=>{if(opt('tankFilter'))opt('tankFilter').value='';if(opt('sf'))opt('sf').value='';if(opt('st'))opt('st').value='';renderHistory()});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.dataView').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.view+'View')?.classList.add('active')});
+async function load(buf,name){let st=document.getElementById('status');st.classList.remove('bad','ready');try{if(typeof XLSX==='undefined')throw Error('library XLSX gagal dimuat');if(typeof Chart==='undefined')throw Error('library Chart.js gagal dimuat');let wb=XLSX.read(buf,{type:'array',cellDates:true});let usageSheet=sh(wb,['Fuel_Usage','Fuel Usage','Fuel_Usage_Clean','Fuel Usage Clean']);if(!usageSheet)throw Error('sheet Fuel Usage tidak ditemukan');parseWB(wb);st.textContent+=' • '+name;return true}catch(e){st.classList.add('bad');st.textContent='Gagal membaca workbook: '+e.message;return false}}
+function destroyCharts(){
+ ['trend','shift','type','cat'].forEach(k=>{try{if(CH&&CH[k]&&typeof CH[k].destroy==='function')CH[k].destroy()}catch(e){}});
+ try{if(typeof Chart!=='undefined'&&typeof Chart.getChart==='function'){document.querySelectorAll('canvas').forEach(x=>{let z=Chart.getChart(x);if(z)z.destroy()})}}catch(e){}
+}
+async function def(){let btn=document.getElementById('reload'),st=document.getElementById('status');btn.disabled=true;st.classList.remove('bad','ready');if(typeof XLSX==='undefined'){st.textContent='BOOT ERROR • XLSX library tidak tersedia';st.classList.add('bad');btn.disabled=false;return}if(typeof Chart==='undefined'){st.textContent='BOOT ERROR • Chart.js library tidak tersedia';st.classList.add('bad');btn.disabled=false;return}st.textContent='BOOT 2/4 • Library siap • mengambil workbook default…';let ctl=new AbortController(),timer=setTimeout(()=>ctl.abort(),25000);try{let url=new URL('../Fuel_Database_Dashboard_Ready_Final.xlsx',location.href);url.searchParams.set('build','8000');let r=await fetch(url.href,{cache:'no-store',signal:ctl.signal});if(!r.ok)throw Error('HTTP '+r.status+' workbook tidak tersedia');let buf=await r.arrayBuffer();if(buf.byteLength<10000)throw Error('file workbook terlalu kecil/tidak valid');st.textContent='BOOT 3/4 • Workbook diterima '+nf.format(buf.byteLength)+' byte • parsing Excel…';await new Promise(requestAnimationFrame);let ok=await load(buf,'workbook default');if(!ok){st.classList.remove('bad');st.textContent='BOOT 3/4 • Workbook ringkas tidak kompatibel • mencoba database sumber…';let src=new URL('../Source_Fuel_Database.xlsx',location.href);src.searchParams.set('build','8000');let r2=await fetch(src.href,{cache:'no-store',signal:ctl.signal});if(!r2.ok)throw Error('HTTP '+r2.status+' database sumber tidak tersedia');let buf2=await r2.arrayBuffer();if(buf2.byteLength<10000)throw Error('database sumber terlalu kecil/tidak valid');st.textContent='BOOT 3/4 • Database sumber diterima '+nf.format(buf2.byteLength)+' byte • parsing Excel…';await new Promise(requestAnimationFrame);ok=await load(buf2,'database sumber')}if(!ok)throw Error(st.textContent);if(!DATA.length||!RECEIPTS.length||!STOCKH.length)throw Error('parsing selesai tetapi dataset utama belum lengkap');let q=releaseQA();if(q.blocking.length)throw Error('QA BLOCK: '+q.blocking.join(' | '));st.classList.remove('bad');st.classList.add('ready');st.textContent='DEFAULT DATA • OPERATIONAL READY • '+DATA.length+' transaksi • '+RECEIPTS.length+' receipt • '+Object.keys(STOCK).length+'/8 tank • Rekonsiliasi ✓'+(q.warnings.length?' • WARN: '+q.warnings.join(' | '):'')}catch(e){let sheetInfo=WB?.SheetNames?.length?' • SHEETS: '+WB.SheetNames.join(' | '):'';DATA=[];RECEIPTS=[];STOCK={};STOCKH=[];MASTER={};PLAN_DAILY={};WB=null;destroyCharts();render();st.classList.remove('ready');st.classList.add('bad');st.textContent='NO OPERATIONAL DATA • '+(e.name==='AbortError'?'Default timeout >25 detik':'Default gagal: '+e.message)+sheetInfo+' • Upload Excel operasional untuk menjalankan dashboard'}finally{clearTimeout(timer);btn.disabled=false}}
+window.addEventListener('error',e=>{let s=document.getElementById('status');s.classList.add('bad');s.textContent='Runtime error: '+e.message});window.addEventListener('unhandledrejection',e=>{let s=document.getElementById('status');s.classList.add('bad');s.textContent='Data error: '+(e.reason?.message||e.reason)});function exportOperationalPDF(){
+ const old=document.getElementById('printReport');if(old)old.remove();
+ const root=document.createElement('section');root.id='printReport';root.setAttribute('aria-label','Fuel operational PDF report');
+ const clone=(selector)=>{const n=document.querySelector(selector);return n?n.cloneNode(true):document.createElement('div')};
+ const chart=(id)=>{const c=document.getElementById(id);if(!c)return '';try{return '<img class="print-chart" src="'+c.toDataURL('image/png',1)+'" alt="'+id+'">'}catch(e){return '<p>Grafik tidak dapat dicetak.</p>'}};
+ const box=(title,inner)=>'<div class="print-box"><h3>'+title+'</h3>'+inner+'</div>';
+ const head=(num)=>'<div class="print-head"><strong>FUEL MANAGEMENT SYSTEM V80.58</strong><small>PT PRIMA SARANA GEMILANG SITE ABM &nbsp; • &nbsp; '+num+'/3</small></div>';
+ const page=(num,cls='')=>{const el=document.createElement('section');el.className='print-page '+cls;el.innerHTML=head(num);root.appendChild(el);return el};
+ const one=page(1,'one');const kpis=document.createElement('div');kpis.className='print-kpis';document.querySelectorAll('#dashboardView .kpis .card').forEach(c=>{const d=c.cloneNode(true);d.className='print-kpi';kpis.appendChild(d)});one.appendChild(kpis);
+ one.insertAdjacentHTML('beforeend','<div class="print-two">'+box('DAILY FUEL CONSUMPTION • ACTUAL VS PLAN',chart('trend'))+box('SHIFT MIX • DAY VS NIGHT','<div class="print-shift-summary">'+document.getElementById('shiftSummary').innerHTML+'</div>'+chart('shift'))+'</div>');
+ const two=page(2,'two');const stocks=clone('#stocks');stocks.className='print-stocks';const stockBox=document.createElement('div');stockBox.className='print-box';stockBox.innerHTML='<h3>FUEL STOCK • LATEST</h3>';stockBox.appendChild(stocks);const chartBox=document.createElement('div');chartBox.innerHTML=box('FUEL CONSUMPTION BY TYPE UNIT • MTD',chart('typeMtd'));const twoGrid=document.createElement('div');twoGrid.className='print-two';twoGrid.style.gridTemplateColumns='1fr 1.5fr';twoGrid.append(stockBox,chartBox);two.appendChild(twoGrid);
+ const three=page(3,'three');three.insertAdjacentHTML('beforeend','<div class="print-two" style="grid-template-columns:1fr 1fr">'+box('PRODUKSI VS GENERAL SUPPORT',chart('cat'))+box('RINGKASAN OPERASIONAL','<p>Fuel Usage: '+(document.getElementById('kUsage').textContent||'—')+' L</p><p>Fuel Receipt: '+(document.getElementById('kReceipt').textContent||'—')+' L</p><p>Latest Stock: '+(document.getElementById('kStock').textContent||'—')+' L</p>')+'</div>');
+ const tables=document.createElement('div');tables.className='print-tables';['.top-over','.top-efficient'].forEach(sel=>{const n=document.querySelector(sel);if(n){const b=document.createElement('div');b.className='print-box';b.innerHTML='<h3>'+n.querySelector('h3').textContent+'</h3>';b.appendChild(n.querySelector('table').cloneNode(true));tables.appendChild(b)}});three.appendChild(tables);
+ root.querySelectorAll('[id]').forEach(el=>el.removeAttribute('id'));document.body.appendChild(root);
+ const imgs=[...root.querySelectorAll('img')];Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve}))).then(()=>{window.print()});
+}
+document.getElementById('print').onclick=exportOperationalPDF;document.getElementById('file').onchange=async e=>{let f=e.target.files[0],st=document.getElementById('status');if(!f)return;st.classList.remove('bad','ready');st.textContent='UPLOAD • membaca '+f.name+'…';try{let ok=await load(await f.arrayBuffer(),f.name);if(!ok)return;let q=validateData(),total=DATA.reduce((s,x)=>s+x.lit,0),shift=DATA.reduce((s,x)=>(s[x.shift]=(s[x.shift]||0)+x.lit,s),{DAY:0,NIGHT:0}),cat=DATA.reduce((s,x)=>{let k=x.category==='PRODUKSI'?'PRODUKSI':'GENERAL SUPPORT';s[k]=(s[k]||0)+x.lit;return s},{PRODUKSI:0,'GENERAL SUPPORT':0}),eps=.01;if(Math.abs((shift.DAY+shift.NIGHT)-total)>eps)q.blocking.push('rekonsiliasi Day/Night');if(Math.abs((cat.PRODUKSI+cat['GENERAL SUPPORT'])-total)>eps)q.blocking.push('rekonsiliasi Produksi/General Support');st.classList.remove('bad','ready');if(q.blocking.length){st.classList.add('bad');st.textContent='PUBLISH BLOCKED • DATA VALIDATION FAILED • '+q.blocking.join(' | ')+' • Snapshot server tetap aman'}else{st.classList.add('ready');st.textContent='LOCAL UPLOAD • OPERATIONAL READY • '+DATA.length+' transaksi • '+RECEIPTS.length+' receipt • '+Object.keys(STOCK).length+'/8 tank • '+((DATA.map(x=>x.date).filter(Boolean).sort()[0]||'—')+' → '+(DATA.map(x=>x.date).filter(Boolean).sort().at(-1)||'—'))+' • Rekonsiliasi ✓'+(q.warnings.length?' • WARN: '+q.warnings.join(' | '):'');try{let pub=await publishShared(f.name);if(pub&&pub.ok){st.textContent='SHARED PUBLISHED & VERIFIED ✓ • OPERATIONAL READY • '+DATA.length+' transaksi • '+RECEIPTS.length+' receipt • '+Object.keys(STOCK).length+'/8 tank • Server '+pub.verifiedCount+' transaksi • Last Sync '+syncTimeLocal(pub.serverUpdatedAt||pub.updatedAt);let b=document.getElementById('syncBadge');if(b){b.className='sync-badge shared';b.textContent='DATA • SHARED'}let sn=document.getElementById('syncNote');if(sn)sn.textContent='Publish terverifikasi di server ✓ • Refresh HP untuk mengambil snapshot terbaru';updateFreshness(pub.serverUpdatedAt||pub.updatedAt)}else if(pub&&pub.cancelled){st.classList.add('publish-warn');st.textContent+=' • PUBLISH BELUM DILAKUKAN • data hanya aktif di perangkat ini';let sn=document.getElementById('syncNote');if(sn)sn.textContent='Snapshot server belum diperbarui'}}catch(pe){st.classList.remove('ready');st.classList.add('bad');st.textContent='LOCAL DATA READY • PUBLISH GAGAL: '+pe.message+' • Data lokal tidak dihapus'}}}catch(err){st.classList.add('bad');st.textContent='UPLOAD ERROR • '+err.message}finally{e.target.value=''}};document.getElementById('reload').onclick=def;document.getElementById('apply').onclick=render;document.getElementById('reset').onclick=()=>{from.value='';to.value='';category.value='';render()};setTimeout(()=>{let s=document.getElementById('status');if(s&&/Menyiapkan data|Memuat default/i.test(s.textContent)){s.classList.add('bad');s.textContent='SHARED DATA LAMBAT • Upload Excel tetap dapat digunakan dari laptop.'}},12000);
+</script>
+<script>
+/* V80.33 sync foundation: endpoint is intentionally blank until Apps Script is deployed. */
+const SYNC_CONFIG={
+ endpoint:'https://script.google.com/macros/s/AKfycbz5hPYDkTPnAexFSNcyNYCD4Lkl3idcbkaWCAGQ7tCbADPeBLYTz3PZq8BAltKqquFQ/exec',
+ enabled:true
+};
+function syncTimeLocal(v){if(!v)return '—';let d=new Date(v);if(isNaN(d))return String(v);return new Intl.DateTimeFormat('id-ID',{timeZone:'Asia/Makassar',day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(d).replace(/\./g,'')+' WITA'}
+async function syncHealth(){
+ if(!SYNC_CONFIG.enabled||!SYNC_CONFIG.endpoint)return {mode:'LOCAL',ok:false};
+ try{let r=await fetch(SYNC_CONFIG.endpoint+'?action=health',{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);let j=await r.json();return {mode:'SHARED',ok:j&&j.ok===true,data:j}}catch(e){return {mode:'LOCAL',ok:false,error:e.message}}
+}
+function dateAgeDays(v){if(!v)return null;let d=new Date(v+'T00:00:00'),n=new Date();if(isNaN(d))return null;let today=new Date(n.getFullYear(),n.getMonth(),n.getDate());return Math.max(0,Math.floor((today-d)/86400000))}
+function updateFreshness(serverUpdatedAt){let bar=document.getElementById('freshnessBar');if(!bar)return;let usage=maxFuelDate(DATA),stockDates=Object.values(STOCK||{}).map(x=>x&&x.date).filter(Boolean).sort(),stock=stockDates.at(-1)||'',ua=dateAgeDays(usage),sa=dateAgeDays(stock),syncAge=null;if(serverUpdatedAt){let sd=new Date(serverUpdatedAt);if(!isNaN(sd))syncAge=Math.max(0,(Date.now()-sd.getTime())/3600000)}let cls=a=>a===null?'neutral':a<=1?'ok':a<=3?'warn':'bad',syncCls=syncAge===null?'neutral':syncAge<=24?'ok':syncAge<=72?'warn':'bad',gap=null;if(usage&&stock){gap=Math.round((new Date(stock+'T00:00:00')-new Date(usage+'T00:00:00'))/86400000)}let guardClass=gap===null?'neutral':gap>=0&&gap<=1?'ok':gap>=-1&&gap<=2?'warn':'bad',guardText=gap===null?'CHECK • —':gap===0?'CHECK • SELARAS':gap===1?'CHECK • STOCK +1 HARI':gap>1?'CHECK • STOCK +'+gap+' HARI':'CHECK • STOCK TERTINGGAL '+Math.abs(gap)+' HARI';bar.innerHTML='<span class="fresh-chip '+cls(ua)+'">FUEL USAGE • '+(usage||'—')+'</span><span class="fresh-chip '+cls(sa)+'">STOCK • '+(stock||'—')+'</span><span class="fresh-chip '+syncCls+'">SYNC • '+(serverUpdatedAt?syncTimeLocal(serverUpdatedAt):'—')+'</span><span class="fresh-chip '+guardClass+'">'+guardText+'</span>'}
+function maxFuelDate(rows){let d=(Array.isArray(rows)?rows:[]).map(x=>x&&x.date).filter(Boolean).sort();return d.length?d[d.length-1]:''}
+function sharedPayload(source){return {schema:2,source:source||'Excel Upload',clientUpdatedAt:new Date().toISOString(),dataMaxDate:maxFuelDate(DATA),data:DATA,receipts:RECEIPTS,stock:STOCK,stockHistory:STOCKH,master:MASTER,planDaily:PLAN_DAILY,stockAutoDate:STOCK_AUTO_DATE,stockActualDate:STOCK_ACTUAL_DATE}}
+function hydrateShared(p){updateFreshness(null);DATA=Array.isArray(p.data)?p.data:[];RECEIPTS=Array.isArray(p.receipts)?p.receipts:[];STOCK=p.stock||{};STOCKH=Array.isArray(p.stockHistory)?p.stockHistory:[];MASTER=p.master||{};PLAN_DAILY=p.planDaily||{};STOCK_AUTO_DATE=p.stockAutoDate||'';STOCK_ACTUAL_DATE=p.stockActualDate||'';WB=null;destroyCharts();render();renderHistory();let q=validateData(),health=document.getElementById('health');if(health){health.className='status '+(q.blocking.length?'bad':'ready');health.textContent='SYSTEM CHECK • SHARED DATA ✓ • Fuel Usage '+DATA.length+' ✓ • Fuel Receipt '+RECEIPTS.length+' ✓ • Master Unit '+Object.keys(MASTER).length+' ✓ • Stock '+Object.keys(STOCK).length+'/8 '+(Object.keys(STOCK).length===8?'✓':'✕')+(q.blocking.length?' • CHECK: '+q.blocking.join(' | '):' • CORE DATA ✓')}}
+async function loadShared(){
+ let st=document.getElementById('status');
+ try{let r=await fetch(SYNC_CONFIG.endpoint+'?action=latest&_='+Date.now(),{cache:'no-store'}),j=await r.json();if(!j.ok)throw Error(j.error||'shared read gagal');if(!j.hasData){st.classList.remove('bad','ready');st.textContent='SHARED CONNECTED • Belum ada snapshot operasional • Upload Excel dari laptop untuk publish pertama';return false}hydrateShared(j.payload||{});st.classList.remove('bad');st.classList.add('ready');let dd=DATA.map(x=>x.date).filter(Boolean).sort(),period=dd.length?(dd[0]+' → '+dd.at(-1)):'—';st.textContent='SHARED DATA • OPERATIONAL READY • '+DATA.length+' transaksi • '+RECEIPTS.length+' receipt • '+Object.keys(STOCK).length+'/8 tank • Data '+period+' • Last Sync '+syncTimeLocal((j.payload||{}).serverUpdatedAt);updateFreshness((j.payload||{}).serverUpdatedAt);let sn=document.getElementById('syncNote');if(sn)sn.textContent='Snapshot shared aktif • Data terbaru '+(maxFuelDate(DATA)||'—')+' • HP/laptop membaca sumber yang sama';return true}catch(e){st.classList.remove('ready');st.classList.add('bad');st.textContent='SYNC OFFLINE • '+e.message+' • Upload Excel lokal tetap tersedia';return false}
+}
+async function publishShared(source){
+ let incomingDate=maxFuelDate(DATA),currentDate='',serverCount=0,guardNote='';
+ try{let cr=await fetch(SYNC_CONFIG.endpoint+'?action=latest&_='+Date.now(),{cache:'no-store'}),cj=await cr.json();if(cj&&cj.ok&&cj.hasData){let cp=cj.payload||{};currentDate=cp.dataMaxDate||maxFuelDate(cp.data);serverCount=Array.isArray(cp.data)?cp.data.length:0;if(currentDate&&incomingDate&&incomingDate<currentDate)throw Error('PUBLISH DIBLOKIR • File lebih lama ('+incomingDate+') daripada snapshot server ('+currentDate+'). Snapshot shared tidak diubah.');if(currentDate===incomingDate&&serverCount>0&&DATA.length<serverCount){let drop=Math.round((serverCount-DATA.length)/serverCount*100);guardNote='\nPERINGATAN: tanggal terbaru sama, tetapi transaksi turun dari '+serverCount+' menjadi '+DATA.length+' ('+drop+'%). Pastikan ini memang revisi file terbaru.'}}}catch(e){if(/^PUBLISH DIBLOKIR/.test(e.message))throw e}
+ let token=window.prompt('PUBLISH KE SHARED SERVER\nData terbaru file: '+(incomingDate||'—')+(currentDate?'\nData server saat ini: '+currentDate:'')+guardNote+'\n\nMasukkan Value FMS_PUBLISH_TOKEN.\nPassword tidak disimpan di browser:');if(!token)return {ok:false,cancelled:true};
+ let r=await fetch(SYNC_CONFIG.endpoint,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'publish',token:token,payload:sharedPayload(source)})});
+ let j=await r.json();token='';if(!j.ok)throw Error(j.error||'publish gagal');let vr=await fetch(SYNC_CONFIG.endpoint+'?action=latest&_='+Date.now(),{cache:'no-store'}),vj=await vr.json();if(!vj.ok||!vj.hasData)throw Error('publish diterima tetapi verifikasi snapshot gagal');let vp=vj.payload||{},expected=DATA.length,actual=Array.isArray(vp.data)?vp.data.length:-1;if(actual!==expected)throw Error('verifikasi snapshot berbeda: '+actual+' / '+expected+' transaksi');j.verified=true;j.verifiedCount=actual;j.serverUpdatedAt=vp.serverUpdatedAt||j.updatedAt;return j
+}
+window.FMS_SYNC=Object.freeze({config:SYNC_CONFIG,health:syncHealth,latest:loadShared,publish:publishShared});
+document.addEventListener('DOMContentLoaded',async()=>{let b=document.getElementById('syncBadge'),h=await syncHealth();if(b){b.className='sync-badge '+(h.ok?'shared':'local');b.textContent=h.ok?'DATA • SHARED':'DATA • LOCAL'}let sn=document.getElementById('syncNote');if(sn)sn.textContent=h.ok?'Server shared terhubung':'Server shared tidak terhubung';if(h.ok)await loadShared();else await def();});
+</script>
+<script>
+function syncMobileDateLabels(){let a=document.getElementById('from'),b=document.getElementById('to'),at=document.getElementById('fromText'),bt=document.getElementById('toText');if(at)at.textContent=a&&a.value?'Dari: '+a.value:'Tanggal Awal';if(bt)bt.textContent=b&&b.value?'Sampai: '+b.value:'Tanggal Akhir'}
+document.getElementById('from')?.addEventListener('change',syncMobileDateLabels);document.getElementById('to')?.addEventListener('change',syncMobileDateLabels);syncMobileDateLabels();
+</script></body></html>

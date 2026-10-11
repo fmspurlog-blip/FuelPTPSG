@@ -1,0 +1,11 @@
+'use strict';
+const {chromium}=require('playwright');const path=require('node:path');
+(async()=>{const browser=await chromium.launch({headless:true,args:['--no-sandbox']});const page=await browser.newPage({viewport:{width:1366,height:900}});
+page.on('pageerror',e=>console.log('BROWSER PAGE ERROR:',e.stack||e.message));page.on('console',m=>{if(m.type()==='error')console.log('BROWSER CONSOLE ERROR:',m.text())});page.on('requestfailed',r=>console.log('REQUEST FAILED:',r.url(),r.failure()?.errorText));
+const local=n=>path.resolve('node_modules',n);
+await page.route('https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js',r=>r.fulfill({path:local('chart.js/dist/chart.umd.js'),contentType:'application/javascript'}));
+await page.route('https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0',r=>r.fulfill({path:local('chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.min.js'),contentType:'application/javascript'}));
+await page.route('https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js',r=>r.fulfill({path:local('xlsx/dist/xlsx.full.min.js'),contentType:'application/javascript'}));
+await page.route('https://script.google.com/**',r=>r.abort());
+await page.goto('http://127.0.0.1:4173/?v=78.9#dashboard',{waitUntil:'domcontentloaded'});await page.waitForTimeout(3500);
+console.log('DIAGNOSTIC:',JSON.stringify(await page.evaluate(()=>({version:document.querySelector('.hero h1')?.textContent,chartLibrary:typeof Chart,chartIds:['dailyChart','shiftChart','categoryChart','truckChart','statusChart'].map(id=>({id,present:!!document.getElementById(id),chart:!!window.Chart?.getChart(document.getElementById(id))})),legendCount:document.querySelectorAll('.fms-chart-legend').length,brand:document.querySelector('.logo-box')?.className,css:document.querySelector('#fms-chart-components')?.textContent?.length})),null,2));await browser.close()})().catch(e=>{console.error('DEBUG ERROR',e);process.exitCode=1});
